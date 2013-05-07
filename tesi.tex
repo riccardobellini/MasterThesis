@@ -3,9 +3,22 @@
 
 \begin{document}
 
+\selectlanguage{italian}
+
 \frontmatter
 \includepdf{titolo/titolo}
 \includepdf{titolo/blank}
+\include{frontmatter/dedica}
+\include{frontmatter/ringraziamenti}
+\include{frontmatter/sommario-en}
 
+\tableofcontents
+\clearpage
+\thispagestyle{myheadings}\markboth{}{}
+\listoffigures
+\listoftables
+\clearpage
+\thispagestyle{myheadings}\markboth{}{}
+\include{frontmatter/abbreviazioni}
 
 \end{document}
