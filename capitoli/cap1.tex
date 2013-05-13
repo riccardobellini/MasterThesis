@@ -14,14 +14,32 @@ La Sezione \ref{sec:definizioneProblema} descrive quindi la problematica dello
 precedente.
 
 
-\section{Reconfigurable Computing}
+\section{Reconfigurable computing}
 \label{sec:reconfComp}
 Oggigiorno, grazie al progresso tecnologico e alla costante riduzione della dimensione 
-dei transistor, si assiste all'integrazione di diversi componenti elettronici su un 
-singolo chip. Questi sistemi, chiamati \ac{SoC} o \ac{MPSoC}, a seconda che il 
-microprocessore abbia uno o più core, comprendono oltre al processore anche vari moduli 
-funzionali quali blocchi di memoria, connettori per interfacce (USB, FireWire, Ethernet 
-ecc.) e altre periferiche, collegati tramite BUS.
+dei transistor, è resa possibile l'integrazione di diversi componenti elettronici su un 
+singolo chip; questi sistemi, chiamati \ac{SoC} o \ac{MPSoC}, a seconda 
+che il microprocessore abbia uno o più core, comprendono oltre al processore anche vari 
+moduli funzionali quali blocchi di memoria, connettori per interfacce (USB, FireWire, 
+Ethernet ecc.) e altre periferiche, collegati tramite BUS.
+
+Questa integrazione tuttavia apre una serie di problemi, tra cui elevato costo di 
+progettazione dei sistemi, bassa affidabilità e necessità di controllare il consumo di 
+energia; i problemi sopra citati possono essere risolti grazie all'impiego del 
+reconfigurable computing.
+
+Con il termine \emph{reconfigurable computing} si intende un'architettura hardware che 
+offre la possibilità di essere riconfigurata per implementare qualsiasi logica l'utente 
+desideri. Le caratteristiche e il fondamento logico alla base di questo tipo di 
+architetture sono descritte nelle prossime sezioni.
+
+\subsection{Da Von Neumann alle architetture riconfigurabili}
+\label{subsec:cambioParadigma}
+L'obiettivo delle architetture riconfigurabili consiste nel combinare i 
+vantaggi dei due paradigmi di computazione principali: \emph{general-purpose computing} e 
+\emph{application-specific computing}. Vengono ora descritti brevemente i due paradigmi 
+principali e le differenze rispetto alle architetture riconfigurabili, per meglio 
+evidenziare i vantaggi derivanti dall'utilizzo di un'architettura riconfigurabile.
 
 
 \section{Definizione del problema}
