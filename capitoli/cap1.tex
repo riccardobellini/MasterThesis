@@ -26,7 +26,7 @@ Ethernet ecc.) e altre periferiche, collegati tramite BUS.
 Questa integrazione tuttavia apre una serie di problemi, tra cui elevato costo di 
 progettazione dei sistemi, bassa affidabilità e necessità di controllare il consumo di 
 energia; i problemi sopra citati possono essere risolti grazie all'impiego del 
-reconfigurable computing.
+\emph{reconfigurable computing}.
 
 Con il termine \emph{reconfigurable computing} si intende un'architettura hardware che 
 offre la possibilità di essere riconfigurata per implementare qualsiasi logica l'utente 
@@ -35,11 +35,22 @@ architetture sono descritte nelle prossime sezioni.
 
 \subsection{Da Von Neumann alle architetture riconfigurabili}
 \label{subsec:cambioParadigma}
-L'obiettivo delle architetture riconfigurabili consiste nel combinare i 
-vantaggi dei due paradigmi di computazione principali: \emph{general-purpose computing} e 
-\emph{application-specific computing}. Vengono ora descritti brevemente i due paradigmi 
-principali e le differenze rispetto alle architetture riconfigurabili, per meglio 
-evidenziare i vantaggi derivanti dall'utilizzo di un'architettura riconfigurabile.
+In questa sezione vengono illustrati i due principali modelli concettuali di architettura
+informatica convenzionalmente trattati: il modello di Von Neumann (general-purpose) e il
+modello application-specific. Vengono presentati pregi e difetti di ciascuna architettura
+e viene spiegato come il reconfigurable computing cerca di combinare i vantaggi di
+entrambe.
+
+\subsubsection{Il modello general-purpose}
+Nel 1945 il matematico John von Neumann \cite{First-Draft-Report-EDVAC} descrive
+un'architettura informatica che verrà in seguito largamente applicata, soprattutto nei
+personal computer che utilizziamo tutti i giorni. L'architettura descritta da Von Neumann
+è caratterizzata dalla presenza di una \emph{processor unit} dotata di registri e
+\emph{arithmetic logic unit}, di una unità di controllo formata da un \emph{program
+counter} e un \emph{instruction register}, periferiche per l'input/output dei dati,
+memoria di massa e fisica per memorizzare i dati e le istruzioni dei programmi in
+esecuzione.
+
 
 
 \section{Definizione del problema}
