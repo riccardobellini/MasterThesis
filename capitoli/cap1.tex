@@ -36,20 +36,46 @@ architetture sono descritte nelle prossime sezioni.
 \subsection{Da Von Neumann alle architetture riconfigurabili}
 \label{subsec:cambioParadigma}
 In questa sezione vengono illustrati i due principali modelli concettuali di architettura
-informatica convenzionalmente trattati: il modello di Von Neumann (general-purpose) e il
-modello application-specific. Vengono presentati pregi e difetti di ciascuna architettura
+informatica convenzionalmente trattati: il modello \emph{general-purpose} e il modello
+\emph{application-specific}. Vengono presentati pregi e difetti di ciascuna architettura
 e viene spiegato come il reconfigurable computing cerca di combinare i vantaggi di
 entrambe.
 
 \subsubsection{Il modello general-purpose}
-Nel 1945 il matematico John von Neumann \cite{First-Draft-Report-EDVAC} descrive
-un'architettura informatica che verrà in seguito largamente applicata, soprattutto nei
-personal computer che utilizziamo tutti i giorni. L'architettura descritta da Von Neumann
-è caratterizzata dalla presenza di una \emph{processor unit} dotata di registri e
-\emph{arithmetic logic unit}, di una unità di controllo formata da un \emph{program
-counter} e un \emph{instruction register}, periferiche per l'input/output dei dati,
-memoria di massa e fisica per memorizzare i dati e le istruzioni dei programmi in
-esecuzione.
+Il modello general-purpose è tuttora ampiamente utilizzato, soprattutto nei personal
+computer che utilizziamo tutti i giorni. Questa architettura, proposta dal matematico
+John von Neumann nel 1945 \cite{First-Draft-Report-EDVAC}, è basata sul concetto di
+\emph{stored-program} computer; la particolarità di uno stored-program computer è quella
+di tenere le istruzioni dei programmi e i relativi dati nella memoria RAM. Un computer di
+questo tipo contiene una \ac{ISA} e può memorizzare un programma composto da un insieme
+di queste istruzioni che guideranno la computazione. Contrariamente alle architetture
+precedenti, che potevano eseguire solamente un programma preimpostato, il vantaggio
+dell'architettura general-purpose consiste nella possibilità di eseguire codice
+arbitrario.
+
+\subsubsection{Il modello application-specific}
+Mentre il modello visto nella sezione precedente consente di avere una maggiore
+flessibilità a discapito però delle prestazioni che può fornire, il modello
+application-specific si posiziona all'estremo opposto rispetto al primo: è infatti
+caratterizzato da elevate prestazioni e da un basso consumo di potenza. Questo modello
+computazionale viene realizzato mediante l'impiego di \ac{ASIC}, dei circuiti integrati
+progettati per svolgere un'unica funzionalità. Questo guadagno in prestazioni comporta
+uno svantaggio in termini di costi di produzione e naturalmente una minore flessibilità.
+
+Nella prossima sezione viene spiegato come il reconfigurable computing cerca di combinare
+i vantaggi di entrambi gli approcci.
+
+\subsubsection{In medio stat virtus}
+
+% Nel 1945 il matematico John von Neumann \cite{First-Draft-Report-EDVAC} descrive
+% un'architettura informatica che verrà in seguito largamente applicata, soprattutto nei
+% personal computer che utilizziamo tutti i giorni.
+% L'architettura descritta da Von Neumann
+% è caratterizzata dalla presenza di una \emph{processor unit} dotata di registri e
+% \emph{arithmetic logic unit}, di una unità di controllo formata da un \emph{program
+% counter} e un \emph{instruction register}, periferiche per l'input/output dei dati,
+% memoria di massa e fisica per memorizzare i dati e le istruzioni dei programmi in
+% esecuzione.
 
 
 
