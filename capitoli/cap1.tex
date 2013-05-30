@@ -78,44 +78,47 @@ più convenzionale modello di von Neumann.} o \emph{Xputer}\footnote{Il termine
 lettere della parola ``computer'' con un altro prefisso. Non trovandone uno, è stato
 deciso che queste lettere fossero rimpiazzate dalla lettera ``x''.}.
 
+La principale caratteristica che la differenzia rispetto all'architettura di von Neumann è
+l'essere guidata da flussi di dati (data-streams) piuttosto che da flussi di istruzioni
+(instruction-streams), idea alla base degli \emph{array sistolici}\footnote{Negli array
+sistolici la computazione è affidata a una matrice di \acp{DPU} invece che a \acsp{CPU}
+(dalle quali si differenziano per la mancanza di un program counter). La computazione
+avviene tramite il trasporto dei dati, che vengono scritti nelle \emph{triggering ports}
+delle \acp{DPU}.}.
 
 \begin{table}[ht]
 \caption{Classificazione dei computer effettuata da Nick Tredennick.}
 \label{tab:TredennickClassificationScheme}
  \begin{tabular}{l | l}
  \hline
- \textbf{Historic computers} & \textbf{Programming source} \\
+ \textbf{Historic computers} & \textbf{Programming source}\\
  \hline
- resources fixed & none \\
- algorithms fixed & none \\
+ resources fixed & none\\
+ algorithms fixed & none\\
  \hline
- \textbf{von Neumann computers} & \textbf{Programming source} \\
+ \textbf{von Neumann computers} & \textbf{Programming source}\\
  \hline
- resources fixed & none \\
- algorithms variable & software \\
+ resources fixed & none\\
+ algorithms variable & software (instruction streams)\\
  \hline
- \textbf{Reconfigurable computing} & \textbf{Programming source} \\
+ \textbf{Reconfigurable computing} & \textbf{Programming source}\\
  \hline
- resources variable & configware \\
+ resources variable & configware\\
  algorithms variable (anti machine) & flowware (data streams)
  \end{tabular}
 \end{table}
 
-La Tabella
-\ref{tab:TredennickClassificationScheme}
+Le differenze tra il paradigma del reconfigurable computing e gli altri paradigmi di
+computazione sono illustrati da Nick Tredennick nella Tabella
+\ref{tab:TredennickClassificationScheme} \cite{TredennickClassification}: si può
+osservare che le architetture riconfigurabili offrono la possibilità di configurare sia le
+risorse per la computazione (\emph{configware}) sia gli algoritmi da eseguire
+(\emph{flowware}). Tale soluzione porta a un minore costo di progettazione e
+maggiore flessibilità rispetto a circuiti dedicati e a prestazioni superiori rispetto a
+soluzioni general-purpose.
 
-
-% Nel 1945 il matematico John von Neumann \cite{First-Draft-Report-EDVAC} descrive
-% un'architettura informatica che verrà in seguito largamente applicata, soprattutto nei
-% personal computer che utilizziamo tutti i giorni.
-% L'architettura descritta da von Neumann
-% è caratterizzata dalla presenza di una \emph{processor unit} dotata di registri e
-% \emph{arithmetic logic unit}, di una unità di controllo formata da un \emph{program
-% counter} e un \emph{instruction register}, periferiche per l'input/output dei dati,
-% memoria di massa e fisica per memorizzare i dati e le istruzioni dei programmi in
-% esecuzione.
-
-
+Nella prossima sezione vengono descritte le motivazioni e la problematica relative al
+lavoro svolto.
 
 \section{Definizione del problema}
 \label{sec:definizioneProblema}
