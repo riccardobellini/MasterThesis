@@ -33,7 +33,7 @@ offre la possibilità di essere riconfigurata per implementare qualsiasi logica 
 desideri. Le caratteristiche e il fondamento logico alla base di questo tipo di 
 architetture sono descritte nelle prossime sezioni.
 
-\subsection{Da Von Neumann alle architetture riconfigurabili}
+\subsection{Da von Neumann alle architetture riconfigurabili}
 \label{subsec:cambioParadigma}
 In questa sezione vengono illustrati i due principali modelli concettuali di architettura
 informatica convenzionalmente trattati: il modello \emph{general-purpose} e il modello
@@ -66,11 +66,49 @@ Nella prossima sezione viene spiegato come il reconfigurable computing cerca di 
 i vantaggi di entrambi gli approcci.
 
 \subsubsection{In medio stat virtus}
+Secondo l'informatico Reiner Hartenstein, le architetture riconfigurabili introducono un
+cambio di paradigma rispetto all'architettura di von Neumann
+\cite{HartensteinParadigmShift}. In un articolo del 1991, Hartenstein et al.~presentano
+una nuova metodologia di design per lo sviluppo rapido di \ac{ASIC} ad alte prestazioni
+partendo da specifiche di algoritmi ad alto livello \cite{HartensteinNovelASICDesign};
+questa metodologia è basata su un nuovo paradigma di macchina sequenziale, chiamata da
+Hartenstein \emph{anti macchina}\footnote{Così definita per le sue differenze rispetto al
+più convenzionale modello di von Neumann.} o \emph{Xputer}\footnote{Il termine
+\emph{Xputer} ha origine dalla necessità dei suoi ideatori di rimpiazzare le prime tre
+lettere della parola ``computer'' con un altro prefisso. Non trovandone uno, è stato
+deciso che queste lettere fossero rimpiazzate dalla lettera ``x''.}.
+
+
+\begin{table}[ht]
+\caption{Classificazione dei computer effettuata da Nick Tredennick.}
+\label{tab:TredennickClassificationScheme}
+ \begin{tabular}{l | l}
+ \hline
+ \textbf{Historic computers} & \textbf{Programming source} \\
+ \hline
+ resources fixed & none \\
+ algorithms fixed & none \\
+ \hline
+ \textbf{von Neumann computers} & \textbf{Programming source} \\
+ \hline
+ resources fixed & none \\
+ algorithms variable & software \\
+ \hline
+ \textbf{Reconfigurable computing} & \textbf{Programming source} \\
+ \hline
+ resources variable & configware \\
+ algorithms variable (anti machine) & flowware (data streams)
+ \end{tabular}
+\end{table}
+
+La Tabella
+\ref{tab:TredennickClassificationScheme}
+
 
 % Nel 1945 il matematico John von Neumann \cite{First-Draft-Report-EDVAC} descrive
 % un'architettura informatica che verrà in seguito largamente applicata, soprattutto nei
 % personal computer che utilizziamo tutti i giorni.
-% L'architettura descritta da Von Neumann
+% L'architettura descritta da von Neumann
 % è caratterizzata dalla presenza di una \emph{processor unit} dotata di registri e
 % \emph{arithmetic logic unit}, di una unità di controllo formata da un \emph{program
 % counter} e un \emph{instruction register}, periferiche per l'input/output dei dati,
