@@ -117,9 +117,41 @@ risorse per la computazione (\emph{configware}) sia gli algoritmi da eseguire
 maggiore flessibilità rispetto a circuiti dedicati e a prestazioni superiori rispetto a
 soluzioni general-purpose.
 
-Nella prossima sezione vengono descritte le motivazioni e la problematica relative al
-lavoro svolto.
+Viene ora illustrata la struttura generica di un'architettura riconfigurabile.
+
+\subsubsection{I dispositivi riconfigurabili}
+Le architetture riconfigurabili sono composte da un processore general-purpose e da una
+porzione di logica riconfigurabile: lo scopo del processore è controllare le attività,
+d'ora in avanti definite \emph{task}, in esecuzione sulla logica riconfigurabile e di
+gestire le comunicazioni da e verso l'esterno. Le informazioni per la (ri)configurazione
+che devono essere ``caricate'' sul dispositivo sono contenute in un file chiamato
+\emph{bitstream}.
+
+Esempi molto diffusi di dispositivi riconfigurabili sono le schede \emph{\acp{FPGA}},
+introdotte attorno alla metà degli anni '80, che contengono sia logica che comunicazioni
+programmabili. La logica può essere configurata per rappresentare delle porte logiche
+oppure per sintetizzare dei core \ac{IP}.
+
+Inizialmente, il reconfigurable computing veniva utilizzato per realizzare prototipi
+economici di soluzioni hardware. Continui progressi tecnologici hanno portato
+a un'evoluzione della fase di riconfigurazione, qui descritta:
+\begin{itemize}
+ \item \emph{Riconfigurazione a Compile Time}: il dispositivo è configurato soltanto
+dopo la fase di design, prima dell'esecuzione dell'applicazione;
+ \item \emph{Riconfigurazione a Run Time}: il dispositivo può essere riconfigurato
+interrompendo temporaneamente l'esecuzione dell'applicazione;
+ \item \emph{Riconfigurazione Parziale Dinamica}: parte della logica può essere
+riconfigurata tramite un bitstream parziale, senza interrompere i task in esecuzione su
+altre regioni del dispositivo.
+\end{itemize}
+
+Nella prossima sezione vengono descritte le motivazioni e la problematica oggetto del
+lavoro.
 
 \section{Definizione del problema}
 \label{sec:definizioneProblema}
-
+Come visto nella precedente sezione, il reconfigurable computing offre elevate
+prestazioni senza sacrificare la flessibilità, per questo motivo rappresenta un'area di
+ricerca in continua crescita; l'aumento di risorse logiche configurabili e delle
+possibilità di utilizzo di tali risorse ha portato alllo sviluppo di strumenti \ac{CAD}
+sempre più complessi ed efficaci.
