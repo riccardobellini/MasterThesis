@@ -121,11 +121,11 @@ Viene ora illustrata la struttura generica di un'architettura riconfigurabile.
 
 \subsubsection{I dispositivi riconfigurabili}
 Le architetture riconfigurabili sono composte da un processore general-purpose e da una
-porzione di logica riconfigurabile: lo scopo del processore è controllare le attività,
-d'ora in avanti definite \emph{task}, in esecuzione sulla logica riconfigurabile e di
-gestire le comunicazioni da e verso l'esterno. Le informazioni per la (ri)configurazione
-che devono essere ``caricate'' sul dispositivo sono contenute in un file chiamato
-\emph{bitstream}.
+porzione di logica riconfigurabile: lo scopo del processore è controllare le
+attività (d'ora in avanti definite \emph{task}) in esecuzione sulla logica
+riconfigurabile e di gestire le comunicazioni da e verso l'esterno. Le informazioni per la
+(ri)configurazione che devono essere ``caricate'' sul dispositivo sono contenute in un
+file chiamato \emph{bitstream}.
 
 Esempi molto diffusi di dispositivi riconfigurabili sono le schede \emph{\acp{FPGA}},
 introdotte attorno alla metà degli anni '80, che contengono sia logica che comunicazioni
@@ -140,10 +140,12 @@ a un'evoluzione della fase di riconfigurazione, qui descritta:
 dopo la fase di design, prima dell'esecuzione dell'applicazione;
  \item \emph{Riconfigurazione a Run Time}: il dispositivo può essere riconfigurato
 interrompendo temporaneamente l'esecuzione dell'applicazione;
- \item \emph{Riconfigurazione Parziale Dinamica}: parte della logica può essere
-riconfigurata tramite un bitstream parziale, senza interrompere i task in esecuzione su
-altre regioni del dispositivo.
+ \item \emph{Riconfigurazione Parziale Dinamica}, in inglese \ac{PDR}: parte della logica
+può essere riconfigurata tramite un bitstream parziale, senza interrompere i task in
+esecuzione su altre regioni del dispositivo.
 \end{itemize}
+
+% TODO: applicazioni del reconfigurable computing?
 
 Nella prossima sezione vengono descritte le motivazioni e la problematica oggetto del
 lavoro.
@@ -152,6 +154,11 @@ lavoro.
 \label{sec:definizioneProblema}
 Come visto nella precedente sezione, il reconfigurable computing offre elevate
 prestazioni senza sacrificare la flessibilità, per questo motivo rappresenta un'area di
-ricerca in continua crescita; l'aumento di risorse logiche configurabili e delle
-possibilità di utilizzo di tali risorse ha portato alllo sviluppo di strumenti \ac{CAD}
-sempre più complessi ed efficaci.
+ricerca in continua crescita negli ultimi anni; l'aumento di risorse logiche
+configurabili e delle possibilità di utilizzo di tali risorse, unito alle innovazioni
+tecnologiche quali ad esempio la \ac{PDR} hanno portato alla necessità di sviluppare
+strumenti per il \ac{CAD} sempre più complessi. Questi strumenti guidano i designer in
+fase di progettazione e implementazione di un sistema riconfigurabile. Un esempio di tool
+\ac{CAD} è l'\ac{EDK} sviluppato da Xilinx, che gestisce sia i componenti software che
+hardware nella fase di design, consentendo di realizzare un sistema riconfigurabile
+completo.
