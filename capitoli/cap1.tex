@@ -168,25 +168,35 @@ acceleratori hardware (ad esempio una porzione di scheda riconfigurabile FPGA), 
 hardware general-purpose oppure da \acp{DSP}.} stanno guadagnando popolarità.
 
 Il nuovo paradigma introdotto dalle architetture riconfigurabili procura vantaggi
-soprattutto nel design \ac{ESL}, in particolare l'hardware/software co-design.
+soprattutto nel design \ac{ESL}, in particolare l'\mbox{hardware/software} co-design.
 Prima delle architetture riconfigurabili, le due parti (hardware e software) erano
-sviluppate separatamente e integrate successivamente; la ricerca su hardware/software
-co-design invece ha come obiettivo la creazione di strumenti che permettano lo
-sviluppo contemporaneo delle due componenti, con possibilità di esplorare e analizzare
-trade-off durante il design del sistema.
-In questo modo si permette al designer di concentrarsi sullo sviluppo dell'applicazione
-ad alto livello, parzialmente astraendo dal livello più basso (ad esempio generazione dei
-core che implementano i vari task, oppure delle direttive di sincronizzazione).
+sviluppate separatamente e integrate successivamente; la ricerca su 
+\mbox{hardware/software} co-design invece ha come obiettivo la creazione di strumenti che 
+permettano lo sviluppo contemporaneo delle due componenti, con possibilità di esplorare e 
+analizzare trade-off durante il design del sistema. In questo modo si permette al 
+designer di concentrarsi sullo sviluppo dell'applicazione ad alto livello, parzialmente 
+astraendo dal livello più basso (ad esempio generazione dei core che implementano i vari 
+task, oppure delle direttive di sincronizzazione).
 
-Il flusso di design automatizzato dovrebbe permettere di realizzare la sintesi ad alto
-livello (\emph{high-level synthesis}): partendo da un'applicazione scritta in un
+Il flusso di design automatizzato dovrebbe consentire la realizzazione della sintesi ad 
+alto livello (\emph{high-level synthesis}): partendo da un'applicazione scritta in un
 linguaggio ad alto livello, opportunamente annotata per istruire il tool sui vari task
 da eseguire, e da una descrizione dell'architettura riconfigurabile, il tool deve gestire
 le seguenti fasi:
 \begin{enumerate}
- \item 
+ \item \emph{Mapping}: decisione di quale task deve essere eseguito su quale unità 
+(\mbox{hardware/software} partitioning) e, nel caso di più implementazioni per ogni task, 
+quale implementazione eseguire;
+ \item \emph{Scheduling}: assegnazione dei tempi di inizio/fine esecuzione dei task;
+ \item \emph{Floorplacement} o \emph{floorplanning}: in questa fase si identificano i 
+task che idealmente dovrebbero essere posti fisicamente ``vicini'' sulla scheda, ad 
+esempio per minimizzare la latenza della comunicazione, rispettando i vincoli di area 
+riconfigurabile a disposizione.
 \end{enumerate}
 
+Il lavoro descritto in questa tesi si concentra su una possibile soluzione per il 
+problema di scheduling dei task, che verrà spiegato più in dettaglio nella prossima 
+sezione.
 
 % l'aumento di risorse logiche
 % configurabili e delle possibilità di utilizzo di tali risorse, unito alle innovazioni
