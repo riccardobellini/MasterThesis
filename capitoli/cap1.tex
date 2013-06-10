@@ -198,6 +198,31 @@ Il lavoro descritto in questa tesi si concentra su una possibile soluzione per i
 problema di scheduling dei task, che verrà spiegato più in dettaglio nella prossima 
 sezione.
 
+
+\subsection{La fase di scheduling}
+L'obiettivo dello scheduler è assegnare i tempi di inizio e di fine dell'esecuzione ai
+task che compongono l'applicazione.
+
+\begin{figure}[ht]
+ \begin{center}
+ \includegraphics[width=0.7\textwidth]{./capitoli/figure/TaskGraphExample.pdf}
+ \caption{Esempio di task graph.}
+ \label{fig:taskGraphExample}
+ \end{center}
+\end{figure}
+
+Lo scheduler riceve i dati relativi all'applicazione sotto forma di ``task graph''.
+In Figura \ref{fig:taskGraphExample} è raffigurato un esempio di task graph: esso è un 
+grafo orientato aciclico\footnote{\ac{DAG}.} in cui i nodi rappresentano i vari task da 
+eseguire, e gli archi rappresentano le precedenze tra questi task.
+Le precedenze esplicitano relazioni produttore-consumatore, ovvero un arco orientato 
+$(i,j)$ simboleggia un trasferimento dell'output della computazione del task $i$ in 
+memoria (locale o condivisa), per essere utilizzato successivamente come input per il 
+task $j$. Gli archi introducono quindi delle comunicazioni che devono necessariamente 
+essere prese in considerazione nella fase di scheduling.
+
+
+
 % l'aumento di risorse logiche
 % configurabili e delle possibilità di utilizzo di tali risorse, unito alle innovazioni
 % tecnologiche quali ad esempio la \ac{PDR} hanno portato alla necessità di sviluppare
