@@ -87,7 +87,7 @@ avviene tramite il trasporto dei dati, che vengono scritti nelle \emph{triggerin
 delle \acp{DPU}.}.
 
 \begin{table}[ht]
-\caption{Classificazione dei computer effettuata da Nick Tredennick.}
+\caption{Classificazione dei paradigmi secondo Nick Tredennick.}
 \label{tab:TredennickClassificationScheme}
  \begin{tabular}{l | l}
  \hline
@@ -184,9 +184,9 @@ linguaggio ad alto livello, opportunamente annotata per istruire il tool sui var
 da eseguire, e da una descrizione dell'architettura riconfigurabile, il tool deve gestire
 le seguenti fasi:
 \begin{enumerate}
- \item \emph{Mapping}: decisione di quale task deve essere eseguito su quale unità 
-(\mbox{hardware/software} partitioning) e, nel caso di più implementazioni per ogni task, 
-quale implementazione eseguire;
+ \item \emph{Mapping}: decisione di quale task deve essere eseguito su quale processing 
+element  (\mbox{hardware/software} partitioning) e, nel caso di più implementazioni per 
+ogni task, quale implementazione eseguire;
  \item \emph{Scheduling}: assegnazione dei tempi di inizio/fine esecuzione dei task;
  \item \emph{Floorplacement} o \emph{floorplanning}: in questa fase si identificano i 
 task che idealmente dovrebbero essere posti fisicamente ``vicini'' sulla scheda, ad 
@@ -218,10 +218,23 @@ eseguire, e gli archi rappresentano le precedenze tra questi task.
 Le precedenze esplicitano relazioni produttore-consumatore, ovvero un arco orientato 
 $(i,j)$ simboleggia un trasferimento dell'output della computazione del task $i$ in 
 memoria (locale o condivisa), per essere utilizzato successivamente come input per il 
-task $j$. Gli archi introducono quindi delle comunicazioni che devono necessariamente 
+task $j$; gli archi introducono quindi delle comunicazioni che devono necessariamente 
 essere prese in considerazione nella fase di scheduling.
 
+Oltre alle comunicazioni, lo scheduler deve anche gestire il verificarsi di 
+riconfigurazioni nel corso dell'esecuzione dell'applicazione. Ad esempio, se due task $i$ 
+e $j$ durante la fase di mapping vengono assegnati a uno stesso processing element su 
+scheda con due implementazioni diverse, è necessario riconfigurare quella porzione di 
+scheda dopo l'esecuzione di $i$ e prima dell'esecuzione di $j$.
 
+
+\subsubsection{Complessità del problema}
+Il problema di fissare uno schedule per i task di un'applicazione è un classico esempio 
+di \ac{RCSP}; tale problema appartiene alla classe di complessità computazionale 
+NP-hard.
+
+% (si veda l'Appendice \ref{chap:appA} per un riepilogo delle classi di 
+% complessità computazionale).
 
 % l'aumento di risorse logiche
 % configurabili e delle possibilità di utilizzo di tali risorse, unito alle innovazioni
