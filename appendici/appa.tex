@@ -30,8 +30,11 @@ la stima della complessità sarà una funzione di $n$ (che simboleggia la dimens
 dell'istanza).
 
 Per il calcolo si considera la rapidità di crescita del numero di operazioni elementari 
-effettuate dall'algoritmo nel caso peggiore: dato il numero di operazioni per 
-risolvere un'istanza $I$,
+effettuate dall'algoritmo nel caso peggiore.
+\begin{mydef}
+\label{def:definizioneComplessita}
+Dato il numero di operazioni per 
+risolvere un'istanza $I$ di un problema $P$,
 \begin{displaymath}
  I \leq f(n), \quad \forall I\  \text{con}\  \vert I \vert \leq n
 \end{displaymath}
@@ -40,14 +43,15 @@ si dice che $f(n)$ è dell'ordine di $g(n)$ e si scrive $f(n) = O(g(n))$ se
  \exists c > 0\  \vert\  f(n) \leq c\cdot g(n)
 \end{equation}
 per $n$ sufficientemente grande.
+\end{mydef}
 
-Un algoritmo è detto \emph{polinomiale} se necessita di un numero di operazioni elementari
+Seguendo la Definizione \ref{def:definizioneComplessita}, un algoritmo è detto 
+\emph{polinomiale} se necessita di un numero di operazioni elementari
 \begin{displaymath}
  f(n) = O(n^d) \quad \text{con}\  n = \vert I \vert, d\  \text{costante}
 \end{displaymath}
-
-Un algoritmo è detto \emph{esponenziale} se necessita di un numero di operazioni 
-elementari
+Similmente, un algoritmo è detto \emph{esponenziale} se necessita di un numero di 
+operazioni elementari
 \begin{displaymath}
  f(n) = O(2^n) \quad \text{con}\ n = \vert I \vert
 \end{displaymath}
@@ -61,6 +65,73 @@ essere risolti algoritmicamente.
 \section{Complessità dei problemi}
 \label{sec:complessitaProblemi}
 Mentre lo studio della complessità degli algoritmi consente di classificare alcuni 
-algoritmi come ``migliori'' rispetto ad altri nel risolvere un determinato problema, lo 
+algoritmi come migliori rispetto ad altri nel risolvere un determinato problema, lo 
 studio della complessità dei problemi consente di stimarne la difficoltà intrinseca, 
 ovvero quanto può essere efficiente il miglior algoritmo che può risolvere un problema.
+
+\begin{mydef}
+ Un problema di ottimizzazione $P$ è detto \emph{polinomiale} se ogni sua istanza è 
+risolvibile da un algoritmo di complessità polinomiale.
+\end{mydef}
+I problemi polinomiali sono generalmente ritenuti ``facili''. Nella teoria della 
+$\mathcal{NP}$-completezza si classificano, oltre a questi, anche problemi di 
+ottimizzazione per i quali non esiste un algoritmo che li risolva in tempo polinomiale.
+
+
+\subsection{Teoria della $\mathcal{NP}$-completezza}
+La teoria della $\mathcal{NP}$-completezza si focalizza sui problemi di \emph{decisione}
+(anche definiti di \emph{riconoscimento}):
+\begin{mydef}
+ Un problema di riconoscimento è un problema che ammette solo una risposta: ``si''/``no''.
+\end{mydef}
+
+Dato un problema di ottimizzazione, è sempre possibile associare ad esso un problema di 
+riconoscimento. Ad esempio il problema del commesso 
+viaggiatore\footnote{In inglese \ac{TSP}, è formulato come segue: dato un grafo $G = 
+(N, A)$ orientato, con costi associati agli archi, determinare un circuito di costo 
+minimo che consenta di visitare esattamente una volta ogni nodo.} è riconducibile al 
+seguente problema di riconoscimento:
+\begin{quotation}
+Dato un grafo $G = (N, A)$ con costi $c_{ij} \; \forall (i,j) \in A$ e 
+un intero $L$, esiste un circuito hamiltoniano\footnote{Un circuito è detto 
+\emph{hamiltoniano} se passa esattamente una volta per ogni nodo.} $C$ tale che
+\begin{displaymath}
+ \sum_{(i,j) \in C}c_{ij} \leq L\text{?}
+\end{displaymath}
+\end{quotation}
+La complessità intrinseca di un problema di ottimizzazione si stima dunque partendo dal 
+corrispondente problema di riconoscimento, se tale problema è difficile il problema di 
+ottimizzazione è almeno altrettanto difficile.
+
+Verranno ora enumerate le varie classi di complessità dei problemi
+
+\paragraph{Classe di complessità $\mathcal{P}$}
+\begin{mydef}
+La classe di complessità $\mathcal{P}$ comprende i problemi di riconoscimento che possono 
+essere risolti in tempo polinomiale.
+\end{mydef}
+Per ogni problema di ottimizzazione appartenente a questa classe esiste quindi un 
+algoritmo che per ogni istanza del problema risponde ``si''/``no'' in tempo polinomiale 
+rispetto alla dimensione dell'istanza.
+
+Esempi di problemi di questo tipo sono relativi ai problemi di cammini minimi, nella 
+ricerca operativa.
+
+\paragraph{Classe di complessità $\mathcal{NP}$}
+\begin{mydef}
+ La classe di complessità $\mathcal{NP}$ comprende i problemi di riconoscimento 
+tali che le istanze con risposta affermativa possono essere verificate in tempo 
+polinomiale.
+\end{mydef}
+$\mathcal{NP}$ non significa ``Non Polinomiale'', bensì ``Non-deterministico 
+Polinomiale''.
+
+% \begin{figure}[ht]
+ % TODO
+% \end{figure}
+
+
+Vale la relazione $\mathcal{P} \subseteq \mathcal{NP}$, ma la questione attualmente più 
+importante nella teoria della complessità è se questa inclusione sia stretta oppure 
+no, ovvero se $\mathcal{P} \subset \mathcal{NP}$ ed esista un problema di classe 
+$\mathcal{NP}$ che non sia compreso in $\mathcal{P}$ \cite{GasarchPoll} (vedi Figura).
