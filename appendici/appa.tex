@@ -1,6 +1,66 @@
-\selectlanguage{italian}
 \appendix
 \addcontentsline{toc}{chapter}{Appendici}
-\chapter{Cenni sulle classi di complessità computazionale}
+\chapter[Riepilogo complessità computazionale]{Riepilogo sulla teoria di complessità 
+computazionale}
 \label{chap:appA}
-Appendice A...
+In questa appendice verranno riepilogati i concetti base della teoria di complessità 
+computazionale.
+
+La Sezione \ref{sec:complessitaAlgoritmi} descrive in termini generali la 
+complessità di un generico algoritmo in base alla dimensione dell'istanza.
+
+La Sezione \ref{sec:complessitaProblemi} descrive invece le varie classi di complessità 
+in cui si possono suddividere i problemi.
+
+
+\section{Complessità degli algoritmi}
+\label{sec:complessitaAlgoritmi}
+La teoria della complessità algoritmica ha come obiettivo la stima di quanto onere 
+computazionale è richiesto a un algoritmo per risolvere un dato problema $P$, per poter 
+selezionare l'algoritmo più efficiente. Le metriche per la misura della complessità 
+computazionale di un algoritmo sono:
+\begin{itemize}
+ \item Complessità spaziale: occupazione di memoria richiesta;
+ \item Complessità temporale: tempo di calcolo.
+\end{itemize}
+La misura è effettuata stimando il numero di operazioni elementari necessarie per 
+risolvere un'\emph{istanza} $I$ del problema $P$. Chiaramente, il tempo e lo spazio 
+impiegati dipendono soprattutto dalla dimensione dell'istanza $\vert I \vert$, per questo 
+la stima della complessità sarà una funzione di $n$ (che simboleggia la dimensione 
+dell'istanza).
+
+Per il calcolo si considera la rapidità di crescita del numero di operazioni elementari 
+effettuate dall'algoritmo nel caso peggiore: dato il numero di operazioni per 
+risolvere un'istanza $I$,
+\begin{displaymath}
+ I \leq f(n), \quad \forall I\  \text{con}\  \vert I \vert \leq n
+\end{displaymath}
+si dice che $f(n)$ è dell'ordine di $g(n)$ e si scrive $f(n) = O(g(n))$ se
+\begin{equation}
+ \exists c > 0\  \vert\  f(n) \leq c\cdot g(n)
+\end{equation}
+per $n$ sufficientemente grande.
+
+Un algoritmo è detto \emph{polinomiale} se necessita di un numero di operazioni elementari
+\begin{displaymath}
+ f(n) = O(n^d) \quad \text{con}\  n = \vert I \vert, d\  \text{costante}
+\end{displaymath}
+
+Un algoritmo è detto \emph{esponenziale} se necessita di un numero di operazioni 
+elementari
+\begin{displaymath}
+ f(n) = O(2^n) \quad \text{con}\ n = \vert I \vert
+\end{displaymath}
+
+Ad esempio il merge-sort, un algoritmo per l'ordinamento di un array di $n$ interi, ha 
+complessità computazionale dell'ordine di $O(n\cdot \log n)$.
+
+Nella prossima sezione verrà trattata la complessità intrinseca dei problemi che possono 
+essere risolti algoritmicamente.
+
+\section{Complessità dei problemi}
+\label{sec:complessitaProblemi}
+Mentre lo studio della complessità degli algoritmi consente di classificare alcuni 
+algoritmi come ``migliori'' rispetto ad altri nel risolvere un determinato problema, lo 
+studio della complessità dei problemi consente di stimarne la difficoltà intrinseca, 
+ovvero quanto può essere efficiente il miglior algoritmo che può risolvere un problema.
