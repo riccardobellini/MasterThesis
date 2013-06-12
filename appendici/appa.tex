@@ -140,3 +140,47 @@ importante nella teoria della complessità è se questa inclusione sia stretta o
 no, ovvero se $\mathcal{P} \subset \mathcal{NP}$ ed esista un problema di classe 
 $\mathcal{NP}$ che non sia compreso in $\mathcal{P}$ \cite{GasarchPoll} (vedi Figura 
 \ref{fig:ClassiComplessita}).
+
+Nel prossimo paragrafo verrà trattato il concetto di \emph{riduzione polinomiale} fra 
+problemi, fondamentale per capire le ultime due classi di problemi: i problemi 
+$\mathcal{NP}$-completi e i problemi $\mathcal{NP}$-difficili.
+
+\subparagraph{Riduzione polinomiale fra problemi}
+Il concetto di riduzione polinomiale consente di ordinare i problemi di riconoscimento, 
+definendo quelli più difficili.
+
+\begin{mydef}
+ Dati due problemi $P_1, P_2 \in \mathcal{NP}$, $P_1$ si riduce in tempo polinomiale a 
+$P_2$ e si scrive $P_1 \propto P_2$ se esiste un algoritmo per la risoluzione di $P_1$ 
+che:
+\begin{itemize}
+ \item Chiama un dato numero di volte un algoritmo per la risoluzione di $P_2$,
+ \item Risulta polinomiale, nell'ipotesi che l'algoritmo per la risoluzione di $P_2$ 
+richieda una sola unità di tempo.
+\end{itemize}
+\end{mydef}
+Come conseguenza, se $P_1 \propto P_2$ e $P_2$ può essere risolto utilizzando un 
+algoritmo di complessità polinomiale, anche $P_1$ può essere risolto in tempo polinomiale.
+
+Questa definizione consente di illustrare le rimanenti classi di problemi.
+
+\paragraph{I problemi $\mathcal{NP}$-completi}
+\begin{mydef}
+ Un problema $P$ è $\mathcal{NP}$-completo sse:
+ \begin{enumerate}
+  \item $P \in \mathcal{NP}$,
+  \item $\forall P' \in \mathcal{NP} \setminus \left\{P\right\}, \quad P' \propto P$.
+ \end{enumerate}
+\end{mydef}
+La $\mathcal{NP}$-completezza è quindi un forte indizio di difficoltà intrinseca di un 
+problema; infatti, se un problema $\mathcal{NP}$-completo fosse risolvibile in tempo 
+polinomiale, lo sarebbe infatti qualsiasi problema in $\mathcal{NP}$\footnote{Infatti, in 
+questo caso si avrebbe che $\mathcal{P} = \mathcal{NP}$, eventualità non ancora 
+dimostrata ma considerata improbabile.}.
+
+Il primo problema ad essere dimostrato $\mathcal{NP}$-completo è il problema della 
+soddisfacibilità booleana (SAT)\footnote{Consiste nel determinare se una formula booleana 
+sia soddisfacibile oppure no, ovvero determinare se esiste un assegnamento di valori alle 
+variabili che rende vere tutte le clausole della formula.}, dimostrazione fornita da 
+Stephen Cook in \cite{CookSAT}, che in tale pubblicazione formalizza la nozione di 
+riduzione polinomiale vista nel precedente paragrafo.
