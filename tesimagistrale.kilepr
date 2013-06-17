@@ -158,10 +158,10 @@ Mode=LaTeX
 
 [item:appendici/appa.tex]
 archive=true
-column=0
+column=5
 encoding=UTF-8
 highlight=LaTeX
-line=131
+line=198
 mode=LaTeX
 open=true
 order=5
@@ -317,8 +317,8 @@ open=false
 order=-1
 
 [view-settings,view=0,item:appendici/appa.tex]
-CursorColumn=0
-CursorLine=131
+CursorColumn=5
+CursorLine=198
 JumpList=
 ViMarks=
 

@@ -26,8 +26,8 @@ computazionale di un algoritmo sono:
 La misura è effettuata stimando il numero di operazioni elementari necessarie per 
 risolvere un'\emph{istanza} $I$ del problema $P$. Chiaramente, il tempo e lo spazio 
 impiegati dipendono soprattutto dalla dimensione dell'istanza $\vert I \vert$, per questo 
-la stima della complessità sarà una funzione di $n$ (che simboleggia la dimensione 
-dell'istanza).
+la stima della complessità sarà una funzione di $n$ (che cambia a seconda della 
+dimensione dell'istanza).
 
 Per il calcolo si considera la rapidità di crescita del numero di operazioni elementari 
 effettuate dall'algoritmo nel caso peggiore.
@@ -74,23 +74,23 @@ ovvero quanto può essere efficiente il miglior algoritmo che può risolvere un 
 risolvibile da un algoritmo di complessità polinomiale.
 \end{mydef}
 I problemi polinomiali sono generalmente ritenuti ``facili''. Nella teoria della 
-$\mathcal{NP}$-completezza si classificano, oltre a questi, anche problemi di 
-ottimizzazione per i quali non esiste un algoritmo che li risolva in tempo polinomiale.
+$\mathcal{NP}$-completezza si classificano, oltre a questi, anche altri problemi per i 
+quali non esiste un algoritmo che li risolva in tempo polinomiale.
 
 
-\subsection{Teoria della $\mathcal{NP}$-completezza}
-La teoria della $\mathcal{NP}$-completezza si focalizza sui problemi di \emph{decisione}
-(anche definiti di \emph{riconoscimento}):
+% \subsection{Teoria della $\mathcal{NP}$-completezza}
+% La teoria della $\mathcal{NP}$-completezza
+Nella teoria della complessità ci si focalizza sui \emph{problemi di decisione}, anche 
+definiti \emph{problemi di riconoscimento}:
 \begin{mydef}
- Un problema di riconoscimento è un problema che ammette solo una risposta: ``si''/``no''.
+ Un problema di decisione è un problema che ammette solo una risposta: ``si''/``no''.
 \end{mydef}
 
 Dato un problema di ottimizzazione, è sempre possibile associare ad esso un problema di 
-riconoscimento. Ad esempio il problema del commesso 
-viaggiatore\footnote{In inglese \ac{TSP}, è formulato come segue: dato un grafo $G = 
-(N, A)$ orientato, con costi associati agli archi, determinare un circuito di costo 
-minimo che consenta di visitare esattamente una volta ogni nodo.} è riconducibile al 
-seguente problema di riconoscimento:
+decisione. Ad esempio, il problema del commesso viaggiatore\footnote{In inglese \ac{TSP}, 
+è formulato come segue: dato un grafo $G = (N, A)$ orientato, con costi associati agli 
+archi, determinare un circuito di costo minimo che consenta di visitare esattamente una 
+volta ogni nodo.} è riconducibile al seguente problema di decisione:
 \begin{quotation}
 Dato un grafo $G = (N, A)$ con costi $c_{ij} \; \forall (i,j) \in A$ e 
 un intero $L$, esiste un circuito hamiltoniano\footnote{Un circuito è detto 
@@ -100,14 +100,14 @@ un intero $L$, esiste un circuito hamiltoniano\footnote{Un circuito è detto
 \end{displaymath}
 \end{quotation}
 La complessità intrinseca di un problema di ottimizzazione si stima dunque partendo dal 
-corrispondente problema di riconoscimento, se tale problema è difficile il problema di 
+corrispondente problema di decisione, se tale problema è difficile il problema di 
 ottimizzazione è almeno altrettanto difficile.
 
-Verranno ora enumerate le varie classi di complessità dei problemi
+Verranno ora enumerate le varie classi di complessità dei problemi di decisione.
 
 \paragraph{Classe di complessità $\mathcal{P}$}
 \begin{mydef}
-La classe di complessità $\mathcal{P}$ comprende i problemi di riconoscimento che possono 
+La classe di complessità $\mathcal{P}$ comprende i problemi di decisione che possono 
 essere risolti in tempo polinomiale.
 \end{mydef}
 Per ogni problema di ottimizzazione appartenente a questa classe esiste quindi un 
@@ -119,7 +119,7 @@ ricerca operativa.
 
 \paragraph{Classe di complessità $\mathcal{NP}$}
 \begin{mydef}
- La classe di complessità $\mathcal{NP}$ comprende i problemi di riconoscimento 
+ La classe di complessità $\mathcal{NP}$ comprende i problemi di decisione 
 tali che le istanze con risposta affermativa possono essere verificate in tempo 
 polinomiale.
 \end{mydef}
@@ -146,12 +146,12 @@ problemi, fondamentale per capire le ultime due classi di problemi: i problemi
 $\mathcal{NP}$-completi e i problemi $\mathcal{NP}$-difficili.
 
 \subparagraph{Riduzione polinomiale fra problemi}
-Il concetto di riduzione polinomiale consente di ordinare i problemi di riconoscimento, 
+Il concetto di riduzione polinomiale consente di ordinare i problemi di decisione, 
 definendo quelli più difficili.
 
 \begin{mydef}
  Dati due problemi $P_1, P_2 \in \mathcal{NP}$, $P_1$ si riduce in tempo polinomiale a 
-$P_2$ e si scrive $P_1 \propto P_2$ se esiste un algoritmo per la risoluzione di $P_1$ 
+$P_2$ e si scrive $P_1 \propto P_2$, se esiste un algoritmo per la risoluzione di $P_1$ 
 che:
 \begin{itemize}
  \item Chiama un dato numero di volte un algoritmo per la risoluzione di $P_2$,
@@ -166,7 +166,7 @@ Questa definizione consente di illustrare le rimanenti classi di problemi.
 
 \paragraph{I problemi $\mathcal{NP}$-completi}
 \begin{mydef}
- Un problema $P$ è $\mathcal{NP}$-completo sse:
+ Un problema $P$ è $\mathcal{NP}$-completo se e solo se:
  \begin{enumerate}
   \item $P \in \mathcal{NP}$,
   \item $\forall P' \in \mathcal{NP} \setminus \left\{P\right\}, \quad P' \propto P$.
@@ -182,5 +182,18 @@ Il primo problema ad essere dimostrato $\mathcal{NP}$-completo è il problema de
 soddisfacibilità booleana (SAT)\footnote{Consiste nel determinare se una formula booleana 
 sia soddisfacibile oppure no, ovvero determinare se esiste un assegnamento di valori alle 
 variabili che rende vere tutte le clausole della formula.}, dimostrazione fornita da 
-Stephen Cook in \cite{CookSAT}, che in tale pubblicazione formalizza la nozione di 
-riduzione polinomiale vista nel precedente paragrafo.
+Stephen Cook in \cite{CookSAT}, che in tale pubblicazione formalizza inoltre la nozione 
+di riduzione polinomiale vista nel precedente paragrafo.
+
+\paragraph{I problemi $\mathcal{NP}$-difficili}
+\begin{mydef}
+ Un problema $P_1$ è $\mathcal{NP}$-difficile se e solo se esiste un problema $P_2$ 
+$\mathcal{NP}$-completo riducibile in tempo polinomiale a $P_1$, cioè $P_2 \propto P_1$.
+\end{mydef}
+In maniera informale, i problemi $\mathcal{NP}$-difficili possono essere definiti come 
+``almeno altrettanto difficili rispetto ai più difficili problemi in $\mathcal{NP}$'' (i 
+problemi $\mathcal{NP}$-completi). Mentre la classe di complessità $\mathcal{NP}$ 
+comprende problemi di decisione, i problemi $\mathcal{NP}$-difficili possono essere 
+di qualsiasi tipo: problemi di decisione, di ottimizzazione o di ricerca. Questo 
+implica che tutti i problemi di ottimizzazione la cui versione di decisione è 
+\mbox{$\mathcal{NP}$-completa} sono $\mathcal{NP}$-difficili.
