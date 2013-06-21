@@ -257,15 +257,39 @@ problema, il cui modello, tratto da \cite{ModelloRedaelli} e da
 
 
 \paragraph{Modello del problema}
-Il dispositivo riconfigurabile viene rappresentato come una griglia di unità 
-riconfigurabili, costituita da un insieme di righe $R=\left\{r_1, r_2, \dots, 
-r_{\vert R \vert}\right\}$ e di colonne $C=\left\{c_1, c_2, \dots, c_{\vert C 
-\vert}\right\}$. Ogni cella è composta da un numero $\rho_{u}$ di \ac{CLB}. 
-L'applicazione è rappresentata da un \acp{DFG} $\langle S, P \rangle$, dove $S$ è 
-l'insieme dei task e $P$ rappresenta le precedenze tra i task. I task devono essere 
-mappati su un insieme $E$ di \acp{EU}, ottenute configurando le unità riconfigurabili 
-tramite bitstream che specificano l'implementazione di tali task.
+Il dispositivo riconfigurabile viene rappresentato come una griglia di \ac{RU}, 
+costituita da un insieme di righe $R=\left\{r_1, r_2, \dots, r_{\vert R \vert}\right\}$ e 
+di colonne $C=\left\{c_1, c_2, \dots, c_{\vert C \vert}\right\}$. Ogni unità 
+riconfigurabile è rappresentata da una tupla $(r,c) \in U$ con $r \in R$ e $c \in C$, e 
+composta da un numero $\rho_{u}$ di \ac{CLB}. L'applicazione è rappresentata da un 
+\acp{DFG} $\langle S, P \rangle$, dove $S$ è l'insieme dei task e $P$ rappresenta le 
+precedenze tra i task. I task devono essere mappati su un insieme $E$ di \acp{EU}, 
+ottenute configurando le unità riconfigurabili tramite bitstream che specificano 
+l'implementazione di tali task.
 
+Nell'ipotesi di poter calcolare o stimare il tempo di esecuzione $l_{S}$, di 
+riconfigurazione $d_{S}$ e l'area occupata $r_{S}$ da un task, si può quindi modellizzare 
+la ricerca della soluzione come la definizione di una funzione 
+che, dati questi input, specifica per ogni task:
+\begin{enumerate}
+ \item l'\ac{EU} $e_s \in E$ su cui deve essere mappato, e il suo posizionamento 
+all'interno dell'\ac{FPGA} in termini di \ac{RU};
+ \item il tempo di inizio della riconfigurazione per l'\ac{EU}, $\bar{t}_s \in T$;
+ \item il tempo di inizio dell'esecuzione del task $t_s \in T$.
+\end{enumerate}
+
+In maniera formale:
+\begin{equation}
+\label{formula:mappingScheduling}
+ \sigma : S \rightarrow E \times 2^{U} \times T \times T
+\end{equation}
+Come evidenziato dalla formula \ref{formula:mappingScheduling}, lo spazio di ricerca è 
+estremamente ampio, e la complessità delle fasi di mapping e scheduling se effettuate 
+contemporaneamente rende quasi impossibile risolvere (in maniera ottima) problemi non 
+banali.
+
+Nella prossima sezione verranno elencati brevemente i possibili algoritmi per la 
+risoluzione della fase di scheduling.
 
 \subsubsection{Algoritmi utilizzabili}
 Esistono diversi algoritmi per risolvere il problema dello scheduling, alcuni esatti 

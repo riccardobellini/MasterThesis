@@ -158,20 +158,20 @@ Mode=LaTeX
 
 [item:appendici/appa.tex]
 archive=true
-column=13
+column=41
 encoding=UTF-8
 highlight=LaTeX
-line=149
+line=1
 mode=LaTeX
 open=true
 order=6
 
 [item:capitoli/cap1.tex]
 archive=true
-column=12
+column=2
 encoding=UTF-8
 highlight=LaTeX
-line=252
+line=280
 mode=LaTeX
 open=true
 order=1
@@ -228,10 +228,10 @@ order=-1
 
 [item:frontmatter/abbreviazioni.tex]
 archive=true
-column=27
+column=29
 encoding=UTF-8
 highlight=LaTeX
-line=19
+line=22
 mode=LaTeX
 open=true
 order=5
@@ -268,20 +268,20 @@ order=-1
 
 [item:preambolo.tex]
 archive=true
-column=18
+column=21
 encoding=UTF-8
 highlight=LaTeX
-line=2
+line=12
 mode=LaTeX
 open=true
 order=4
 
 [item:tesi.tex]
 archive=true
-column=0
+column=23
 encoding=UTF-8
 highlight=LaTeX
-line=13
+line=28
 mode=LaTeX
 open=true
 order=0
@@ -317,14 +317,14 @@ open=false
 order=-1
 
 [view-settings,view=0,item:appendici/appa.tex]
-CursorColumn=13
-CursorLine=149
+CursorColumn=41
+CursorLine=1
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:capitoli/cap1.tex]
-CursorColumn=12
-CursorLine=252
+CursorColumn=2
+CursorLine=280
 JumpList=
 ViMarks=
 
@@ -359,8 +359,8 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:frontmatter/abbreviazioni.tex]
-CursorColumn=27
-CursorLine=19
+CursorColumn=29
+CursorLine=22
 JumpList=
 ViMarks=
 
@@ -383,14 +383,14 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:preambolo.tex]
-CursorColumn=18
-CursorLine=2
+CursorColumn=21
+CursorLine=12
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:tesi.tex]
-CursorColumn=0
-CursorLine=13
+CursorColumn=23
+CursorLine=28
 JumpList=
 ViMarks=a,1,17
 
