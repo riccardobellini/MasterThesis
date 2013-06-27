@@ -17,11 +17,11 @@ precedente.
 \section{Reconfigurable computing}
 \label{sec:reconfComp}
 Oggigiorno, grazie al progresso tecnologico e alla costante riduzione della dimensione 
-dei transistor, è resa possibile l'integrazione di diversi componenti elettronici su un 
-singolo chip; questi sistemi, chiamati \ac{SoC} o \ac{MPSoC}, a seconda 
-che il microprocessore abbia uno o più core, comprendono oltre al processore anche vari 
-moduli funzionali quali blocchi di memoria, connettori per interfacce (USB, FireWire, 
-Ethernet ecc.) e altre periferiche, collegati tramite BUS.
+dei transistor, è possibile integrare diversi componenti elettronici su un singolo chip; 
+questi sistemi, chiamati \ac{SoC} o \ac{MPSoC}, a seconda che il microprocessore abbia 
+uno o più core, comprendono oltre al processore anche vari moduli funzionali quali 
+blocchi di memoria, connettori per interfacce (USB, FireWire, Ethernet ecc.) e altre 
+periferiche, collegati tramite BUS.
 
 Questa integrazione tuttavia apre una serie di problemi, tra cui elevato costo di 
 progettazione dei sistemi, bassa affidabilità e necessità di controllare il consumo di 
@@ -29,8 +29,8 @@ energia; i problemi sopra citati possono essere risolti grazie all'impiego del
 \emph{reconfigurable computing}.
 
 Con il termine \emph{reconfigurable computing} si intende un'architettura hardware che 
-offre la possibilità di essere riconfigurata per implementare qualsiasi logica l'utente 
-desideri. Le caratteristiche e il fondamento logico alla base di questo tipo di 
+offre la possibilità di essere riconfigurata per implementare qualsiasi funzionalità 
+l'utente desideri. Le caratteristiche e il fondamento logico alla base di questo tipo di 
 architetture sono descritte nelle prossime sezioni.
 
 \subsection{Da von Neumann alle architetture riconfigurabili}
@@ -58,13 +58,17 @@ Mentre il modello visto nella sezione precedente consente di avere una maggiore
 flessibilità a discapito però delle prestazioni che può fornire, il modello
 application-specific si posiziona all'estremo opposto rispetto al primo: è infatti
 caratterizzato da elevate prestazioni e da un basso consumo di potenza. Questo modello
-computazionale viene realizzato mediante l'impiego di \ac{ASIC}, dei circuiti integrati
-progettati per svolgere un'unica funzionalità. Questo guadagno in prestazioni comporta
-uno svantaggio in termini di costi di produzione e naturalmente una minore flessibilità.
+computazionale viene realizzato mediante l'impiego di \acp{ASIC}, dei circuiti integrati
+progettati per svolgere un'unica funzionalità. Questo guadagno in prestazioni comporta 
+tuttavia uno svantaggio in termini di costi di produzione e, naturalmente, una minore 
+flessibilità.
 
 Nella prossima sezione viene spiegato come il reconfigurable computing cerca di combinare
 i vantaggi di entrambi gli approcci.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%% FIXME %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{In medio stat virtus}
 Secondo l'informatico Reiner Hartenstein, le architetture riconfigurabili introducono un
 cambio di paradigma rispetto all'architettura di von Neumann
@@ -283,7 +287,7 @@ In maniera formale:
 \label{formula:mappingScheduling}
  \sigma : S \rightarrow E \times 2^{U} \times T \times T
 \end{equation}
-Come evidenziato dalla formula \ref{formula:mappingScheduling}, lo spazio di ricerca è 
+Come evidenziato da \eqref{formula:mappingScheduling}, lo spazio di ricerca è 
 estremamente ampio, e la complessità delle fasi di mapping e scheduling se effettuate 
 contemporaneamente rende quasi impossibile risolvere (in maniera ottima) problemi non 
 banali.
