@@ -188,7 +188,8 @@ linguaggio ad alto livello, opportunamente annotata per istruire il tool sui var
 da eseguire, e da una descrizione dell'architettura riconfigurabile, il tool deve gestire
 le seguenti fasi:
 \begin{enumerate}
- \item \emph{mapping}: decisione di quale task deve essere eseguito su quale processing 
+ \item \emph{mapping}: in questa fase viene deciso quale task deve essere eseguito su 
+quale processing 
 element (\mbox{hardware/software} partitioning) e, nel caso di più implementazioni per 
 ogni task, quale implementazione eseguire;
  \item \emph{scheduling}: assegnazione dei tempi di inizio/fine esecuzione dei task;
@@ -207,12 +208,34 @@ sezione.
 L'obiettivo dello scheduler è assegnare i tempi di inizio e di fine dell'esecuzione ai
 task che compongono l'applicazione.
 
+% \begin{figure}[ht]
+%  \begin{center}
+%  \includegraphics[width=0.7\textwidth]{./capitoli/figure/TaskGraphExample.pdf}
+%  \caption{Esempio di task graph.}
+%  \label{fig:taskGraphExample}
+%  \end{center}
+% \end{figure}
 \begin{figure}[ht]
- \begin{center}
- \includegraphics[width=0.7\textwidth]{./capitoli/figure/TaskGraphExample.pdf}
- \caption{Esempio di task graph.}
- \label{fig:taskGraphExample}
- \end{center}
+\begin{center}
+\begin{tikzpicture}[scale=.8,auto=left,every node/.style={circle,fill=blue!20},>=stealth]
+ \node (n0) at (1,10) {t0};
+ \node (n1) at (4,8) {t1};
+ \node (n2) at (3,6) {t2};
+ \node (n3) at (5,6) {t3};
+ \node (n4) at (2,4) {t4};
+ \node (n5) at (3,2) {t5};
+ \node (n6) at (5,2) {t6};
+ \node (n7) at (-1,2) {t7};
+ \node (n8) at (1,2) {t8};
+ \node (n9) at (8,0) {t9};
+ 
+ \foreach \from/\to in 
+{n0/n1,n0/n4,n1/n2,n1/n3,n2/n4,n4/n7,n4/n8,n4/n5,n4/n6,n2/n9,n6/n9,n5/n9}
+\draw [->] (\from) -- (\to);
+\end{tikzpicture}
+\caption{Esempio di task graph.}
+\label{fig:taskGraphExample}
+\end{center}
 \end{figure}
 
 Lo scheduler riceve i dati relativi all'applicazione sotto forma di ``task graph''.
