@@ -28,6 +28,35 @@ presentati in questo capitolo.
 \section{Integrazione nella toolchain di \ac{FASTER}}
 \label{sec:integrazioneToolchainFASTER}
 
+Come descritto nel precedente capitolo, l'obiettivo del progetto europeo 
+\ac{FASTER} è fornire un framework per la sintesi ad alto livello di 
+applicazioni, scritte in linguaggio di programmazione C, su vari dispositivi 
+riconfigurabili; la toolchain che permette di realizzare questa sintesi è 
+composta da varie fasi eseguite in sequenza. Ogni fase deve essere il più 
+possibile self-contained, ovvero deve poter essere invocata separatamente e non 
+deve avere nozioni sul funzionamento interno delle altre fasi.
+
+Condizione necessaria perchè ciò accada è la definizione di specifiche 
+interfacce per ogni strumento che deve essere invocato. Ad esempio, la fase di 
+mapping ha la propria interfaccia di input e di output; lo scheduler 
+(incapsulato nell'algoritmo evolvibile di esplorazione delle soluzioni di 
+mapping) ha anch'esso una interfaccia di input e una di output, contenenti tutte 
+le strutture dati necessarie per l'elaborazione e per la memorizzazione delle 
+informazioni calcolate dall'algoritmo, rispettivamente. 
+
+\begin{figure}
+ \begin{center}
+  \includegraphics[width=0.9\textwidth]{capitoli/figure/cap3/MapperWorkflow.pdf}
+  \caption{Flusso di lavoro dell'algoritmo di esplorazione.}
+  \label{fig:mapperWorkflow}
+ \end{center}
+\end{figure}
+
+A livello dell'algoritmo di mapping, dunque, si avrà un flusso di lavoro come 
+rappresentato nella Figura \ref{fig:mapperWorkflow}, in cui è messo in evidenza 
+dove si colloca la fase di scheduling oggetto del lavoro rispetto al flusso 
+dell'algoritmo di esplorazione, con le relative interfacce di input e output.
+
 
 \section{Panoramica della metodologia}
 \label{sec:panoramicaMetodologia}
