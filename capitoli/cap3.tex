@@ -3,22 +3,30 @@
 \vspace{1cm}
 Nel Capitolo \ref{chap:SOA} sono state descritte alcune soluzioni proposte 
 relative al lavoro oggetto di questa tesi, in particolare algoritmi esatti ed
-euristici di ottimizzazione basati su tecniche di evoluzione.
-% TODO & FIXME aggiungere qualcosa
+euristici di ottimizzazione basati su varie tecniche.
+% TODO & FIXME aggiungere qualcosa (tipo pro/contro)
 
 In questo capitolo verrà descritto l'approccio utilizzato per risolvere il 
-problema di scheduling dei task considerando comunicazioni e riconfigurazioni.
+problema di scheduling dei task tenendo in considerazione le comunicazioni e 
+riconfigurazioni introdotte.
 
 Il capitolo è organizzato secondo la seguente struttura: nella Sezione 
-\ref{sec:panoramicaMetodologia} viene descritto ad alto livello il 
-funzionamento dell'algoritmo realizzato, viene fornita una panoramica delle 
-fasi in cui questo si divide, con particolare enfasi sulle interfacce esterne 
-che collegano il componente agli altri strumenti utilizzati nella toolchain di 
-\acs{FASTER}; la Sezione \ref{sec:euristicaSceltaTask} contiene una descrizione 
-dettagliata della fase più delicata del procedimento di scheduling, la scelta 
-del task migliore da considerare ad ogni passo di decisione; la Sezione 
+\ref{sec:integrazioneToolchainFASTER} viene descritta l'integrazione 
+dell'algoritmo di scheduling con il componente che gestisce il mapping dei task, 
+con accenni alle interfacce esterne che collegano il componente 
+agli altri strumenti utilizzati nella toolchain di \acs{FASTER}; la Sezione 
+\ref{sec:panoramicaMetodologia} descrive  ad alto 
+livello il funzionamento dell'algoritmo di scheduling, fornendo una 
+panoramica delle fasi in cui questo si divide; la Sezione 
+\ref{sec:euristicaSceltaTask} contiene una descrizione dettagliata della fase 
+più delicata del procedimento di scheduling, la scelta del task migliore da 
+considerare ad ogni passo di decisione; la Sezione 
 \ref{sec:osservazioniConclusive} fornisce un riepilogo dei concetti importanti 
 presentati in questo capitolo.
+
+
+\section{Integrazione nella toolchain di \ac{FASTER}}
+\label{sec:integrazioneToolchainFASTER}
 
 
 \section{Panoramica della metodologia}
