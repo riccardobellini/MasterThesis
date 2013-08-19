@@ -241,10 +241,40 @@ sostituito con nuovi archi che collegano i task di computazione con i task di
 comunicazione appena inseriti, rispettando i criteri precedentemente stabiliti.
 
 
+\begin{figure}
+ \begin{minipage}[b]{0.4\textwidth}
+  \begin{center}
+   $\vcenter{\includegraphics[width=\linewidth]
+{capitoli/figure/cap3/TaskGraphExample.pdf}}$
+  \end{center}
+ \end{minipage}
+ \hfill
+ \begin{minipage}[b]{0.4\textwidth}
+ \begin{center}
+    $\vcenter{\includegraphics[width=\linewidth]
+{capitoli/figure/cap3/TaskGraphCommunicationExample.pdf}}$
+ \end{center}
+ \end{minipage}
+ \caption{Modifica del task graph in seguito all'aggiunta delle 
+comunicazioni.}
+ \label{fig:taskGraphCommunicationExample}
+\end{figure}
 
-Al termine della fase di inserimento dei task di comunicazione, si avrà quindi 
-un nuovo task graph, si veda la Figura %TODO
-per un esempio.
+
+Si veda la Figura \ref{fig:taskGraphCommunicationExample}
+per un esempio di come viene modificato il task graph della Figura 
+\ref{fig:taskGraphExample2} in seguito all'aggiunta dei task di 
+comunicazione\footnote{Gli archi del grafo originale sono stati 
+tratteggiati per evidenziare come la struttura generale non sia cambiata ma 
+siano stati soltanto introdotti nuovi nodi e archi nel grafo.}.
+
+Dopo l'inserimento dei task di comunicazione, viene eseguito l'inserimento dei 
+task di riconfigurazione, qualora il particolare mapping utilizzato lo 
+richieda. Nel caso, si procede come descritto nel prossimo paragrafo.
+
+
+\subsubsection{Aggiunta delle riconfigurazioni}
+%TODO
 
 
 \subsection{Fase di scheduling}
