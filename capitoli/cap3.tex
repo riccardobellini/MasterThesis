@@ -77,7 +77,6 @@ task graph, delle implementazioni e dei vari elementi di computazione, di
 comunicazione e di memoria presenti;
  \item dati provenienti dall'output della fase di mapping.
 \end{itemize}
-
 Questi ultimi sono organizzati come una lista di triple \emph{$<$processing 
 task, processing element, implementazione$>$} calcolata dal mapper, che 
 specifica per ogni task:
@@ -88,6 +87,7 @@ core hardware su scheda oppure un soft core (processore);
 dividere in implementazione software o hardware a seconda che il task debba 
 essere eseguito su scheda o su un processore.
 \end{enumerate}
+
 Le informazioni provenienti dal mapper vengono quindi utilizzate per 
 determinare se alcune aree dovranno essere riconfigurate durante l'esecuzione 
 dell'applicazione oppure no, oltre a dare informazioni sull'occupazione dei 
@@ -96,11 +96,31 @@ vari componenti del dispositivo.
 
 \subsection{Interfaccia di output}
 
+Il compito dello scheduler è assegnare delle stime di tempo di inizio e di fine 
+esecuzione ad ogni task in modo che le precedenze tra i task imposte dal task 
+graph vengano rispettate, e che nessun altro vincolo sia violato: ad esempio, 
+task che devono essere eseguiti sullo stesso componente non possono avere tempi 
+di esecuzione sovrapposti. Tutte queste informazioni sulle stime calcolate 
+dallo scheduler vengono memorizzate nell'interfaccia di output, che è composta 
+da:
+\begin{itemize}
+ \item una rappresentazione in forma di \emph{diagramma di Gantt}, che delinea 
+per ogni componente quando questo è occupato nell'esecuzione di un task;
+ \item per ogni task, una lista delle informazioni riguardanti lo scheduling, 
+ad esempio il tempo d'esecuzione stimato, il componente su cui deve essere 
+eseguito, l'implementazione che ne caratterizza l'esecuzione e le stime di 
+inizio e fine esecuzione che gli sono state assegnate.
+\end{itemize}
 
+Nella prossima sezione verrà spiegato in dettaglio il flusso di 
+esecuzione dell'algoritmo di scheduling e come le interfacce vengono 
+utilizzate durante l'elaborazione.
 
 
 \section{Panoramica della metodologia}
 \label{sec:panoramicaMetodologia}
+
+
 
 
 \section{Euristica di scelta dei task}
