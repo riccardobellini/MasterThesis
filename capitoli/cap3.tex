@@ -15,7 +15,7 @@ Il capitolo è organizzato secondo la seguente struttura: nella Sezione
 dell'algoritmo di scheduling con il componente che gestisce il mapping dei task, 
 con accenni alle interfacce esterne che collegano il componente 
 con gli altri strumenti utilizzati nella toolchain di \acs{FASTER}; la Sezione 
-\ref{sec:panoramicaMetodologia} descrive  ad alto livello il funzionamento 
+\ref{sec:panoramicaMetodologia} descrive ad alto livello il funzionamento 
 dell'algoritmo di scheduling, fornendo una panoramica delle fasi in cui questo 
 si divide; la Sezione \ref{sec:euristicaSceltaTask} contiene una descrizione 
 dettagliata della fase più delicata del procedimento di scheduling, la scelta 
@@ -24,7 +24,7 @@ del task migliore da considerare ad ogni passo di decisione; la Sezione
 presentati in questo capitolo.
 
 
-\section{Integrazione nella toolchain di \ac{FASTER}}
+\section{Integrazione nella toolchain di \acs{FASTER}}
 \label{sec:integrazioneToolchainFASTER}
 
 Come descritto nel precedente capitolo, l'obiettivo del progetto europeo 
@@ -120,7 +120,52 @@ utilizzate durante l'elaborazione.
 \section{Panoramica della metodologia}
 \label{sec:panoramicaMetodologia}
 
+In questa sezione viene descritto il funzionamento dell'algoritmo proposto e le 
+fasi in cui esso si articola, con una spiegazione dettagliata della struttura 
+di ogni fase e del flusso di lavoro completo dell'algoritmo.
 
+Come accennato nella sezione precedente, l'interfaccia di input è 
+caratterizzata da dati ``statici'', presenti prima dell'invocazione dello 
+scheduler e da dati ``dinamici'', che subiscono modifiche oppure vengono creati 
+durante l'esecuzione del tool. L'interfaccia di output è invece costruita 
+incrementalmente, aggiungendo e modificando dati man mano che la computazione 
+prosegue.
+
+
+\begin{figure}[ht]
+ \begin{center}
+\includegraphics[width=0.9\textwidth]
+{capitoli/figure/cap3/SchedulerWorkflow.pdf}
+  \caption{Flusso di lavoro dell'algoritmo di scheduling.}
+  \label{fig:schedulerWorkflow}
+ \end{center}
+\end{figure}
+
+
+La prima fase dell'algoritmo ha il compito di 
+effettuare una elaborazione preliminare dei dati statici, che permetterà di 
+ottenere una formulazione più specifica e dettagliata del problema; questa 
+prima fase è chiamata \emph{fase di preprocessing}. La seconda fase è 
+costituita dallo \emph{scheduling effettivo} dei task, utilizzando le 
+informazioni calcolate in precedenza nella pre-elaborazione. La terza e ultima 
+fase, pur non essendo strettamente legata all'assegnazione delle stime dei tempi 
+e dell'ordine di esecuzione dei task, è fondamentale per permettere l'effettiva 
+esecuzione dell'applicazione sul dispositivo riconfigurabile; consiste in una 
+parziale rielaborazione dell'output prodotto dalla fase di scheduling ed è 
+chiamata \emph{fase di postprocessing}.
+
+Le tre fasi sono rappresentate nella Figura \ref{fig:schedulerWorkflow}, che 
+illustra il flusso di lavoro dello scheduler, con i relativi dati di input per 
+ogni fase. Nelle prossime sezioni, le fasi verranno analizzate nel dettaglio.
+
+
+\subsection{Fase di preprocessing}
+
+
+\subsection{Fase di scheduling}
+
+
+\subsection{Fase di postprocessing}
 
 
 \section{Euristica di scelta dei task}
