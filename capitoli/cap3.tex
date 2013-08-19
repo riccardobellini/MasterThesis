@@ -66,6 +66,39 @@ in comune.
 
 \subsection{Interfaccia di input}
 
+%%%%%%%%%%%% FIXME %%%%%%%%%%%%%
+%%% overfull hbox %%%
+\begin{figure}
+ \begin{minipage}[b]{0.4\textwidth}
+  \begin{center}
+\includegraphics[width=\linewidth]{capitoli/figure/cap3/TaskGraphExample.pdf}
+  \subcaption{Task graph}\label{fig:taskGraphExample2}
+  \end{center}
+ \end{minipage}
+ \hfill
+ \begin{minipage}[b]{0.4\textwidth}
+  \begin{center}
+   \begin{tabular}{| c | c | c |}
+    \hline
+    \textbf{Task} & \textbf{Component} & \textbf{Implementation}\\
+    \hline
+    A & p1 & impl\_0\\
+    \hline
+    B & p2 & impl\_1\\
+    \hline
+    C & p1 & impl\_2\\
+    \hline
+    D & p3 & impl\_3\\
+    \hline
+   \end{tabular}
+   \subcaption{Lista dei mapping}\label{tab:listaMapping}
+  \end{center}
+ \end{minipage}
+ \caption{Esempio di task graph e di lista dei mapping.}
+ \label{fig:taskGraphAndMapping}
+\end{figure}
+
+
 L'interfaccia di input per la fase di scheduling contiene tutti i dati 
 necessari all'esecuzione dello scheduler, alcuni definiti prima 
 dell'invocazione del tool, altri creati o modificati durante le differenti fasi 
@@ -73,7 +106,8 @@ dell'esecuzione. In particolare, i dati definiti prima dell'invocazione sono:
 \begin{itemize}
  \item dati provenienti dal file XML di specifica del progetto correntemente in 
 elaborazione dalla toolchain, relativi alla descrizione dell'architettura, del 
-task graph, delle implementazioni e dei vari elementi di computazione, di 
+task graph, delle implementazioni e dei vari elementi 
+di computazione, di 
 comunicazione e di memoria presenti;
  \item dati provenienti dall'output della fase di mapping.
 \end{itemize}
@@ -87,6 +121,8 @@ core hardware su scheda oppure un soft core (processore);
 dividere in implementazione software o hardware a seconda che il task debba 
 essere eseguito su scheda o su un processore.
 \end{enumerate}
+Nella Figura \ref{fig:taskGraphAndMapping} sono rappresentati un esempio di 
+task graph e di output della fase di mapping basato su quel task graph.
 
 Le informazioni provenienti dal mapper vengono quindi utilizzate per 
 determinare se alcune aree dovranno essere riconfigurate durante l'esecuzione 
@@ -156,10 +192,59 @@ chiamata \emph{fase di postprocessing}.
 
 Le tre fasi sono rappresentate nella Figura \ref{fig:schedulerWorkflow}, che 
 illustra il flusso di lavoro dello scheduler, con i relativi dati di input per 
-ogni fase. Nelle prossime sezioni, le fasi verranno analizzate nel dettaglio.
+ogni fase. Nelle prossime sezioni, ogni fase verrà analizzata nel dettaglio.
 
 
 \subsection{Fase di preprocessing}
+La fase di preprocessing è la prima ad essere eseguita dopo l'invocazione del 
+tool di scheduling da parte dell'algoritmo di esplorazione. Ha come obiettivo 
+principale l'identificazione delle comunicazioni e delle riconfigurazioni che 
+devono essere prese in considerazione per la corretta esecuzione 
+dell'applicazione sul dispositivo. Un obiettivo secondario è il calcolo di 
+informazioni aggiuntive che verranno poi utilizzate nella fase di scheduling 
+per quanto concerne la scelta del task migliore (vedi Sezione 
+\ref{sec:euristicaSceltaTask}).
+
+Per ottenere questi obiettivi, la fase di preprocessing si divide in tre 
+sotto-fasi eseguite nel seguente ordine:
+\begin{enumerate}
+ \item aggiunta delle comunicazioni: nuovi task, detti \emph{task di 
+comunicazione} vengono aggiunti al task graph originale, a rappresentare le 
+comunicazioni che si verificano tra i task di computazione;
+ \item aggiunta delle riconfigurazioni: può non essere richiesto e dipende 
+dagli assegnamenti stabiliti dal mapping, consiste nell'introduzione di nuovi 
+task, detti \emph{task di riconfigurazione}, dove necessario;
+ \item computazione delle informazioni sul percorso critico.
+\end{enumerate}
+
+\subsubsection{Aggiunta delle comunicazioni}
+L'inserimento dei task di comunicazione viene fatto solamente in base 
+all'analisi del task graph dell'applicazione, in quanto indipendente dal 
+mapping: dato che ogni arco in tale grafo rappresenta una relazione 
+produttore-consumatore tra due task\footnote{Ovvero, denominati $i$ e $j$ i due 
+task, un arco $(i,j)$ indica che l'output della computazione del task $i$ viene 
+utilizzato come input per la computazione del task $j$.}, ogni arco viene 
+trattato come una comunicazione.
+
+Dati due task di computazione $i$, $j$ e un 
+arco $(i,j)$ nel task graph, vi sono due tipi di task di comunicazione, che si 
+differenziano per come operano il trasferimento dei dati:
+\begin{itemize}
+ \item task di comunicazione di tipo \emph{WRITE}, che \emph{scrivono} 
+l'output del task $i$ in una memoria;
+ \item task di comunicazione di tipo \emph{READ}, che \emph{leggono} dei dati 
+da una memoria e li trasferiscono come input per il task $j$. 
+\end{itemize}
+Stanti queste premesse, ogni arco nel task graph implica l'inserimento di 
+entrambi i tipi di task di comunicazione. L'arco originale viene rimosso e 
+sostituito con nuovi archi che collegano i task di computazione con i task di 
+comunicazione appena inseriti, rispettando i criteri precedentemente stabiliti.
+
+
+
+Al termine della fase di inserimento dei task di comunicazione, si avrà quindi 
+un nuovo task graph, si veda la Figura %TODO
+per un esempio.
 
 
 \subsection{Fase di scheduling}
