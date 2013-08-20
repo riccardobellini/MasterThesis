@@ -372,6 +372,49 @@ task graph.
 
 
 \subsubsection{Calcolo delle informazioni sul percorso critico}
+Le informazioni calcolate durante questa fase vengono utilizzate per stabilire 
+quali task sono sul percorso critico\footnote{In inglese \emph{critical path}, 
+avendo un grafo che simboleggia un progetto composto da attività (nodi) con 
+precedenze (archi), rappresenta un cammino dal nodo iniziale al nodo finale del 
+grafo costituito da attività che non possono essere ritardate senza allungare 
+il tempo di esecuzione del progetto.}; verranno poi utilizzate nella fase di 
+scheduling vero e proprio per l'assegnazione della priorità ai task
+
+Tali informazioni consistono in tre dati, calcolati per ogni task del grafo 
+preprocessato:
+\begin{itemize}
+ \item istante al più presto \emph{(asap)},
+ \item istante al più tardi \emph{(alap)},
+ \item scarto \emph{(slack)}: differenza tra istante al più tardi e istante al 
+più presto.
+\end{itemize}
+I task con scarto pari a $0$ fanno parte del percorso critico.
+
+Il calcolo delle tre informazioni sopra elencate viene effettuato tramite un 
+semplice algoritmo comunemente utilizzato in ricerca operativa: il \ac{CPM}.
+Vengono quindi aggiunti due \emph{nodi dummy}: sorgente, collegato ai nodi del 
+grafo senza predecessori e destinazione, collegato ai nodi senza successori.
+Il grafo viene poi ordinato topologicamente\footnote{Si noti che il task graph 
+è aciclico quindi l'ordinamento topologico è sempre possibile.}, e l'algoritmo 
+\ac{CPM} viene eseguito. Lo pseudocodice dell'algoritmo di ordinamento 
+topologico è illustrato nell'Algoritmo \ref{alg:CPM}
+
+\IncMargin{1em}
+\begin{algorithm}
+ \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+ \SetKwArray{Asap}{asap}\SetKwArray{Alap}{alap}
+ 
+ \Input{Un grafo $G=(N,A)$, con $n = \vert N \vert$}
+ \Output{$asap[i]$ e $alap[i],\; \forall i = 1,\dots, n$}
+ \BlankLine
+ \Asap{1} $\leftarrow 0$\;
+ \For{$i = 2$ \KwTo $n$}{
+ \Asap{i} $\leftarrow max\{$\Asap{p}$+ d_p\;:\;(p,i) \in \delta^-(i)\}$\;
+ % TODO
+ }
+ \caption{Algoritmo CPM.}\label{alg:CPM}
+\end{algorithm}
+\DecMargin{1em}
 
 
 
