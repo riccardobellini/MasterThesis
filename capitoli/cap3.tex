@@ -43,6 +43,7 @@ anch'esso una interfaccia di input e una di output, contenenti tutte
 le strutture dati necessarie per l'elaborazione e per la memorizzazione delle 
 informazioni calcolate dall'algoritmo, rispettivamente. 
 
+%%% FIXME: color
 \begin{figure}
  \begin{center}
   \includegraphics[width=0.9\textwidth]{capitoli/figure/cap3/MapperWorkflow.pdf}
@@ -281,7 +282,8 @@ assegnamenti stabiliti dal mapper verifichino le seguenti condizioni:
  \item due task di comunicazione sono mappati sullo stesso componente 
 (processing element);
  \item le implementazioni dei due task sono diverse e di tipo hardware, ovvero 
-i due task devono essere eseguiti su logica riconfigurabile.
+i due task devono essere eseguiti su logica riconfigurabile: questa condizione 
+implica che il modulo hardware non sia riutilizzabile da parte del secondo task.
 \end{enumerate}
 Se queste condizioni sussistono per una qualsiasi coppia di task, allora 
 un nuovo task di riconfigurazione deve essere aggiunto al grafo. Nella Tabella 
