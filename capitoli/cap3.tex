@@ -83,13 +83,13 @@ in comune.
     \hline
     \textbf{Task} & \textbf{Component} & \textbf{Implementation}\\
     \hline
-    A & p1 & impl\_0\\
+    A & p1 & impl\textunderscore0\\
     \hline
-    B & p2 & impl\_1\\
+    B & p2 & impl\textunderscore1\\
     \hline
-    C & p1 & impl\_2\\
+    C & p1 & impl\textunderscore2\\
     \hline
-    D & p3 & impl\_3\\
+    D & p3 & impl\textunderscore3\\
     \hline
    \end{tabular}
    \subcaption{Lista dei mapping}\label{tab:listaMapping}
@@ -297,13 +297,13 @@ riconfigurazione.
  \hline
     \textbf{Task} & \textbf{Component} & \textbf{Implementation}\\
     \hline
-    A & \textcolor{red}{p1} & \textcolor{blue}{impl\_0}\\
+    A & \textcolor{red}{p1} & \textcolor{blue}{impl\textunderscore0}\\
     \hline
-    B & p2 & impl\_1\\
+    B & p2 & impl\textunderscore1\\
     \hline
-    C & \textcolor{red}{p1} & \textcolor{blue}{impl\_2}\\
+    C & \textcolor{red}{p1} & \textcolor{blue}{impl\textunderscore2}\\
     \hline
-    D & p3 & impl\_3\\
+    D & p3 & impl\textunderscore3\\
     \hline
 \end{tabular}
 \caption{Esempio di riconfigurazione necessaria.}
@@ -323,9 +323,48 @@ e per il medesimo motivo, non è possibile eseguirla dopo che i dati siano stati
 trasferiti come input per il task $j$. Questi vincoli determinano i seguenti
 criteri di assegnazione delle precedenze:
 \begin{itemize}
- \item 
+ \item nuovi archi sono introdotti da tutti i task di comunicazione di tipo 
+\emph{WRITE} uscenti dal task $i$ al task di riconfigurazione;
+ \item nuovi archi sono introdotti dal task di riconfigurazione a tutti i task 
+di comunicazione di tipo \emph{READ} entranti nel task $j$.
 \end{itemize}
 
+
+\begin{figure}
+ \begin{minipage}[b]{0.4\textwidth}
+$\vcenter{\includegraphics[width=\linewidth]
+{capitoli/figure/cap3/TaskGraphCommunicationExample.pdf}}$
+ \end{minipage}
+ \hfill
+ \begin{minipage}[b]{0.4\textwidth}
+$\vcenter{\includegraphics[width=\linewidth]
+{capitoli/figure/cap3/TaskGraphCommRecExample.pdf}}$
+ \end{minipage}
+ \caption{Modifica del task graph in seguito all'aggiunta delle 
+riconfigurazioni.}
+ \label{fig:taskGraphCommRecExample}
+\end{figure}
+
+
+Nella Figura \ref{fig:taskGraphCommRecExample} è rappresentata l'evoluzione del 
+task graph successiva all'introduzione dei task di riconfigurazione, sulla 
+base dei mapping riportati nella Figura \ref{tab:listaMapping} e nella
+Tabella \ref{tab:esempioRiconfigurazione}. Si può vedere il nuovo task di 
+riconfigurazione introdotto, di colore rosso; gli archi entranti e uscenti dal 
+nuovo task impongono le precedenze sopra elencate.
+
+Una considerazione 
+aggiuntiva riguarda gli archi tratteggiati che, nel grafo sulla destra, 
+collegano i due task di computazione con il task di riconfigurazione: questi 
+archi vengono inseriti in ogni caso durante il preprocessing, per esplicitare 
+che deve verificarsi una riconfigurazione tra l'esecuzione del task $A$ e 
+l'esecuzione del task $C$. La loro introduzione non influenza tuttavia il 
+funzionamento dello scheduler. Le precedenze aggiuntive introdotte dal cammino 
+$A \rightarrow REC\_0 \rightarrow C$ sono infatti dominate dai cammini già 
+esistenti $A \rightarrow W\_AC \rightarrow REC\_0 \rightarrow R\_AC \rightarrow 
+C$ e $A \rightarrow W\_AB \rightarrow REC\_0 \rightarrow R\_AC \rightarrow C$, 
+quindi la presenza di tali archi non introduce nessun ritardo e non comporta 
+svantaggi rispetto alla loro assenza.
 
 
 \subsection{Fase di scheduling}
