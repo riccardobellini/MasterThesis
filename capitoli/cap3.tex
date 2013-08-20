@@ -274,7 +274,22 @@ richieda. Nel caso, si procede come descritto nel prossimo paragrafo.
 
 
 \subsubsection{Aggiunta delle riconfigurazioni}
-%TODO
+L'inserimento dei task di riconfigurazione avviene in seguito all'analisi della 
+lista dei mapping fornita dal mapper ed è necessario nel caso in cui gli 
+assegnamenti stabiliti dal mapper verifichino le seguenti condizioni:
+\begin{enumerate}
+ \item due task di comunicazione sono mappati sullo stesso componente 
+(processing element);
+ \item le implementazioni dei due task sono diverse e di tipo hardware, ovvero 
+i due task devono essere eseguiti su logica riconfigurabile.
+\end{enumerate}
+Se queste condizioni sussistono per una qualsiasi coppia di task, allora 
+un nuovo task di riconfigurazione deve essere aggiunto al grafo.
+
+L'inserimento avviene seguendo un preciso ordine per l'introduzione delle 
+dipendenze: non si può semplicemente inserire il nuovo task tra i due task di 
+computazione e collegarlo a questi con dei nuovi archi, è necessario tenere 
+conto delle comunicazioni appena introdotte.
 
 
 \subsection{Fase di scheduling}
