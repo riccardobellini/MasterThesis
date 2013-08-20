@@ -284,12 +284,46 @@ assegnamenti stabiliti dal mapper verifichino le seguenti condizioni:
 i due task devono essere eseguiti su logica riconfigurabile.
 \end{enumerate}
 Se queste condizioni sussistono per una qualsiasi coppia di task, allora 
-un nuovo task di riconfigurazione deve essere aggiunto al grafo.
+un nuovo task di riconfigurazione deve essere aggiunto al grafo. Nella Tabella 
+\ref{tab:esempioRiconfigurazione} è illustrato un esempio di quando si 
+verificano le precedenti condizioni ed è necessario introdurre un nuovo task di 
+riconfigurazione.
 
-L'inserimento avviene seguendo un preciso ordine per l'introduzione delle 
+\begin{table}
+\begin{center}
+\begin{tabular}{| c | c | c |}
+ \hline
+    \textbf{Task} & \textbf{Component} & \textbf{Implementation}\\
+    \hline
+    A & \textcolor{red}{p1} & \textcolor{blue}{impl\_0}\\
+    \hline
+    B & p2 & impl\_1\\
+    \hline
+    C & \textcolor{red}{p1} & \textcolor{blue}{impl\_2}\\
+    \hline
+    D & p3 & impl\_3\\
+    \hline
+\end{tabular}
+\caption{Esempio di riconfigurazione necessaria.}
+\label{tab:esempioRiconfigurazione}
+\end{center}
+\end{table}
+
+
+L'inserimento avviene seguendo un preciso criterio per l'introduzione delle 
 dipendenze: non si può semplicemente inserire il nuovo task tra i due task di 
 computazione e collegarlo a questi con dei nuovi archi, è necessario tenere 
-conto delle comunicazioni appena introdotte.
+conto delle comunicazioni appena introdotte. Ad esempio, dati due task di 
+computazione $i$ e $j$ anche non adiacenti, non è possibile eseguire la 
+riconfigurazione prima che l'output del task $i$ sia stato salvato in memoria 
+perchè i dati sarebbero sovrascritti e non più disponibili; allo stesso tempo 
+e per il medesimo motivo, non è possibile eseguirla dopo che i dati siano stati 
+trasferiti come input per il task $j$. Questi vincoli determinano i seguenti
+criteri di assegnazione delle precedenze:
+\begin{itemize}
+ \item 
+\end{itemize}
+
 
 
 \subsection{Fase di scheduling}
