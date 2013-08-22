@@ -397,22 +397,30 @@ grafo senza predecessori e destinazione, collegato ai nodi senza successori.
 Il grafo viene poi ordinato topologicamente\footnote{Si noti che il task graph 
 è aciclico quindi l'ordinamento topologico è sempre possibile.}, e l'algoritmo 
 \ac{CPM} viene eseguito. Lo pseudocodice dell'algoritmo di ordinamento 
-topologico è illustrato nell'Algoritmo \ref{alg:CPM}
+topologico è illustrato nell'Algoritmo \ref{alg:CPM}, dove $\delta^-(i)$ e 
+$\delta^+(i)$ rappresentano il taglio entrante e il taglio uscente del nodo 
+$i$, rispettivamente.
 
 \IncMargin{1em}
 \begin{algorithm}
  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
  \SetKwArray{Asap}{asap}\SetKwArray{Alap}{alap}
+ \SetKw{KwDownTo}{downto}
  
- \Input{Un grafo $G=(N,A)$, con $n = \vert N \vert$}
+ \Input{Un grafo $G=(N,A)$, con $n = \vert N \vert$ e $d_i,\; \forall i = 
+1,\dots,n$ durata del task $i$}
  \Output{$asap[i]$ e $alap[i],\; \forall i = 1,\dots, n$}
  \BlankLine
  \Asap{1} $\leftarrow 0$\;
  \For{$i = 2$ \KwTo $n$}{
  \Asap{i} $\leftarrow max\{$\Asap{p}$+ d_p\;:\;(p,i) \in \delta^-(i)\}$\;
- % TODO
  }
- \caption{Algoritmo CPM.}\label{alg:CPM}
+ \Alap{n} $\leftarrow$ \Asap{n}\;
+ \For{$i=n-1$ \KwDownTo $1$}{
+ \Alap{i} $\leftarrow min\{$\Alap{t}$- d_i\;:\;(i,t) \in \delta^+(i)\}$\;
+ }
+ \caption{Algoritmo CPM}
+\label{alg:CPM}
 \end{algorithm}
 \DecMargin{1em}
 

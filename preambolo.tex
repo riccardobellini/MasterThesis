@@ -18,7 +18,7 @@
 \usepackage{hyphenat}
 \usepackage{subcaption}
 \usepackage{color}
-\usepackage[boxed]{algorithm2e}
+\usepackage[boxruled]{algorithm2e}
 \usepackage{listings, booktabs}
 \usepackage[titletoc]{appendix}
 
@@ -35,6 +35,20 @@ pdfsubject={},
 pdfkeywords={}
 }
 
+\makeatletter
+\renewcommand{\algocf@caption@boxruled}{%
+  \hrule
+  \hbox to \hsize{%
+    \vrule\hskip-0.4pt
+    \vbox{   
+       \vskip\interspacetitleboxruled%
+       \unhbox\algocf@capbox\hfill
+       \vskip\interspacetitleboxruled
+       }%
+     \hskip-0.4pt\vrule%
+   }\nointerlineskip%
+}%
+\makeatother
 
 \renewcommand*{\lstlistingname}{Listato}
 \renewcommand*{\lstlistlistingname}{Elenco dei listati}
