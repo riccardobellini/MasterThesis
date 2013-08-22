@@ -424,9 +424,53 @@ $i$, rispettivamente.
 \end{algorithm}
 \DecMargin{1em}
 
+Il calcolo delle informazioni sul percorso critico conclude la fase di 
+preprocessing. Al termine di questa fase, il task graph presente 
+nell'interfaccia di input dello scheduler viene sostituito con il grafo 
+arricchito di comunicazioni e riconfigurazioni; le informazioni sul percorso 
+critico appena calcolate sono aggiunte all'interfaccia, per essere utilizzate 
+dalla fase successiva.
 
 
 \subsection{Fase di scheduling}
+La fase di scheduling effettivo gestisce l'assegnazione di tempi di inizio e 
+fine dell'esecuzione di ogni task, sia esso di computazione, comunicazione o 
+riconfigurazione. In particolare, a condizione che le stime sulla durata dei 
+task siano il più precise possibile, la fase di scheduling assegna un ordine di 
+esecuzione dei task che rispetti tutte le precedenze imposte dal task graph e 
+che cerchi di minimizzare il tempo di esecuzione \emph{stimato}.
+
+\IncMargin{1em}
+\begin{algorithm}
+ \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+ \SetKwData{UnscheduledSet}{unscheduledSet}
+ \SetKwData{SchedulerOutput}{schedulerOutput }
+ \SetKwData{SchedulerInput}{schedulerInput}
+ \SetKwData{BestTask}{bestTask}
+ \SetKwData{ReadyTaskSet}{readyTaskSet}
+ \SetKwData{TimeInfo}{timeInfo}
+ 
+ \Input{the input interface of the scheduler}
+ \Output{the output interface of the scheduler}
+ \BlankLine
+ \SchedulerOutput $\leftarrow \emptyset$\;
+ \UnscheduledSet $\leftarrow$ \SchedulerInput.getTaskSet()\;
+ \While{\UnscheduledSet is not empty}{
+ \ReadyTaskSet $\leftarrow$ tasks with precedences satisfied\;
+ \BestTask $\leftarrow$ best task to be scheduled among the ready tasks\;
+ \TimeInfo $\leftarrow$ compute start/end time estimations for the best task\;
+ \SchedulerOutput $\leftarrow$ \SchedulerOutput $\cup$ \TimeInfo\;
+ \ReadyTaskSet $\leftarrow$ \ReadyTaskSet $\setminus$ \BestTask\;
+ \UnscheduledSet $\leftarrow$ \UnscheduledSet $\setminus$ \BestTask\;
+ }
+ \Return{\SchedulerOutput}
+\caption{Algoritmo per la fase di scheduling}
+\label{alg:faseScheduling}
+\end{algorithm}
+\DecMargin{1em}
+
+Lo pseudocodice della fase di scheduling proposta è raffigurato nell'Algoritmo 
+\ref{alg:faseScheduling}.
 
 
 \subsection{Fase di postprocessing}
