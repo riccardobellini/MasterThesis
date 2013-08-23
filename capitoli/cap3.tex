@@ -469,11 +469,27 @@ che cerchi di minimizzare il tempo di esecuzione \emph{stimato}.
 \end{algorithm}
 \DecMargin{1em}
 
-Lo pseudocodice della fase di scheduling proposta è raffigurato nell'Algoritmo 
-\ref{alg:faseScheduling}.
+Come si può vedere nell'Algoritmo \ref{alg:faseScheduling}, la fase di 
+scheduling è costituita principalmente da un ciclo ripetuto finchè vi sono 
+task che non sono ancora stati schedulati. A ogni ripetizione del ciclo viene 
+prima aggiornato l'insieme dei task che sono ``pronti'' per l'assegnazione dei 
+tempi, ossia i task le cui precedenze sono state tutte già considerate. Tra 
+questi, tramite un'opportuna euristica di scelta (vedi Sezione 
+\ref{sec:euristicaSceltaTask}) viene eletto il miglior task da considerare al 
+passo corrente; a questo vengono poi assegnate le stime dei tempi, 
+successivamente inserite nell'interfaccia di output dello scheduler e nel 
+diagramma di Gantt dei componenti occupati.
+
+I dati di output dello scheduler vengono poi restituiti all'algoritmo di 
+esplorazione che ha invocato il tool, e possono essere usati per avere una 
+stima del tempo totale di esecuzione dell'applicazione.
 
 
 \subsection{Fase di postprocessing}
+Il postprocessing consiste in una rielaborazione dei dati di output dello 
+scheduler, effettuata separatamente in quanto i dati prodotti da questa fase 
+devono essere utilizzati solamente dal runtime manager per gestire l'esecuzione 
+dell'applicazione.
 
 
 \section{Euristica di scelta dei task}
