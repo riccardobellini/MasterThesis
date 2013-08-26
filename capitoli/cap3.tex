@@ -433,6 +433,7 @@ dalla fase successiva.
 
 
 \subsection{Fase di scheduling}
+\label{subsec:faseScheduling}
 La fase di scheduling effettivo gestisce l'assegnazione di tempi di inizio e 
 fine dell'esecuzione di ogni task, sia esso di computazione, comunicazione o 
 riconfigurazione. In particolare, a condizione che le stime sulla durata dei 
@@ -507,11 +508,15 @@ Di fronte a questi errori nelle stime, non si può ritenere accurato il piano di
 esecuzione formulato dallo scheduler sotto forma di diagramma di Gantt; è 
 necessario dunque che un componente si faccia carico dell'esecuzione dei vari 
 task, lanciandone di nuovi quando i predecessori sono terminati: tale 
-componente è il \emph{runtime manager}.
+componente è il \emph{runtime manager}. Il ruolo del runtime manager è quello 
+di coordinare le esecuzioni di tutti i task, rispettando le precedenze imposte 
+dal grafo e l'ordine stabilito dallo scheduler.
 
-Il ruolo del runtime manager è quello di coordinare le esecuzioni di tutti i 
-task, rispettando le precedenze imposte dal grafo e l'ordine stabilito dallo 
-scheduler.
+Durante l'esecuzione dell'algoritmo di scheduling illustrato nella Sezione 
+\ref{subsec:faseScheduling} si possono avere più task eleggibili per essere 
+schedulati nello stesso passo, ovvero più task con le stesse precedenze 
+soddisfatte. Si consideri la Figura %TODO
+per un semplice esempio di questa situazione.
 
 
 \section{Euristica di scelta dei task}
