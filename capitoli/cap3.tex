@@ -487,9 +487,31 @@ stima del tempo totale di esecuzione dell'applicazione.
 
 \subsection{Fase di postprocessing}
 Il postprocessing consiste in una rielaborazione dei dati di output dello 
-scheduler, effettuata separatamente in quanto i dati prodotti da questa fase 
-devono essere utilizzati solamente dal runtime manager per gestire l'esecuzione 
-dell'applicazione.
+scheduler, effettuata separatamente in quanto i dati prodotti in output da 
+questa fase devono essere utilizzati solamente dal runtime manager per gestire 
+l'esecuzione dell'applicazione.
+
+\paragraph{Ruolo del runtime manager}
+Poichè lo scheduler assegna degli istanti di inizio e fine dei task basati 
+puramente su delle \emph{stime}, non vi è alcuna garanzia che tali istanti 
+vengano rispettati nel corso di una reale esecuzione dell'applicazione sulla 
+piattaforma riconfigurabile. Ciò vale soprattutto per i task la cui
+durata di esecuzione è fortemente dipendente dalla quantità di dati da 
+scambiare, da possibili conflitti sul BUS o sul canale di comunicazione 
+utilizzato che rendono necessario serializzare le esecuzioni, nel caso di 
+task di comunicazione, oppure dalla dimensione dell'area da configurare e 
+dalle caratteristiche dell'architettura sottostante, nel caso di task di 
+riconfigurazione.
+
+Di fronte a questi errori nelle stime, non si può ritenere accurato il piano di 
+esecuzione formulato dallo scheduler sotto forma di diagramma di Gantt; è 
+necessario dunque che un componente si faccia carico dell'esecuzione dei vari 
+task, lanciandone di nuovi quando i predecessori sono terminati: tale 
+componente è il \emph{runtime manager}.
+
+Il ruolo del runtime manager è quello di coordinare le esecuzioni di tutti i 
+task, rispettando le precedenze imposte dal grafo e l'ordine stabilito dallo 
+scheduler.
 
 
 \section{Euristica di scelta dei task}
