@@ -594,6 +594,45 @@ passo.
 
 \section{Euristica di scelta dei task}
 \label{sec:euristicaSceltaTask}
+In questa sezione viene spiegato come l'algoritmo di scheduling opera ad ogni 
+passo la scelta di quale task è più conveniente considerare per l'assegnazione 
+dei tempi, così da minimizzare la lunghezza totale dello schedule finale.
+
+Come visto nel Capitolo \ref{chap:SOA}, è stato preferito l'utilizzo di un 
+algoritmo euristico basato su una lista con uno scheduling effettuato 
+iterativamente e in maniera incrementale, rispetto a una euristica 
+esplorativa/evolvibile, che richiede un tempo di esecuzione superiore prima di 
+giungere a risultati accettabili e rischia di generare molte soluzioni non 
+applicabili. Allo stesso tempo, il procedimento di scegliere un task ad ogni 
+passo sulla base di una determinata priorità, pur essendo molto veloce 
+rappresenta una scelta \emph{greedy}, che può non garantire il 
+raggiungimento di obiettivi accettabili.
+
+Per questo è importante considerare diversi fattori e combinarli; sulla 
+base di conoscenze pregresse è possibile identificare comportamenti 
+ricorrenti che si verificano durante l'esecuzione di una generica applicazione, 
+ad esempio possibili colli di bottiglia nell'esecuzione. Queste regolarità 
+riscontrabili portano alla formulazione di diversi parametri che possono essere 
+combinati nel calcolo della priorità che caratterizza ogni task, creando una 
+funzione di priorità ``pesata'' rispetto alle possibili cifre di merito. Questo 
+è l'approccio alla base dell'euristica utilizzata per la scelta dei task che 
+viene illustrata in questa sezione.
+
+\paragraph{Garanzia di applicabilità delle soluzioni generate}
+L'algoritmo di scheduling proposto permette di evitare che vengano generate 
+delle soluzioni \emph{infeasible}, soluzioni che violino i vincoli sul tempo di 
+esecuzione (per esempio nel caso di tempi di esecuzione sovrapposti per task 
+mappati sullo stesso componente), oppure che siano caratterizzate da un mancato 
+rispetto delle precedenze tra i task del grafo.
+
+Si assiste quindi alla generazione di una soluzione sempre valida per 
+costruzione, poichè i task presi in esame dall'euristica di scelta sono 
+soltanto quelli le cui precedenze siano già state considerate. Questa 
+caratteristica dell'algoritmo, combinata a una veloce euristica di scelta dei 
+task, permette di ottenere in un tempo molto breve una soluzione che non viola 
+nessun vincolo e che fornisce una stima del tempo di esecuzione fedele, 
+nell'ipotesi che le stime dei tempi di esecuzione siano ragionevolmente 
+affidabili.
 
 
 \section{Osservazioni conclusive}
