@@ -547,6 +547,16 @@ nella fase di postprocessing. La Figura \ref{fig:schedulingConflictB}
 rappresenta l'arco aggiuntivo inserito tra i due task di comunicazione, 
 nell'ipotesi che il task $W\_AB$ sia stato scelto prima di $W\_AC$.
 
+È importante evidenziare come i conflitti effettivi si abbiano solo tra task 
+che sono eleggibili per lo scheduling in uno stesso passo e, soprattutto, che 
+il componente su cui sono mappati sia lo stesso. Infatti, è sempre possibile 
+che più task eleggibili durante lo stesso passo vengano poi eseguiti in 
+parallelo, a prescindere dall'ordine con cui sono stati considerati 
+dall'algoritmo; si ha un vero conflitto solo quando la loro esecuzione implica 
+l'utilizzo di uno stesso componente. In tal caso, infatti, le esecuzioni dei 
+task devono necessariamente essere serializzate, per questo motivo tali task 
+sono in conflitto.
+
 
 \section{Euristica di scelta dei task}
 \label{sec:euristicaSceltaTask}
