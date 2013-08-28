@@ -553,9 +553,43 @@ il componente su cui sono mappati sia lo stesso. Infatti, è sempre possibile
 che più task eleggibili durante lo stesso passo vengano poi eseguiti in 
 parallelo, a prescindere dall'ordine con cui sono stati considerati 
 dall'algoritmo; si ha un vero conflitto solo quando la loro esecuzione implica 
-l'utilizzo di uno stesso componente. In tal caso, infatti, le esecuzioni dei 
-task devono necessariamente essere serializzate, per questo motivo tali task 
-sono in conflitto.
+l'utilizzo di uno stesso componente. In tal caso, infatti, le esecuzioni devono 
+necessariamente essere serializzate, per questo motivo tali task sono in 
+conflitto.
+
+\paragraph{Analisi dell'output dello scheduler}
+I conflitti descritti nel precedente paragrafo sono ricavati dall'analisi 
+dell'output dello scheduler durante la fase di postprocessing. Il diagramma di 
+Gantt viene analizzato per ricavare le informazioni su tutti i task schedulati 
+per ogni componente. A questo punto, partendo dalla lista dei task ordinata 
+secondo l'ordine di esecuzione, al grafo vengono aggiunti degli archi che 
+collegano i task nello stesso ordine in cui compaiono nella lista. In questo 
+modo le informazioni sull'ordine scelto dallo scheduler vengono incluse nel 
+task graph finale sotto forma di precedenze aggiuntive.
+
+\paragraph{Scrittura dei dati su file XML}
+Dopo aver analizzato il diagramma di Gantt e aver aggiunto gli archi seguendo 
+l'ordine di scheduling, le informazioni rilevanti per il runtime manager 
+vengono scritte nel file XML del progetto di \ac{FASTER}. I dati scritti sono:
+\begin{itemize}
+ \item tutte le implementazioni usate dai task che compongono il task graph 
+finale, incluse implementazioni aggiuntive create ex novo per i task di 
+comunicazione e di riconfigurazione;
+ \item la lista dei mapping fornita dal mapper per i task di computazione, con 
+mapping aggiuntivi per i task di comunicazione e riconfigurazione, che 
+specificano l'implementazione da utilizzare e il componente su cui verranno 
+eseguiti (componenti di comunicazione per i primi, controllore della 
+riconfigurazione per i secondi);
+ \item informazioni sul task graph finale, cioè con ordine di scheduling 
+esplicito.
+\end{itemize}
+
+Tutte queste informazioni verranno poi utilizzate dal runtime manager per 
+gestire l'effettiva esecuzione dell'applicazione.
+
+Nella prossima sezione verrà descritta la parte più importante dell'algoritmo 
+di scheduling, ossia la scelta di quale task è meglio considerare ad ogni 
+passo.
 
 
 \section{Euristica di scelta dei task}
