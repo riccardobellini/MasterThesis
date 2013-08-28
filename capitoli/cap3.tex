@@ -516,28 +516,36 @@ dal grafo e l'ordine stabilito dallo scheduler.
  \begin{minipage}[b]{0.45\textwidth}
   $\vcenter{\includegraphics[width=\linewidth]
   {capitoli/figure/cap3/SchedulingConflict.pdf}}$
-  \subcaption{Prima del postprocessing}
+  \subcaption{Prima della risoluzione}
   \label{fig:schedulingConflictA}
  \end{minipage}
  \hfill
  \begin{minipage}[b]{0.45\textwidth}
   $\vcenter{\includegraphics[width=\linewidth]
   {capitoli/figure/cap3/SchedulingConflictResolved.pdf}}$
-  \subcaption{Dopo il postprocessing}
+  \subcaption{Dopo la risoluzione}
   \label{fig:schedulingConflictB}
  \end{minipage}
- \caption{Esempio di conflitto tra due task e di come tale conflitto venga 
-risolto.}
+ \caption{Esempio di risoluzione di un conflitto tra due task.}
 \label{fig:schedulingConflict}
 \end{figure}
 
-
+\paragraph{Definizione dell'ordine di scheduling}
 Durante l'esecuzione dell'algoritmo di scheduling illustrato nella Sezione 
 \ref{subsec:faseScheduling} si possono avere più task eleggibili per essere 
 schedulati nello stesso passo, ovvero più task con le stesse precedenze 
 soddisfatte. Si consideri la Figura \ref{fig:schedulingConflict} per un 
-semplice esempio di quando questa situazione si verifica.
-%TODO
+semplice esempio di conflitto tra due task. La Figura 
+\ref{fig:schedulingConflictA} rappresenta una parte del task graph, 
+nell'ipotesi che al passo corrente il task $A$, di colore grigio, sia già stato 
+schedulato mentre i due task di comunicazione $W\_AB$ e $W\_AC$, di colore 
+azzurro, sono eleggibili per il passo di scheduling successivo. Quando questa
+situazione si verifica, l'algoritmo deve effettuare una decisione su quale 
+task è meglio considerare per primo; tale scelta esplicita una relazione 
+d'ordine tra i task in conflitto, rappresentata da un arco aggiuntivo inserito 
+nella fase di postprocessing. La Figura \ref{fig:schedulingConflictB} 
+rappresenta l'arco aggiuntivo inserito tra i due task di comunicazione, 
+nell'ipotesi che il task $W\_AB$ sia stato scelto prima di $W\_AC$.
 
 
 \section{Euristica di scelta dei task}
