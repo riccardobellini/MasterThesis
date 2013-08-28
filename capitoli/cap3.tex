@@ -513,17 +513,31 @@ di coordinare le esecuzioni di tutti i task, rispettando le precedenze imposte
 dal grafo e l'ordine stabilito dallo scheduler.
 
 \begin{figure}
- \begin{center}
-  
- \end{center}
+ \begin{minipage}[b]{0.45\textwidth}
+  $\vcenter{\includegraphics[width=\linewidth]
+  {capitoli/figure/cap3/SchedulingConflict.pdf}}$
+  \subcaption{Prima del postprocessing}
+  \label{fig:schedulingConflictA}
+ \end{minipage}
+ \hfill
+ \begin{minipage}[b]{0.45\textwidth}
+  $\vcenter{\includegraphics[width=\linewidth]
+  {capitoli/figure/cap3/SchedulingConflictResolved.pdf}}$
+  \subcaption{Dopo il postprocessing}
+  \label{fig:schedulingConflictB}
+ \end{minipage}
+ \label{fig:schedulingConflict}
+ \caption{Esempio di conflitto tra due task e di come tale conflitto venga 
+risolto.}
 \end{figure}
 
 
 Durante l'esecuzione dell'algoritmo di scheduling illustrato nella Sezione 
 \ref{subsec:faseScheduling} si possono avere più task eleggibili per essere 
 schedulati nello stesso passo, ovvero più task con le stesse precedenze 
-soddisfatte. Si consideri la Figura %TODO
-per un semplice esempio di questa situazione.
+soddisfatte. Si consideri la Figura \ref{fig:schedulingConflict} per un 
+semplice esempio di quando questa situazione si verifica.
+%TODO
 
 
 \section{Euristica di scelta dei task}
