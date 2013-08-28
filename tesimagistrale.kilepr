@@ -181,17 +181,17 @@ archive=true
 column=0
 encoding=UTF-8
 highlight=LaTeX
-line=5
+line=10
 mode=LaTeX
 open=true
 order=2
 
 [item:capitoli/cap3.tex]
 archive=true
-column=2
+column=45
 encoding=UTF-8
 highlight=LaTeX
-line=516
+line=604
 mode=LaTeX
 open=true
 order=3
@@ -278,10 +278,10 @@ order=4
 
 [item:tesi.tex]
 archive=true
-column=0
+column=17
 encoding=UTF-8
 highlight=LaTeX
-line=2
+line=1
 mode=LaTeX
 open=true
 order=0
@@ -330,15 +330,15 @@ ViMarks=
 
 [view-settings,view=0,item:capitoli/cap2.tex]
 CursorColumn=0
-CursorLine=5
+CursorLine=10
 JumpList=
-ViMarks=
+ViMarks=.,9,59,[,10,0,],-1,-1
 
 [view-settings,view=0,item:capitoli/cap3.tex]
-CursorColumn=2
-CursorLine=516
+CursorColumn=45
+CursorLine=604
 JumpList=
-ViMarks=.,517,13,[,517,13,],517,13
+ViMarks=.,633,70,[,633,56,],633,70
 
 [view-settings,view=0,item:capitoli/cap4.tex]
 CursorColumn=27
@@ -389,8 +389,8 @@ JumpList=
 ViMarks=.,20,20,[,20,20,],20,20
 
 [view-settings,view=0,item:tesi.tex]
-CursorColumn=0
-CursorLine=2
+CursorColumn=17
+CursorLine=1
 JumpList=
 ViMarks=a,1,17
 
