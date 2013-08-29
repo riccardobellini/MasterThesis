@@ -716,6 +716,12 @@ controllo dello scarto di un task, che viene così considerato come critico anch
 se il suo scarto è di poco superiore a $0$, invece che considerare critici 
 solamente task con scarto nullo.
 
+Se lo scarto del task supera la soglia, si considera il logaritmo di tale 
+scarto e il valore della cifra di merito è così calcolato:
+\begin{displaymath}
+ CPInfo = \frac{1}{log_2s}
+\end{displaymath}
+dove $s$ è lo scarto del task.
 
 
 \section{Osservazioni conclusive}
