@@ -757,10 +757,50 @@ verifica nell'analisi dei task iniziali, che si suppone siano sempre task di
 computazione.
 
 Valgono considerazioni analoghe rispetto alla precedente cifra di merito 
-per quanto concerne l'uso del logaritmo.
+per quanto concerne l'uso del logaritmo nel calcolo del valore.
 
 \subsection{Regole aggiuntive}
+Oltre al calcolo delle varie metriche presentato nella precedente sezione, sono 
+state introdotte delle regole aggiuntive che modificano i valori delle cifre di 
+merito e, di conseguenza, della priorità finale dei task. Queste regole non 
+operano avendo conoscenza isolata a livello del singolo task, bensì agiscono in 
+base al comportamento tenuto in precedenza dall'algoritmo o considerando anche 
+altri task. L'aggiunta di queste regole consente quindi all'algoritmo di 
+effettuare scelte più ``intelligenti'' nella scelta dei task migliori da 
+schedulare.
 
+\subsubsection{Fattore di degrado}
+La prima di queste tecniche è l'introduzione di un \emph{fattore di degrado} 
+(in inglese \emph{decay factor}). Può capitare che, nel corso dell'esecuzione 
+dello scheduler, venga data sempre massima priorità ai task sul percorso 
+critico, che vengono quindi scelti dall'euristica come migliori a ogni passo di 
+scheduling. Laddove vi siano molti conflitti (soprattutto nelle comunicazioni) 
+questo può portare al verificarsi di un collo di bottiglia nell'utilizzo delle 
+risorse, che vengono occupate prevalentemente da task che si trovano sul 
+percorso critico, mentre altri task non possono essere eseguiti per la continua 
+occupazione delle risorse su cui questi sono mappati.
+
+Per scongiurare il verificarsi di questa situazione, si è deciso di introdurre 
+un fattore di degrado, che riduca progressivamente il massimo valore della 
+cifra di merito corrispondente alle informazioni sul percorso critico; in 
+questo modo viene data una sempre minore priorità ai task sul percorso critico. 
+Il fattore di degrado è inizialmente unitario, così da avere impatto nullo; man 
+mano che si scelgono task sul percorso critico esso viene ridotto 
+progressivamente di una quantità $\delta_1$. Non appena viene scelto un 
+task che non appartiene al percorso critico (quindi avente scarto sopra la 
+soglia), il fattore di degrado viene incrementato di una quantità $\delta_2$. 
+In questo modo, se non si scelgono task sul percorso critico si torna a dare 
+maggiore priorità ai task critici.
+
+L'assegnamento del valore alla cifra di merito relativa al task critico, 
+delineato nella \ref{eq:softwarePriority}, viene sostituito con
+\begin{equation} \label{eq:newSoftwarePriority}
+ CPInfo = \begin{cases}
+           MAX*df & \mbox{se } 0 \leq s \leq THRESHOLD\\
+           \frac{1}{log_2\left(s\right)} & \mbox{se } s > THRESHOLD
+           \end{cases}
+\end{equation}
+dove $df$ rappresenta il fattore di degrado.
 
 
 \section{Osservazioni conclusive}
