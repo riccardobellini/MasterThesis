@@ -637,7 +637,26 @@ affidabili.
 
 
 \subsection{Funzionamento}
+L'algoritmo per la scelta del task migliore viene invocato a ogni passo di 
+scheduling, e opera su una lista aggiornata di task le cui precedenze sono 
+soddisfatte.
 
+Appena inizia l'esecuzione dell'algoritmo viene effettuata un'analisi 
+preliminare della lista dei task per determinare se la lista contiene un solo 
+elemento, ad esempio nel caso in cui si stia esaminando il primo nodo del 
+grafo. Se si verifica questa situazione, allora l'unico elemento della lista è 
+selezionato come task migliore. Nel caso in cui la lista contenga più di un 
+elemento, è necessario procedere al calcolo delle priorità.
+
+% TODO
+
+
+\subsection{Calcolo delle priorità}
+Il calcolo della priorità di un task dipende dal suo tipo; diverse regole e 
+modi per assegnare la priorità sono utilizzati a seconda che il task sia di 
+computazione, comunicazione o riconfigurazione. Anche l'implementazione 
+utilizzata per i task di computazione riveste un ruolo importante per definire 
+come calcolare la priorità.
 
 
 \section{Osservazioni conclusive}
