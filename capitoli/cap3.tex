@@ -716,12 +716,51 @@ controllo dello scarto di un task, che viene così considerato come critico anch
 se il suo scarto è di poco superiore a $0$, invece che considerare critici 
 solamente task con scarto nullo.
 
-Se lo scarto del task supera la soglia, si considera il logaritmo di tale 
-scarto e il valore della cifra di merito è così calcolato:
-\begin{displaymath}
- CPInfo = \frac{1}{log_2s}
-\end{displaymath}
+Se, invece, lo scarto del task supera la soglia, si considera il logaritmo di 
+tale scarto. Il valore della cifra di merito è così calcolato:
+\begin{equation}
+ CPInfo = \begin{cases}
+           MAX & \mbox{se } 0 \leq s \leq THRESHOLD\\
+           \frac{1}{log_2\left(s\right)} & \mbox{se } s > THRESHOLD
+          \end{cases}
+\end{equation}
 dove $s$ è lo scarto del task.
+
+\paragraph{Earliest Start Time}
+L'istante al più presto nel quale il task può iniziare l'esecuzione, senza 
+contare possibili conflitti nell'utilizzo dei componenti, è concettualmente 
+uguale al tempo \emph{asap}, anch'esso calcolato nella fase di preprocessing 
+come lo scarto. Il valore della cifra di merito è così calcolato:
+\begin{equation}
+ EST = \begin{cases}
+        0 & \mbox{se } asap = 0\\
+        log_2\left(asap\right) & \mbox{se } asap > 0
+       \end{cases}
+\end{equation}
+Si è deciso di utilizzare il logaritmo in modo da non penalizzare 
+significativamente task che hanno un EST più elevato rispetto a task con un EST 
+minore. Il logaritmo infatti permette di basarsi sulla differenza tra gli ordini 
+di grandezza in base $2$.
+
+\paragraph{Earliest Finish Time}
+L'istante al più presto in cui il task termina l'esecuzione è calcolato come la 
+stima asap del task, a cui viene sommato il tempo di esecuzione stimato.
+
+Il valore di questa metrica è così calcolato:
+\begin{equation}
+ EFT = log_2\left(asap + eTime\right)
+\end{equation}
+Si noti che il caso in cui l'argomento del logaritmo abbia valore $0$ non è 
+gestito, poichè il tempo di esecuzione di un task di computazione è supposto 
+non nullo, e l'unico caso in cui si abbia una stima $asap$ pari a $0$ si 
+verifica nell'analisi dei task iniziali, che si suppone siano sempre task di 
+computazione.
+
+Valgono considerazioni analoghe rispetto alla precedente cifra di merito 
+per quanto concerne l'uso del logaritmo.
+
+\subsection{Regole aggiuntive}
+
 
 
 \section{Osservazioni conclusive}
