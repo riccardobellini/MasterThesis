@@ -675,13 +675,46 @@ A seconda che il task sia o meno sul percorso critico del grafo, e in
 base all'eventuale scarto se così non è, viene calcolata la priorità del task 
 di computazione. La funzione di calcolo della priorità dei task di computazione 
 con implementazione software diventa quindi
-\begin{equation}
- f=c*CPInfo
+\begin{equation} \label{eq:softwarePriority}
+ f=C*CPInfo
 \end{equation}
-dove $c$ rappresenta un parametro costante e $CPInfo$ le informazioni sul 
+dove $C$ rappresenta un parametro costante e $CPInfo$ le informazioni sul 
 percorso critico.
 
 \subsubsection{Task con implementazione hardware}
+Nel caso di task che devono essere eseguiti su logica riconfigurabile, quindi 
+mappati su implementazioni di tipo hardware, vengono utilizzate tre metriche:
+\begin{enumerate}
+ \item informazioni sul percorso critico, come nel caso dei task con 
+implementazione di tipo software;
+ \item l'istante di inizio al più presto, o \emph{\ac{EST}}: rappresenta 
+l'istante al più presto nel quale il task può iniziare l'esecuzione.
+ \item l'istante di fine al più presto, o \emph{\ac{EFT}}.
+\end{enumerate}
+La funzione di calcolo della priorità risulta quindi diversa rispetto alla 
+\ref{eq:softwarePriority}, assumendo la forma
+\begin{equation} \label{eq:hardwarePriority}
+ f=-A*EST - B*EFT + C*CPInfo
+\end{equation}
+dove $A$, $B$ e $C$ sono parametri fissati e $CPInfo$, $EST$ e $EFT$ sono le 
+tre metriche sopra elencate.
+
+Nei prossimi paragrafi viene descritto come si calcolano le tre metriche 
+utilizzate nelle funzioni \ref{eq:softwarePriority} e \ref{eq:hardwarePriority}.
+
+\paragraph{Informazioni sul percorso critico}
+Il calcolo della metrica relativa al percorso critico si basa sulle 
+informazioni riguardanti lo \emph{scarto} (slack) del task. I dati sugli 
+scarti di tutti i task sono stati calcolati durante la fase di preprocessing, 
+e sono disponibili in quanto inseriti nell'interfaccia di input dello scheduler.
+
+Si fissa una soglia per lo scarto al di sotto della quale si considera il task 
+come facente parte del percorso critico; al task si assegna quindi la massima 
+priorità per questa cifra di merito se il suo scarto è sotto soglia. La 
+definizione di una soglia permette all'algoritmo di essere meno rigido nel 
+controllo dello scarto di un task, che viene così considerato come critico anche 
+se il suo scarto è di poco superiore a $0$, invece che considerare critici 
+solamente task con scarto nullo.
 
 
 
