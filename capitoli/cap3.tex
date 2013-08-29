@@ -648,7 +648,12 @@ grafo. Se si verifica questa situazione, allora l'unico elemento della lista è
 selezionato come task migliore. Nel caso in cui la lista contenga più di un 
 elemento, è necessario procedere al calcolo delle priorità.
 
-% TODO
+Viene eseguito un ciclo su tutta la lunghezza della lista, ad ogni passo del 
+ciclo si calcola la priorità del task secondo il procedimento descritto nella 
+prossima sezione; la priorità viene confrontata con la massima priorità trovata 
+fino a quel momento. Dopo che tutti i task sono stati presi in esame, il task 
+con la massima priorità in assoluto viene selezionato per l'assegnazione dei 
+tempi, e l'algoritmo termina.
 
 
 \subsection{Calcolo delle priorità}
@@ -657,6 +662,23 @@ modi per assegnare la priorità sono utilizzati a seconda che il task sia di
 computazione, comunicazione o riconfigurazione. Anche l'implementazione 
 utilizzata per i task di computazione riveste un ruolo importante per definire 
 come calcolare la priorità.
+
+\subsubsection{Task con implementazione software}
+I task con implementazione di tipo software non possono essere eseguiti su 
+scheda, bensì vengono mappati su un processore general-purpose. Partendo da 
+questo presupposto, la metrica utilizzata per calcolare la priorità di un task 
+mappato con implementazione software è basata sulle informazioni sul percorso 
+critico. In questo ambito diventano rilevanti tali informazioni, calcolate 
+in precedenza durante la fase di preprocessing.
+
+A seconda che il task sia o meno sul percorso critico del grafo, e in 
+base all'eventuale scarto se così non è, viene calcolata la priorità del task 
+di computazione. La funzione di calcolo della priorità dei task di computazione 
+con implementazione software diventa quindi
+\begin{equation}
+ f=c*CPInfo
+\end{equation}
+dove $c$ rappresenta un parametro costante.
 
 
 \section{Osservazioni conclusive}
