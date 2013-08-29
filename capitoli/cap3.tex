@@ -598,6 +598,7 @@ In questa sezione viene spiegato come l'algoritmo di scheduling opera ad ogni
 passo la scelta di quale task è più conveniente considerare per l'assegnazione 
 dei tempi, così da minimizzare la lunghezza totale dello schedule finale.
 
+\paragraph{Utilizzo di un algoritmo euristico}
 Come visto nel Capitolo \ref{chap:SOA}, è stato preferito l'utilizzo di un 
 algoritmo euristico basato su una lista con uno scheduling effettuato 
 iterativamente e in maniera incrementale, rispetto a una euristica 
@@ -626,13 +627,17 @@ mappati sullo stesso componente), oppure che siano caratterizzate da un mancato
 rispetto delle precedenze tra i task del grafo.
 
 Si assiste quindi alla generazione di una soluzione sempre valida per 
-costruzione, poichè i task presi in esame dall'euristica di scelta sono 
-soltanto quelli le cui precedenze siano già state considerate. Questa 
-caratteristica dell'algoritmo, combinata a una veloce euristica di scelta dei 
-task, permette di ottenere in un tempo molto breve una soluzione che non viola 
-nessun vincolo e che fornisce una stima del tempo di esecuzione fedele, 
+costruzione, poichè i task presi in esame ad ogni passo dall'euristica di 
+scelta sono soltanto quelli le cui precedenze siano già state considerate. 
+Questa caratteristica dell'algoritmo, combinata a una veloce euristica di scelta 
+dei task, permette di ottenere in un tempo molto breve una soluzione che non 
+viola nessun vincolo e che fornisce una stima del tempo di esecuzione fedele, 
 nell'ipotesi che le stime dei tempi di esecuzione siano ragionevolmente 
 affidabili.
+
+
+\subsection{Funzionamento}
+
 
 
 \section{Osservazioni conclusive}
