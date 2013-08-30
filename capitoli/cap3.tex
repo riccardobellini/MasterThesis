@@ -275,6 +275,7 @@ richieda. Nel caso, si procede come descritto nel prossimo paragrafo.
 
 
 \subsubsection{Aggiunta delle riconfigurazioni}
+\label{sec:aggiuntaRiconfigurazioni}
 L'inserimento dei task di riconfigurazione avviene in seguito all'analisi della 
 lista dei mapping fornita dal mapper ed è necessario nel caso in cui gli 
 assegnamenti stabiliti dal mapper verifichino le seguenti condizioni:
@@ -741,6 +742,7 @@ Si è deciso di utilizzare il logaritmo in modo da non penalizzare
 significativamente task che hanno un EST più elevato rispetto a task con un EST 
 minore. Il logaritmo infatti permette di basarsi sulla differenza tra gli ordini 
 di grandezza in base $2$.
+% TODO spiegare cosa l'est permette di considerare
 
 \paragraph{Earliest Finish Time}
 L'istante al più presto in cui il task termina l'esecuzione è calcolato come la 
@@ -758,6 +760,7 @@ computazione.
 
 Valgono considerazioni analoghe rispetto alla precedente cifra di merito 
 per quanto concerne l'uso del logaritmo nel calcolo del valore.
+% TODO spiegare cosa l'eft permette di considerare
 
 \subsection{Regole aggiuntive}
 Oltre al calcolo delle varie metriche presentato nella precedente sezione, sono 
@@ -801,6 +804,34 @@ delineato nella \ref{eq:softwarePriority}, viene sostituito con
            \end{cases}
 \end{equation}
 dove $df$ rappresenta il fattore di degrado.
+
+\subsubsection{Priorità per task di comunicazione}
+La seconda tecnica utilizzata è una diversa assegnazione di priorità per alcuni 
+task di comunicazione. Come visto nella Sezione 
+\ref{sec:aggiuntaRiconfigurazioni}, eventuali task di riconfigurazione vengono 
+inseriti tra i task di comunicazione di tipo \emph{WRITE} e \emph{READ} che 
+leggono e scrivono dati su quell'area, rispettivamente. Poichè il tempo 
+impiegato per la riconfigurazione di un'area in generale introduce un 
+overhead considerevole nell'esecuzione dell'applicazione, è auspicabile che 
+il tempo di riconfigurazione venga ``nascosto'' il più possibile dal tempo 
+impiegato per l'esecuzione di altri task (le dipendenze del task da eseguire 
+successivamente sull'area riconfigurata), così da non introdurre ritardi che 
+peseranno sul makespan finale.
+
+Per mascherare il più possibile l'esecuzione di una riconfigurazione è 
+necessario che questa parta il prima possibile, il che implica, per la 
+struttura del grafo costruito dopo la fase di preprocessing, che tutte le 
+comunicazioni di tipo \emph{WRITE} che precedono la riconfigurazione vengano 
+eseguite il prima possibile. Questo requisito è stato risolto creando una 
+regola speciale per il calcolo della priorità dei task di comunicazione di tipo 
+\emph{WRITE} che precedono una riconfigurazione; per questi tipi di task, la 
+priorità è calcolata nel seguente modo:
+\begin{equation} \label{eq:writeBeforRecPriority}
+ f=-A*EST - B*EFT + C*CPInfo + EP
+\end{equation}
+dove il termine aggiuntivo $EP$ rappresenta la priorità extra che viene 
+assegnata ai task. La formula \ref{eq:writeBeforRecPriority} sostituisce la 
+\ref{eq:hardwarePriority} in questi casi.
 
 
 \section{Osservazioni conclusive}
