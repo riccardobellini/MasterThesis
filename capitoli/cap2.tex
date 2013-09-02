@@ -20,9 +20,8 @@ riconfigurabili, divisi in algoritmi esatti, trattati nella Sezione
 \label{sec:progettoFASTER}
 In questa sezione vengono presentate il fondamento logico e le motivazioni alla 
 base del progetto \ac{FASTER}. La Sezione \ref{sec:fasterIntro} fornisce 
-un'introduzione al progetto e ne spiega gli obiettivi; la Sezione 
-\ref{sec:fasterMotivazioni} delinea le motivazioni alla base che hanno 
-portato alla creazione del progetto; infine, la Sezione 
+un'introduzione al progetto e spiega gli obiettivi e le motivazioni alla 
+base che hanno portato alla creazione del progetto; infine, la Sezione 
 \ref{sec:fasterMetodologia} illustra la metodologia tramite la quale si possono 
 raggiungere gli obiettivi prefissati.
 
@@ -38,9 +37,29 @@ tra cui il Politecnico di Milano. Il progetto è stato avviato il 1 settembre
 2011, ha una durata di 36 mesi ed è supportato tramite fondi stanziati dalla 
 comunità europea.
 
+\subsubsection{Obiettivi e motivazioni del progetto}
+L'ambito di applicazione del progetto \ac{FASTER} sono le architetture 
+riconfigurabili; in particolare, \ac{FASTER} è pensato, come il nome 
+suggerisce, per facilitare la definizione e l'uso di sistemi implementati in 
+hardware \cite{FasterPaper}.
 
-\subsection{Motivazioni}
-\label{sec:fasterMotivazioni}
+Sfruttando le potenzialità delle promettenti architetture hardware basate sulla 
+logica riconfigurabile, introdotte nel Capitolo \ref{chap:intro}, si possono 
+infatti estendere le funzionalità (e quindi la durata della vita) di 
+un'applicazione senza dover riprogettare interamente l'hardware necessario per 
+eseguirla, consentendo allo stesso tempo di raggiungere performance equiparabili 
+a quelle di un'esecuzione su hardware dedicato.
+
+% FIXME spostare nell'introduzione?
+Si pensi, a titolo esemplificativo, a un \ac{NIDS}, il cui scopo è eseguire la 
+scansione di tutti i pacchetti in ingresso per rilevare possibili minacce, e 
+tale scansione deve essere sufficientemente veloce da non costituire un collo 
+di bottiglia e rallentare così le comunicazioni. Inoltre, nuove regole devono 
+essere aggiunte costantemente, con il crescere della lista delle minacce. In 
+risposta a questi requisiti di velocità e dinamicità dell'applicazione, la 
+logica riconfigurabile rappresenta una soluzione per il soddisfacimento di 
+entrambi i requisiti.
+
 % Extending product functionality and lifetime requires constant addition of new 
 % features to satisfy the growing customer needs and the evolving market and 
 % technology trends. Software component adaptivity is straightforward but not 
@@ -56,7 +75,40 @@ comunità europea.
 % speed and efficiency. For the Intrusion Detection System example, new rules can 
 % be hardcoded into the reconfigurable logic, achieving high performance, while 
 % providing the necessary adaptivity to new threats.
-% 
+
+
+Nonostante il vantaggio di utilizzare architetture riconfigurabili rispetto 
+all'eseguire le applicazioni puramente in software, il design e 
+l'implementazione di un sistema basato su logica riconfigurabile hanno delle 
+limitazioni rispetto alla più facile estensione delle funzionalità di 
+un'applicazione software, per le seguenti ragioni:
+\begin{itemize}
+ \item il supporto di tool esterni per il design del sistema è ancora 
+``elementare'';
+ \item le riconfigurazioni hanno un grande impatto in termini di overhead sul 
+tempo di esecuzione dell'applicazione, pertanto devono essere utilizzate con 
+attenzione;
+ \item la gestione delle risorse disponibili sulla scheda (anche a run-time) è 
+interamente affidata all'utente.
+\end{itemize}
+Oltre a queste limitazioni, il designer ha altri compiti da assolvere per 
+implementare correttamente un sistema su hardware riconfigurabile, tra cui 
+l'identificazione di quali parti del codice devono essere eseguite in hardware 
+per avere un effettivo guadagno in termini di velocità di esecuzione, quali 
+moduli hardware possono beneficiare di una riconfigurazione, stabilire uno 
+schedule e verificare la bontà della soluzione così ottenuta.
+
+Il progetto \ac{FASTER} concentra dunque i propri obiettivi nell'introduzione 
+di una nuova metodologia che permetta ai designer di implementare facilmente un 
+sistema su una piattaforma target dotata di processori general-purpose e 
+acceleratori hardware basati su logica riconfigurabile. Questa metodologia 
+consentirà, partendo da un input costituito da una descrizione ad alto livello 
+sia dell'applicazione che dell'architettura, di sfruttare al massimo le 
+capacità della riconfigurazione parziale dinamica.
+
+\subsubsection{Lavori precedenti}
+
+
 % FASTER will facilitate the use of reconfigurable technology by providing a 
 % complete methodology that enables designers to easily implement and verify 
 % applications on platforms with general-purpose processors and acceleration 
