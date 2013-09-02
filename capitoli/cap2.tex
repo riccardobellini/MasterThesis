@@ -104,15 +104,30 @@ sistema su una piattaforma target dotata di processori general-purpose e
 acceleratori hardware basati su logica riconfigurabile. Questa metodologia 
 consentirà, partendo da un input costituito da una descrizione ad alto livello 
 sia dell'applicazione che dell'architettura, di sfruttare al massimo le 
-capacità della riconfigurazione parziale dinamica.
+possibilità offerte dalla riconfigurazione parziale dinamica.
 
-\subsubsection{Lavori precedenti}
+\paragraph{Lavori precedenti}
+Tra i lavori di ricerca e progetti europei più relativi a \ac{FASTER} si 
+annoverano \emph{hArtes} \cite{HArtes}, \emph{Morpheus}, \emph{ACOTES} 
+\cite{ACOTES}, \emph{Andres} e \emph{Reflect}. % FIXME citazioni mancanti 
+% perchè i siti sono offline
+Questi lavori hanno obiettivi simili a quelli di \ac{FASTER}, tuttavia si 
+concentrano più sugli aspetti architetturali della riconfigurazione; in questi 
+lavori non si accenna esplicitamente al design della riconfigurazione parziale 
+dinamica, nè si considera quale granularità è meglio utilizzare per la 
+riconfigurazione: \emph{region-based}\footnote{Nella riconfigurazione di tipo 
+region-based, sono riconfigurati interi moduli che occupano arbitrarie porzioni 
+della scheda.} oppure \emph{micro-riconfigurazione}\footnote{Nella 
+micro-riconfigurazione vengono identificati dei parametri del modulo che 
+sono soggetti a cambiamenti; tali parametri non vengono inclusi nel bitstream, 
+lasciando così dei ``buchi''. Quando i valori per tali parametri devono essere 
+fissati, è sufficiente lanciare una riconfigurazione con un bitstream di 
+dimensioni molto ridotte, che vada a modificare solamente i buchi lasciati in 
+precedenza.}
 
+\paragraph{Contributi di \ac{FASTER}}
 
-% FASTER will facilitate the use of reconfigurable technology by providing a 
-% complete methodology that enables designers to easily implement and verify 
-% applications on platforms with general-purpose processors and acceleration 
-% modules implemented in the latest reconfigurable technology. We expect that the 
+% We expect that the 
 % project will lead to a 20% productivity improvement due to seamless 
 % implementation and verification of dynamically changing systems, a 50% total 
 % ownership cost reduction for NIDS and Reverse Time Migration systems, with a 2x 
