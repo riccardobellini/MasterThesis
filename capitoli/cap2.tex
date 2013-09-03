@@ -25,6 +25,14 @@ base che hanno portato alla creazione del progetto; infine, la Sezione
 \ref{sec:fasterMetodologia} illustra la metodologia tramite la quale si possono 
 raggiungere gli obiettivi prefissati.
 
+
+%%% acro definitions
+\acrodef{NIDS}{Network Intrusion Detection System}
+\acrodef{RTM}{Reverse Time Migration}
+\acrodef{TCO}{Total Cost of Ownership}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 \subsection{Introduzione}
 \label{sec:fasterIntro}
 \ac{FASTER} è l'acronimo di \emph{\acl{FASTER}}, un progetto\footnote{Sito del 
@@ -37,7 +45,7 @@ tra cui il Politecnico di Milano. Il progetto è stato avviato il 1 settembre
 2011, ha una durata di 36 mesi ed è supportato tramite fondi stanziati dalla 
 comunità europea.
 
-\subsubsection{Obiettivi e motivazioni del progetto}
+\subsubsection{Motivazioni e obiettivi del progetto}
 L'ambito di applicazione del progetto \ac{FASTER} sono le architetture 
 riconfigurabili; in particolare, \ac{FASTER} è pensato, come il nome 
 suggerisce, per facilitare la definizione e l'uso di sistemi implementati in 
@@ -132,13 +140,27 @@ dinamica come un concetto di design esplicito, fornendo anche i metodi per
 supportare la riconfigurazione a run-time nell'intera metodologia di design.
 Il progetto \ac{FASTER}, quindi, deve possedere le seguenti caratteristiche:
 \begin{enumerate}
- \item deve fornire un framework per il design di un sistema su logica 
-riconfigurabile, gestendo l'analisi, la sintesi e la verifica delle soluzioni 
-ottenute;
  \item deve fornire supporto per l'inclusione della riconfigurazione parziale 
 dinamica, sia region-based che micro-riconfigurazione, in maniera trasparente 
-all'utente.
+all'utente;
+ \item deve fornire un framework per il design di un sistema su logica 
+riconfigurabile, gestendo l'analisi, la sintesi e la verifica delle soluzioni 
+ottenute.
 \end{enumerate}
+
+% TODO da scrivere meglio
+Gli obiettivi che il progetto \ac{FASTER} si prefigge di raggiungere sono un 
+significativo aumento della produttività nel design e nell'implementazione di 
+sistemi riconfigurabili, aumento delle performance delle applicazioni 
+sviluppate in hardware in presenza di vincoli sul consumo energetico e 
+riduzione del costo totale di proprietà\footnote{In inglese \emph{\ac{TCO}}, 
+rappresenta l'insieme di tutti i costi da sostenere per l'intero ciclo di 
+vita di un sistema o un'apparecchiatura IT.} per sistemi come \ac{NIDS} e 
+\ac{RTM} implementati su hardware riconfigurabile, grazie alla minore 
+manutenzione richiesta.
+
+Nella prossima sezione verranno illustrate le piattaforme hardware supportate 
+da \ac{FASTER} e la metodologia proposta per il framework.
 
 
 % We expect that the 
