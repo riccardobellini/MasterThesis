@@ -826,11 +826,11 @@ eseguite il prima possibile. Questo requisito è stato risolto creando una
 regola speciale per il calcolo della priorità dei task di comunicazione di tipo 
 \emph{WRITE} che precedono una riconfigurazione; per questi tipi di task, la 
 priorità è calcolata nel seguente modo:
-\begin{equation} \label{eq:writeBeforRecPriority}
+\begin{equation} \label{eq:writeBeforeRecPriority}
  f=-A*EST - B*EFT + C*CPInfo + EP
 \end{equation}
 dove il termine aggiuntivo $EP$ rappresenta la priorità extra che viene 
-assegnata ai task. La formula \ref{eq:writeBeforRecPriority} sostituisce la 
+assegnata ai task. La formula \ref{eq:writeBeforeRecPriority} sostituisce la 
 \ref{eq:hardwarePriority} in questi casi.
 
 
