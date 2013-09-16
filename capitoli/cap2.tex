@@ -236,6 +236,51 @@ all'applicazione, quali ad esempio scadenze nell'esecuzione oppure una
 richiesta in termini di throughput.
 
 \paragraph{High-level analysis}
+La prima fase del flusso di lavoro prevede l'analisi ad alto livello 
+dell'applicazione e dei suoi requisiti. In questa fase è fornito un modello di 
+design riconfigurabile che mette in relazione i requisiti dell'applicazione con 
+determinate metriche di valutazione delle performance.
+
+Tramite questo processo si possono identificare dei componenti e determinare le 
+performance delle relative implementazioni: esempi di parametri relativi ad 
+un'implementazione sono le stime di risorse occupate, dell'overhead introdotto 
+dalle riconfigurazioni o del consumo di energia in base all'area occupata su 
+scheda.
+
+\paragraph{Identificazione dei core}
+Durante questa fase viene analizzata l'applicazione per estrarne i vari core, 
+ovvero moduli composti da una serie di operazioni. I moduli sono estratti 
+partendo dal \ac{CDFG} dell'applicazione, cercando di identificare opportuni 
+sottografi isomorfi; nel caso l'identificazione abbia successo, è possibile 
+riutilizzare uno o più moduli senza fare uso di riconfigurazione e guadagnando 
+quindi in termini di tempo di esecuzione.
+I core possono essere di due tipi:
+\begin{enumerate}
+ \item \emph{statici}, moduli configurati staticamente e non riconfigurabili 
+durante l'esecuzione;
+ \item \emph{riconfigurabili}, i quali a loro volta si dividono in:
+  \begin{itemize}
+   \item \emph{region-based}, in cui l'intero modulo viene riconfigurato;
+   \item \emph{micro-riconfigurabili}, in cui solo piccole parti del modulo 
+sono riconfigurate e il resto viene riutilizzato.
+  \end{itemize}
+\end{enumerate}
+
+Al termine dell'identificazione dei core, si svolge la fase di 
+\emph{partitioning}, in cui si stabilisce quali parti dell'applicazione debbano 
+essere eseguite in software su un processore general-purpose e quali in 
+hardware su logica riconfigurabile.
+
+\paragraph{Baseline scheduling}
+A questo punto, partendo dalle informazioni calcolate nei passi precedenti, 
+viene calcolato un baseline schedule dei task sulla piattaforma target. Lo 
+schedule viene calcolato da uno scheduler euristico che deve essere conscio 
+delle riconfigurazioni che vengono introdotte. Lo scheduler deve quindi 
+possedere le seguenti caratteristiche e funzionalità:
+\begin{itemize}
+ \item 
+\end{itemize}
+
 
 
 \section{Algoritmi proposti}
