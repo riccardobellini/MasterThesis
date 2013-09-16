@@ -225,11 +225,17 @@ L'approccio adottato da \ac{FASTER} prevede che i vari componenti del framework
 si interfaccino tra loro mediante l'uso di file XML. L'input di un progetto 
 \ac{FASTER} è costituito dall'applicazione da sintetizzare, che può 
 essere scritta in un linguaggio ad alto livello (ad esempio, il linguaggio C) e 
-provvista di annotazioni, ad esempio in formato 
-OpenMP\footnote{OpenMP è un formato standard per la specifica di applicazioni 
-parallele, che permette di specificare quali funzioni di un'applicazione sono 
-parallelizzabili e di suddividere l'applicazione nei vari task.}, che ne 
-consentono la suddivisione iniziale in task.
+provvista di annotazioni, ad esempio in formato OpenMP\footnote{OpenMP è un 
+formato standard per la specifica di applicazioni parallele, che permette di 
+specificare quali funzioni di un'applicazione sono parallelizzabili e di 
+suddividere l'applicazione nei vari task.}, che ne consentono la suddivisione 
+iniziale in task e dalla descrizione delle funzionalità di riconfigurazione a 
+disposizione dell'architettura. Oltre all'applicazione possono essere presenti 
+degli attributi specificati dal designer che impongono vincoli particolari 
+all'applicazione, quali ad esempio scadenze nell'esecuzione oppure una 
+richiesta in termini di throughput.
+
+\paragraph{High-level analysis}
 
 
 \section{Algoritmi proposti}
