@@ -295,6 +295,15 @@ moduli sull'area della scheda \ac{FPGA}; vengono definiti i vincoli spaziali e
 la dimensione delle aree su cui configurare i moduli da eseguire, e viene 
 stabilito se un determinato piazzamento è fattibile oppure viola alcuni vincoli.
 
+\paragraph{Generazione del codice} % TODO sistemare e ampliare
+In questa fase viene generato il codice necessario per eseguire l'applicazione 
+sulla piattaforma target, tramite l'utilizzo di backend specifici per ogni tipo 
+di piattaforma supportata.
+
+Partendo dal progetto \ac{FASTER} così creato si può derivare un progetto 
+interfacciato con i vari tool sviluppati dal fornitore della piattaforma target 
+per la sintesi dei vari IP core o del sistema di comunicazione tra i moduli.
+
 
 \section{Algoritmi proposti}
 \label{sec:algoritmiProposti}
