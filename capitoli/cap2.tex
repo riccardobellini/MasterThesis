@@ -322,6 +322,30 @@ relativi pregi e difetti di ognuna.
 
 \section{Algoritmi proposti}
 \label{sec:algoritmiProposti}
+In questa sezione verranno esaminate diverse soluzioni al problema dello 
+scheduling, proposte in altri lavori.
+
+Come anticipato nel Capitolo \ref{chap:intro}, il problema di trovare uno 
+schedule di lunghezza minima per un insieme di task in presenza di vincoli di 
+risorse appartiene alla classe dei problemi di ottimizzazione 
+$\mathcal{NP}$-difficili. Tutte le soluzioni proposte appartengono a una 
+tra queste categorie di algoritmi:
+\begin{enumerate}
+ \item \emph{algoritmi esatti} o \emph{ottimi}, che permettono di ricavare la 
+soluzione ottima, tramite l'impiego di opportune strutture matematiche o di 
+formulazioni particolari del problema;
+ \item \emph{algoritmi euristici}, che in generale portano ad ottenere 
+soluzioni subottime. Gli algoritmi euristici si possono suddividere a loro 
+volta in sottocategorie in base al loro funzionamento, tra le più importanti 
+ricordiamo:
+ \begin{itemize}
+  \item euristiche basate su una lista, in cui i task vengono schedulati 
+secondo l'ordine in cui compaiono nella lista ordinata per priorità decrescenti;
+  \item meta-euristiche, che comprendono algoritmi evolutivi o ispirati al 
+comportamento di sistemi presenti in natura.
+ \end{itemize}
+\end{enumerate}
+
 
 
 \subsection{Algoritmi esatti}
