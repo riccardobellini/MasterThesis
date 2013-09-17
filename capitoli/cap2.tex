@@ -276,11 +276,24 @@ A questo punto, partendo dalle informazioni calcolate nei passi precedenti,
 viene calcolato un baseline schedule dei task sulla piattaforma target. Lo 
 schedule viene calcolato da uno scheduler euristico che deve essere conscio 
 delle riconfigurazioni che vengono introdotte. Lo scheduler deve quindi 
-possedere le seguenti caratteristiche e funzionalità:
+avere le seguenti funzionalità:
 \begin{itemize}
- \item 
+ \item \emph{configuration prefetching}: una riconfigurazione per un 
+modulo viene eseguita il prima possibile rispetto all'inizio dell'esecuzione 
+del modulo, così facendo in alcuni casi è possibile mascherare l'overhead di 
+riconfigurazione;
+ \item \emph{riutilizzo dei moduli}: eventuali moduli che devono 
+essere eseguiti in hardware (stabilito nella fase di partitioning) e sono 
+caratterizzati dalla stessa implementazione non necessitano di riconfigurazione 
+dell'area.
 \end{itemize}
+Obiettivo di questa fase è ottenere uno scheduling \emph{feasible} che abbia il 
+minore makespan possibile, non necessariamente il minimo assoluto.
 
+Il floorplanner viene eseguito in questa fase e si occupa del piazzamento dei 
+moduli sull'area della scheda \ac{FPGA}; vengono definiti i vincoli spaziali e 
+la dimensione delle aree su cui configurare i moduli da eseguire, e viene 
+stabilito se un determinato piazzamento è fattibile oppure viola alcuni vincoli.
 
 
 \section{Algoritmi proposti}
