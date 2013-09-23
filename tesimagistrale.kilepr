@@ -4,7 +4,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
 kileversion=2.1.3
-lastDocument=frontmatter/ringraziamenti.tex
+lastDocument=capitoli/cap2.tex
 masterDocument=
 name=TesiMagistrale
 pkg_extIsRegExp=false
@@ -181,7 +181,7 @@ archive=true
 column=0
 encoding=UTF-8
 highlight=LaTeX
-line=390
+line=400
 mode=LaTeX
 open=true
 order=2
@@ -228,10 +228,10 @@ order=-1
 
 [item:frontmatter/abbreviazioni.tex]
 archive=true
-column=35
+column=29
 encoding=UTF-8
 highlight=LaTeX
-line=29
+line=30
 mode=LaTeX
 open=true
 order=5
@@ -268,10 +268,10 @@ order=-1
 
 [item:preambolo.tex]
 archive=true
-column=22
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=11
+line=17
 mode=LaTeX
 open=true
 order=4
@@ -330,9 +330,9 @@ ViMarks=
 
 [view-settings,view=0,item:capitoli/cap2.tex]
 CursorColumn=0
-CursorLine=390
+CursorLine=400
 JumpList=
-ViMarks=.,389,35,[,389,35,],389,35
+ViMarks=.,422,56,[,422,54,],422,56
 
 [view-settings,view=0,item:capitoli/cap3.tex]
 CursorColumn=43
@@ -359,10 +359,10 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:frontmatter/abbreviazioni.tex]
-CursorColumn=35
-CursorLine=29
+CursorColumn=29
+CursorLine=30
 JumpList=
-ViMarks=.,29,34,[,29,13,],29,34
+ViMarks=.,30,27,[,30,10,],30,27
 
 [view-settings,view=0,item:frontmatter/dedica.tex]
 CursorColumn=16
@@ -383,10 +383,10 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:preambolo.tex]
-CursorColumn=22
-CursorLine=11
+CursorColumn=0
+CursorLine=17
 JumpList=
-ViMarks=.,64,14,[,64,14,],64,14
+ViMarks=.,17,0,[,17,0,],17,0
 
 [view-settings,view=0,item:tesi.tex]
 CursorColumn=0
