@@ -389,6 +389,40 @@ solitamente non polinomiale, a meno di istanze del problema molto particolari e
 in generale difficilmente riscontrabili in casi reali 
 \cite{PolynomialCompleteScheduling}.
 
+Nelle prossime sezioni verranno esaminate alcune soluzioni proposte per 
+ottenere una soluzione ottima al problema oggetto del lavoro.
+
+\subsubsection{Formulazioni ILP}
+La programmazione lineare, in inglese \ac{LP}, è un metodo matematico che, 
+applicato a un modello con requisiti sotto forma di vincoli \emph{lineari}, 
+permette di ricavare la soluzione ottima tra tutte le soluzioni possibili che 
+soddisfano i requisiti. L'ottimità della soluzione è determinata in base a una 
+funzione (lineare) detta \emph{funzione obiettivo}.
+
+Il problema è tradotto matematicamente nei termini di un modello, 
+caratterizzato da \emph{variabili}, \emph{parametri} e \emph{vincoli}.
+La \emph{forma canonica} di un problema di programmazione lineare è espressa 
+come:
+
+\begin{align*}
+& \text{maximize}   && \mathbf{c}^\mathrm{T} \mathbf{x}\\
+& \text{subject to} && A \mathbf{x} \le \mathbf{b},\\
+&  && \mathbf{x} \ge \mathbf{0}
+\end{align*}
+
+Alternativamente, si può esprimere in maniera equivalente utilizzando la 
+\emph{forma standard}:
+
+\begin{align*}
+ & \text{maximize}   && \mathbf{c}^\mathrm{T} \mathbf{x}\\
+& \text{subject to} && A \mathbf{x} = \mathbf{b}, \\
+&  && \mathbf{x} \ge \mathbf{0}
+\end{align*}
+dove $\mathbf{x}$ rappresenta il vettore di variabili che devono essere 
+determinate per trovare la soluzione ottima, $\mathbf{c}$ e $\mathbf{b}$ sono 
+vettori di coefficienti costanti e noti. $(\mathord{\cdot})^\mathrm{T}$ 
+rappresenta la trasposizione della matrice/vettore.
+
 
 \subsection{Algoritmi euristici}
 \label{sec:algoritmiEuristici}
