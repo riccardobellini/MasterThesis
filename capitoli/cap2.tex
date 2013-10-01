@@ -420,7 +420,8 @@ Alternativamente, si può esprimere in maniera equivalente utilizzando la
 \end{align*}
 dove $\mathbf{x}$ rappresenta il vettore di variabili che devono essere 
 determinate per trovare la soluzione ottima, $\mathbf{c}$ e $\mathbf{b}$ sono 
-vettori di coefficienti costanti e noti, $(\mathord{\cdot})^\mathrm{T}$ 
+vettori di coefficienti costanti e noti, $\mathbf{A}$ è una matrice di 
+coefficienti e $(\mathord{\cdot})^\mathrm{T}$ 
 rappresenta la trasposizione della matrice/vettore.
 
 È sempre possibile passare dalla forma canonica alla forma standard 
@@ -428,6 +429,12 @@ introducendo variabili aggiuntive, dette variabili di \emph{scarto}, che
 permettono di eliminare le disequazioni nei vincoli; le variabili del problema 
 che non presentano vincoli di segno possono essere sostituite dalla differenza 
 tra due variabili aventi vincoli di segno.
+
+Un problema di programmazione lineare intera, a differenza da un problema di 
+programmazione lineare (come mostrato nelle precedenti forme), aggiunge un 
+vincolo di interezza per le variabili decisionali contenute nel vettore 
+$\mathbf{x}$; inoltre, i coefficienti dei vettori $\mathbf{c}$ e $\mathbf{b}$ 
+e della matrice $\mathbf{A}$ sono numeri interi.
 
 \subsection{Algoritmi euristici}
 \label{sec:algoritmiEuristici}
