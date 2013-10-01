@@ -181,7 +181,7 @@ archive=true
 column=0
 encoding=UTF-8
 highlight=LaTeX
-line=400
+line=437
 mode=LaTeX
 open=true
 order=2
@@ -330,9 +330,9 @@ ViMarks=
 
 [view-settings,view=0,item:capitoli/cap2.tex]
 CursorColumn=0
-CursorLine=400
+CursorLine=437
 JumpList=
-ViMarks=.,422,56,[,422,54,],422,56
+ViMarks=.,423,13,[,423,8,],423,13
 
 [view-settings,view=0,item:capitoli/cap3.tex]
 CursorColumn=43
