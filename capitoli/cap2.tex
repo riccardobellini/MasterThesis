@@ -465,12 +465,25 @@ soluzione, che può non essere la migliore se i problemi sono risolti
 separatamente, e la dimensione dello spazio delle soluzioni possibili, che 
 cresce nel caso in cui i problemi si risolvano congiuntamente.
 
-\paragraph{Vincoli di risorse hardware nella formulazione}
+\paragraph{Configuration prefetching}
 Banerjee et al.~\cite{BanerjeePhysicalConstraints} propongono, nel loro 
 articolo, un modello ILP che prende in considerazione una tecnica utilizzata 
 nell'ambito delle architetture riconfigurabili per ridurre il tempo di 
 esecuzione, dato il considerevole overhead introdotto dalle riconfigurazioni 
-che devono essere eseguite: il \emph{configuration prefetching}. 
+che devono essere eseguite: il \emph{configuration prefetching}.
+Per ridurre il significativo overhead delle riconfigurazioni, il configuration 
+prefetching scompone un task nelle componenti di riconfigurazione e di 
+esecuzione. In questo modo si permette al componente relativo alla 
+riconfigurazione di essere eseguito separatamente dal task di esecuzione che 
+segue, eliminando le dipendenze dai dati rappresentate dagli archi entranti nel 
+task orginale.
+
+\paragraph{Vincoli di risorse hardware e comunicazioni}
+Nello stesso lavoro, Banerjee et al.~tengono in considerazione i vincoli di 
+piazzamento dei task per verificare che la soluzione sia esatta e 
+implementabile (ovvero, che tutti i task selezionati per l'esecuzione su 
+scheda nella fase di partizionamento siano posizionabili senza violare la 
+disponibilità delle risorse).
 
 
 \subsection{Algoritmi euristici}
