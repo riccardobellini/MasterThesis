@@ -446,7 +446,24 @@ intera; i lavori di questo tipo sono descritti nella sezione seguente.
 
 
 \subsubsection{Formulazioni ILP}
+Il problema di effettuare lo scheduling di task di un'applicazione per 
+l'esecuzione su hardware, anche riconfigurabile, è un tema ampiamente discusso 
+in letteratura; molte sono le formulazioni che ricorrono alla programmazione 
+lineare intera per trovare una soluzione a questo problema. Spesso, oltre alla 
+ricerca di una soluzione per lo scheduling, il modello consente anche di 
+determinare un mapping adeguato che minimizzi il tempo di esecuzione finale
+dell'applicazione.
 
+Come visto nel Capitolo \ref{chap:intro}, infatti, la minimizzazione assoluta 
+del tempo di esecuzione può essere ottenuta solamente risolvendo unitamente le 
+fasi di mapping, scheduling e floorplanning (per verificare che la soluzione 
+sia implementabile). In generale, la risoluzione separata delle fasi, in 
+particolare la separazione di mapping e scheduling, non porta alla 
+minimizzazione assoluta del tempo di esecuzione. La scelta tra queste due 
+possibilità implica il dover fare un compromesso tra l'accuratezza della 
+soluzione, che può non essere la migliore se i problemi sono risolti 
+separatamente, e la dimensione dello spazio delle soluzioni possibili, che 
+cresce nel caso in cui i problemi si risolvano congiuntamente.
 
 
 \subsection{Algoritmi euristici}
