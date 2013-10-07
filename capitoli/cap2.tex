@@ -486,17 +486,30 @@ l'esecuzione su scheda nella fase di partizionamento devono essere
 posizionabili senza violare la disponibilità delle risorse o le possibilità del 
 controllore di riconfigurazione.
 
-\begin{figure}[b]
+\begin{figure}[!htb]
  \begin{center}
   \includegraphics[width=0.3\textwidth]
 {./capitoli/figure/cap2/InfeasiblePlacement.pdf}
-\caption{Esempio di piazzamento ottimo ma non implementabile.}
+\caption[Piazzamento ottimo non implementabile]{Esempio di piazzamento ottimo 
+ma non implementabile\footnotemark.}
 \label{fig:infeasiblePlacement}
-% FIXME credits
  \end{center}
 \end{figure}
 
-% TODO spiegare figura
+\footnotetext{Immagine tratta da 
+\cite{BanerjeePhysicalConstraints}.}
+
+Un esempio di piazzamento di una soluzione ricavata tramite un algoritmo esatto 
+per il partizionamento e lo scheduling di task nel caso di 
+architettura con riconfigurazione monodimensionale è rappresentato in 
+Figura \ref{fig:infeasiblePlacement}. Si ipotizzi che i requisiti di area per i 
+task $T_1$, $T_2$ e $T_3$ siano $1$, $2$, e $1$ colonne, rispettivamente, e che 
+sia dato il seguente mapping: $\langle T_1, C_1 \rangle$, $\langle T_2, \{C_2, 
+C_3\} \rangle$ e $\langle T_3, C_4 \rangle$. Dovendo piazzare un nuovo task 
+$T_4$, il cui requisito di area è pari a due colonne, un algoritmo che non 
+considera le posizioni in cui vengono piazzati i vari task, vedrebbe che al 
+tempo $t_2$ vi sono due colonne libere; tuttavia, non essendo colonne 
+adiacenti, il piazzamento non è possibile.
 
 
 \subsection{Algoritmi euristici}
