@@ -479,11 +479,24 @@ segue, eliminando le dipendenze dai dati rappresentate dagli archi entranti nel
 task orginale.
 
 \paragraph{Vincoli di risorse hardware e comunicazioni}
-Nello stesso lavoro, Banerjee et al.~tengono in considerazione i vincoli di 
-piazzamento dei task per verificare che la soluzione sia esatta e 
-implementabile (ovvero, che tutti i task selezionati per l'esecuzione su 
-scheda nella fase di partizionamento siano posizionabili senza violare la 
-disponibilità delle risorse).
+Nello stesso lavoro \cite{BanerjeePhysicalConstraints}, Banerjee et al.~tengono 
+in considerazione i vincoli di piazzamento dei task per verificare che la 
+soluzione sia esatta e implementabile: infatti, tutti i task selezionati per 
+l'esecuzione su scheda nella fase di partizionamento devono essere 
+posizionabili senza violare la disponibilità delle risorse o le possibilità del 
+controllore di riconfigurazione.
+
+\begin{figure}[b]
+ \begin{center}
+  \includegraphics[width=0.3\textwidth]
+{./capitoli/figure/cap2/InfeasiblePlacement.pdf}
+\caption{Esempio di piazzamento ottimo ma non implementabile.}
+\label{fig:infeasiblePlacement}
+% FIXME credits
+ \end{center}
+\end{figure}
+
+% TODO spiegare figura
 
 
 \subsection{Algoritmi euristici}
