@@ -465,7 +465,7 @@ soluzione, che può non essere la migliore se i problemi sono risolti
 separatamente, e la dimensione dello spazio delle soluzioni possibili, che 
 cresce nel caso in cui i problemi si risolvano congiuntamente.
 
-\paragraph{Configuration prefetching}
+\paragraph{Modello ILP di Banerjee}
 Banerjee et al.~\cite{BanerjeePhysicalConstraints} propongono, nel loro 
 articolo, un modello ILP che prende in considerazione una tecnica utilizzata 
 nell'ambito delle architetture riconfigurabili per ridurre il tempo di 
@@ -478,7 +478,7 @@ riconfigurazione di essere eseguito separatamente dal task di esecuzione che
 segue, eliminando le dipendenze dai dati rappresentate dagli archi entranti nel 
 task orginale.
 
-\paragraph{Vincoli di risorse hardware e comunicazioni}
+\subparagraph{Vincoli di risorse hardware e comunicazioni}
 Nello stesso lavoro \cite{BanerjeePhysicalConstraints}, Banerjee et al.~tengono 
 in considerazione i vincoli di piazzamento dei task per verificare che la 
 soluzione sia esatta e implementabile: infatti, tutti i task selezionati per 
@@ -513,6 +513,7 @@ adiacenti, il piazzamento non è possibile. Da questa situazione si evince che
 la fattibilità del piazzamento lineare non è garantita dall'utilizzo di un 
 algoritmo esatto.
 
+\subparagraph{Modello e vincoli}
 Il modello ILP proposto nel loro lavoro prevede quindi la presenza di $n$ task 
 che possono avere più implementazioni possibili, sia di tipo SW che HW. Nel 
 caso delle implementazioni di tipo HW, ciascuna di esse ha un proprio requisito 
@@ -538,6 +539,7 @@ sinistra del loro mapping. In questo modo è possibile definire vincoli che
 prevengano la sovrapposizione di aree assegnate a task diversi e che rispettino 
 in ogni istante la disponibilità di risorse.
 
+\subparagraph{Limitazioni}
 La principale limitazione del lavoro proposto in 
 \cite{BanerjeePhysicalConstraints} è costituita dal fatto che il modello è 
 adatto solo ad architetture che supportano la riconfigurazione parziale a una 
