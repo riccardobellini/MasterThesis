@@ -544,7 +544,20 @@ La principale limitazione del lavoro proposto in
 \cite{BanerjeePhysicalConstraints} è costituita dal fatto che il modello è 
 adatto solo ad architetture che supportano la riconfigurazione parziale a una 
 dimensione con un singolo controllore di riconfigurazione, un tipo di 
-architettura molto semplice rispetto ai dispositivi utilizzabili oggigiorno.
+architettura molto semplice rispetto ai dispositivi utilizzabili oggigiorno. 
+Inoltre, non sono considerate alcune caratteristiche sfruttabili grazie ai 
+dispositivi aventi riconfigurazione parziale dinamica, ovvero il \emph{riuso 
+dei moduli} ed eventuali tecniche per evitare un'eccessiva \emph{frammentazione} 
+delle aree occupate dai task sulla scheda.
+
+
+\paragraph{Modelli ILP di Redaelli}
+La formulazione ILP proposta da Redaelli et al.~\cite{Redaelli1DILP} cerca di 
+superare alcune limitazioni che caratterizzano i lavori 
+\cite{BanerjeeHwSwPartitioning} e \cite{BanerjeePhysicalConstraints} visti nel 
+precedente paragrafo. % FIXME
+Il modello proposto consente infatti di tenere conto delle due tecniche 
+sopracitate:
 
 
 \subsection{Algoritmi euristici}
