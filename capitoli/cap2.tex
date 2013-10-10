@@ -509,7 +509,34 @@ C_3\} \rangle$ e $\langle T_3, C_4 \rangle$. Dovendo piazzare un nuovo task
 $T_4$, il cui requisito di area è pari a due colonne, un algoritmo che non 
 considera le posizioni in cui vengono piazzati i vari task, vedrebbe che al 
 tempo $t_2$ vi sono due colonne libere; tuttavia, non essendo colonne 
-adiacenti, il piazzamento non è possibile.
+adiacenti, il piazzamento non è possibile. Da questa situazione si evince che 
+la fattibilità del piazzamento lineare non è garantita dall'utilizzo di un 
+algoritmo esatto.
+
+Il modello ILP proposto nel loro lavoro prevede quindi la presenza di $n$ task 
+che possono avere più implementazioni possibili, sia di tipo SW che HW. Nel 
+caso delle implementazioni di tipo HW, ciascuna di esse ha un proprio requisito 
+in termini di numero di colonne richieste\footnote{Ricordiamo che poichè 
+l'architettura supporta la riconfigurazione solamente a una dimensione, è 
+sufficiente specificare il numero di colonne necessarie per 
+un'implementazione.}. I vincoli di risorse sono modellizzati considerando un 
+processore per l'esecuzione di task SW e fissando un parametro $m$ che 
+rappresenta il vincolo sul numero di colonne per il mapping dei task con 
+implementazione di tipo HW.
+
+Il configuration prefetching è modellizzato invece creando due variabili 
+diverse per ogni task (se la sua implementazione è di tipo HW):
+\begin{itemize}
+ \item una variabile che rappresenta l'inizio della riconfigurazione;
+ \item una variabile che rappresenta l'inizio dell'esecuzione.
+\end{itemize}
+Per tenere in considerazione i vincoli sulle risorse disponibili e sul 
+piazzamento, le variabili che coinvolgono i task mappati su hardware sono 
+caratterizzate, oltre a un indice che specifica il task e uno che definisce 
+l'istante di tempo, da un indice aggiuntivo che rappresenta la colonna più a 
+sinistra del loro mapping. In questo modo è possibile definire vincoli che 
+prevengano la sovrapposizione di aree assegnate a task diversi e che rispettino 
+in ogni istante la disponibilità di risorse.
 
 
 \subsection{Algoritmi euristici}
