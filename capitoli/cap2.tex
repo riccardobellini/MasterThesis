@@ -568,6 +568,19 @@ frammentazione dello spazio disponibile sulla scheda, così da massimizzare la
 dimensione di aree libere (adiacenti).
 \end{itemize}
 
+\subparagraph{Modello ILP per architetture riconfigurabili a una dimensione}
+Il primo modello proposto da Redaelli et al.~in \cite{Redaelli1DILP} è simile 
+al modello formulato in \cite{BanerjeePhysicalConstraints}, ma è esteso con 
+variabili e costanti che permettono di definire il concetto di riutilizzo dei 
+moduli, visto in precedenza. In particolare, è definita una costante 
+binaria $a_{ij}$, che assume valore $1$ se i task $i$ e $j$ eseguono la stessa 
+azione (quindi il modulo è riutilizzabile); nel modello è inoltre presente una 
+variabile binaria $m_i$ che assume valore $1$ se il task $i$ sfrutta un modulo 
+riutilizzabile.
+
+I vincoli a cui è soggetto il modello sono formulati in modo da evitare la 
+definizione dell'istante iniziale della riconfigurazione di particolari task, 
+nel caso in cui tali task sfruttino dei moduli riutilizzabili.
 
 
 \subsection{Algoritmi euristici}
