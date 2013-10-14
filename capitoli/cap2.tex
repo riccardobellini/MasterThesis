@@ -582,6 +582,19 @@ I vincoli a cui è soggetto il modello sono formulati in modo da evitare la
 definizione dell'istante iniziale della riconfigurazione di particolari task, 
 nel caso in cui tali task sfruttino dei moduli riutilizzabili.
 
+\subparagraph{Modello ILP per architetture riconfigurabili a due dimensioni}
+Il modello proposto da in \cite{Redaelli1DILP} risolve la limitazione 
+riguardante la mancata considerazione della possibilità di riutilizzare alcuni 
+moduli per guadagnare in termini di overhead di riconfigurazione, ma rimane un 
+modello applicabile ad architetture piuttosto datate, dato che supporta 
+solamente la riconfigurazione a una dimensione. Per questo, Redaelli et al.~in 
+\cite{Redaelli2DILP} propongono una formulazione ILP adatta ad architetture con 
+riconfigurazione parziale dinamica a due dimensioni.
+
+Il modello è ripreso dal loro lavoro precedente \cite{Redaelli1DILP}, ma 
+subisce alcune modifiche atte a supportare la bidimensionalità della 
+riconfigurazione e delle aree da piazzare sul dispositivo.
+
 
 \subsection{Algoritmi euristici}
 \label{sec:algoritmiEuristici}
