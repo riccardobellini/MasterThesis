@@ -616,6 +616,23 @@ area della scheda) sono quindi due, uno per la colonna più a sinistra e uno per
 la riga più in basso.
 
 
+\subsubsection{Altri algoritmi ottimi}
+% FIXME meglio metterne anche altri, se ci sono...
+In questa sezione viene descritto un algoritmo proposto per risolvere in 
+maniera ottima il problema di scheduling dei task su dispositivi 
+riconfigurabili dinamicamente, che non rientra tra le formulazioni di 
+programmazione lineare (intera). L'algoritmo, presentato da Fekete, K\"ohler 
+e Teich in \cite{FeketeOptimal}, permette di risolvere due tipi di problemi 
+legati allo scheduling:
+\begin{enumerate}
+ \item trovare il tempo di esecuzione minimo di un problema data una \ac{FPGA} 
+con un limite di risorse fissato;
+ \item trovare il numero di risorse minimo di cui deve disporre una \ac{FPGA} 
+affinchè il tempo di esecuzione sia inferiore a un limite massimo fissato.
+\end{enumerate}
+
+
+
 \subsection{Algoritmi euristici}
 \label{sec:algoritmiEuristici}
 
