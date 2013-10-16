@@ -591,6 +591,9 @@ solamente la riconfigurazione a una dimensione. Per questo, Redaelli et al.~in
 \cite{Redaelli2DILP} propongono una formulazione ILP adatta ad architetture con 
 riconfigurazione parziale dinamica a due dimensioni.
 
+% TODO spiegare vantaggi riconfigurazione bidimensionale, qui o 
+% nell'introduzione
+
 Il modello è ripreso dal loro lavoro precedente \cite{Redaelli1DILP}, ma 
 subisce alcune modifiche atte a supportare la bidimensionalità della 
 riconfigurazione e delle aree da piazzare sul dispositivo.
@@ -599,9 +602,18 @@ riconfigurazione e delle aree da piazzare sul dispositivo.
 In primo luogo, a differenza del precedente lavoro dello stesso autore e 
 del lavoro di Banerjee, cambia la descrizione del problema riguardo alla 
 modellazione del dispositivo riconfigurabile. Esso non è più rappresentato 
-solamente tramite un insieme di colonne ordinate $C = \{c_1,c_2,\dots,c_{\vert 
-C \vert}\}$, ma anche tramite un insieme $R = \{r_1,r_2,\dots,r_{\vert R 
-\vert}\}$ che ne definisce le righe. 
+solamente tramite un insieme di colonne $C = \{c_1,c_2,\dots,c_{\vert C 
+\vert}\}$, ma anche tramite un insieme $R = \{r_1,r_2,\dots,r_{\vert R \vert}\}$ 
+che ne definisce le righe. Ogni ``cella'' della \ac{FPGA} è quindi identificata 
+da una coppia $(r,c)$ con $r \in R$ e $c \in C$, ed è composta da $\rho_u$ 
+\acp{CLB}.
+
+\subparagraph{Supporto alla riconfigurazione bidimensionale}
+Alcune variabili del modello ILP proposte in \cite{Redaelli1DILP} sono 
+adattate per supportare la bidimensionalità dell'architettura; gli indici che 
+identificano la posizione di un task (o l'occupazione temporale di una certa 
+area della scheda) sono quindi due, uno per la colonna più a sinistra e uno per 
+la riga più in basso.
 
 
 \subsection{Algoritmi euristici}
