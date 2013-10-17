@@ -656,7 +656,18 @@ modulo sulla scheda), mentre l'asse $t$ identifica la dimensione temporale
 piazzati dentro all'area disponibile e non si sovrappongano se eseguiti 
 simultaneamente.
 
+L'idea alla base del metodo è di trattare i task come scatole tridimensionali e 
+i possibili schedule \emph{feasible} come disposizioni di tali scatole che 
+soddisfano i vincoli di precedenza.
 
+\paragraph{Limitazioni}
+La principale limitazione del modello proposto in \cite{FeketeOptimal} è 
+l'assunzione che ci sia un numero potenzialmente infinito di controllori di 
+riconfigurazione, un'ipotesi che toglie realismo nell'applicazione del metodo 
+in scenari concreti; infatti, l'overhead introdotto dalle riconfigurazioni non 
+è trascurabile e l'esecuzione di un numero considerevole di riconfigurazioni 
+diventa inevitabilmente un collo di bottiglia, penalizzando il tempo di 
+esecuzione.
 \subsection{Algoritmi euristici}
 \label{sec:algoritmiEuristici}
 
