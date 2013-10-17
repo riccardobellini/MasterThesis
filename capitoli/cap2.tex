@@ -616,6 +616,20 @@ area della scheda) sono quindi due, uno per la colonna più a sinistra e uno per
 la riga più in basso.
 
 
+\paragraph{Limitazioni formulazioni ILP}
+Oltre alla limitazione dovuta alle potenzialità dell'architettura 
+riconfigurabile considerata in \cite{BanerjeePhysicalConstraints}, esiste uno 
+svantaggio specifico per le formulazioni di programmazione lineare intera: il 
+costo computazionale eccessivo. Al crescere della complessità del modello, il 
+costo in termini di tempo d'esecuzione del \emph{solver ILP} aumenta 
+esponenzialmente.
+
+Come riportato in \cite{Redaelli2DILP}, il tempo impiegato per risolvere in 
+maniera ottima un'istanza del problema con $10$ task da mappare su una 
+\ac{FPGA} con $5$ righe, $5$ colonne e $2$ controllori di riconfigurazione è di 
+$39$ giorni, troppo per essere applicabile ad esempi concreti.
+
+
 \subsubsection{Altri algoritmi ottimi}
 % FIXME meglio metterne anche altri, se ci sono...
 In questa sezione viene descritto un algoritmo proposto per risolvere in 
