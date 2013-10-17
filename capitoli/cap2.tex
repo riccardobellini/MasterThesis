@@ -635,6 +635,27 @@ Questo lavoro è stato il primo a comprendere la modellazione delle
 comunicazioni tra i vari moduli, includendo il ritardo dovuto alle 
 comunicazioni nel tempo di esecuzione dei task.
 
+\begin{figure}[!tb]
+ \begin{center}
+  \includegraphics[width=0.5\textwidth]
+{capitoli/figure/cap2/BoxModules.pdf}
+\caption[Piazzamento dei moduli con rappresentazione tridimensionale]{Esempio 
+di piazzamento dei moduli con rappresentazione tridimensionale\footnotemark.}
+\label{fig:boxModules}
+ \end{center}
+\end{figure}
+
+\footnotetext{Immagine tratta da \cite{FeketeOptimal}.}
+
+\paragraph{Modello matematico}
+I moduli sono rappresentati nel modello come box di forma tridimensionale, come 
+mostrato in Figura \ref{fig:boxModules}. Nella rappresentazione utilizzata, gli 
+assi $x$ e $y$ identificano le due dimensioni spaziali (per il piazzamento del 
+modulo sulla scheda), mentre l'asse $t$ identifica la dimensione temporale 
+(ovvero il tempo di esecuzione). È importante quindi che i moduli vengano 
+piazzati dentro all'area disponibile e non si sovrappongano se eseguiti 
+simultaneamente.
+
 
 \subsection{Algoritmi euristici}
 \label{sec:algoritmiEuristici}
