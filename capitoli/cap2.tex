@@ -687,7 +687,25 @@ esecuzione.
 \subsection{Algoritmi euristici}
 \label{sec:algoritmiEuristici}
 Dopo aver fornito una panoramica degli algoritmi esatti vengono ora esaminate 
-alcune soluzioni euristiche presenti nello stato dell'arte.
+alcune soluzioni euristiche presenti nello stato dell'arte. In generale, le 
+soluzioni prodotte da algoritmi euristici per un problema non sono ottime 
+(esatte). Si ricorre all'impiego di algoritmi euristici qualora altri metodi 
+esatti non possono essere applicati oppure sono troppo lenti nel risolvere il 
+problema; in questi casi, si deve sempre trovare un compromesso tra la 
+``bontà'' della soluzione trovata e il tempo impiegato per giungere a quella 
+soluzione.
+
+Le euristiche si classificano in base al modo di trovare una soluzione 
+approssimata. Uno stesso problema può essere risolto utilizzando più di una 
+euristica, ma non è garantito che tutte le euristiche applicate a uno stesso 
+problema trovino la stessa soluzione, anzi, di solito questo non si verifica.
+
+% TODO
+
+Come rappresentato nella Figura \ref{fig:metaheuristicsClassification}, esistono 
+diverse categorie di meta-euristiche, che si ispirano alle basi del 
+funzionamento di sistemi presenti in natura oppure si basano su criteri che 
+rispecchiano le teorie sull'evoluzione di una popolazione
 
 
 % TODO presentazione delle motivazioni che hanno portato allo sviluppo di un 
