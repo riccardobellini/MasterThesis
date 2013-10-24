@@ -696,16 +696,19 @@ problema; in questi casi, si deve sempre trovare un compromesso tra la
 soluzione.
 
 Le euristiche si classificano in base al modo di trovare una soluzione 
-approssimata. Uno stesso problema può essere risolto utilizzando più di una 
+approssimata.
+%%%%%%%%%%%%% FIXME controllare
+Uno stesso problema può essere risolto utilizzando più di una 
 euristica, ma non è garantito che tutte le euristiche applicate a uno stesso 
-problema trovino la stessa soluzione, anzi, di solito questo non si verifica.
+problema restituiscano la stessa soluzione.
 
-% TODO
+Esistono euristiche specifiche per risolvere determinate classi di problemi che 
+si distinguono in base al grado di approssimazione delle soluzioni trovate. 
+In tal senso, un'euristica potrebbe performare meglio di altre, se applicata 
+allo stesso problema.
+%%%%%%%%%%%%%
 
-Come rappresentato nella Figura \ref{fig:metaheuristicsClassification}, esistono 
-diverse categorie di meta-euristiche, che si ispirano alle basi del 
-funzionamento di sistemi presenti in natura oppure si basano su criteri che 
-rispecchiano le teorie sull'evoluzione di una popolazione
+
 
 
 % TODO presentazione delle motivazioni che hanno portato allo sviluppo di un 
