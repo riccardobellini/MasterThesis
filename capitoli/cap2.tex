@@ -708,7 +708,26 @@ In tal senso, un'euristica potrebbe performare meglio di altre, se applicata
 allo stesso problema.
 %%%%%%%%%%%%%
 
+\subsubsection{Partizionamento HW-SW}
+Tra l'ampia varietà di algoritmi euristici proposti nello stato dell'arte per 
+risolvere il problema di scheduling dei task, alcuni di questi algoritmi 
+considerano come ulteriore obiettivo il partizionamento tra task hardware e 
+task software. Ad esempio, Mei et al.~propongono in 
+\cite{MeiPartitioningScheduling} un approccio basato sulla combinazione di un 
+algoritmo genetico standard\footnote{Gli algoritmi genetici appartengono alle 
+meta-euristiche di tipo evolutivo ispirate al funzionamento di sistemi presenti 
+in natura, come rappresentato in Figura 
+\ref{fig:metaheuristicsClassification}.} con un'euristica basata su lista di 
+priorità. Il loro metodo è adatto ad architetture riconfigurabili dinamicamente 
+e risolve, oltre allo scheduling, anche il partizionamento dei task che 
+compongono l'applicazione. L'overhead introdotto dalla riconfigurazione 
+parziale è tenuto in considerazione; tuttavia, non vengono impiegate tecniche 
+per mascherare il tempo di riconfigurazione (come il \emph{configuration 
+prefetching}), e il collo di bottiglia causato dalle limitazioni del 
+controllore della riconfigurazione, che impongono riconfigurazioni non 
+sovrapposte nel tempo.
 
+% TODO scendere più nel dettaglio...
 
 
 % TODO presentazione delle motivazioni che hanno portato allo sviluppo di un 
