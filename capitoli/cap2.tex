@@ -1,5 +1,3 @@
-%%%%%% FIXME %%%%%%% sostituire ILP con relativo acronimo
-
 \chapter{Stato dell'arte}
 \label{chap:SOA}
 \vspace{1cm}
@@ -447,7 +445,7 @@ variabili e i coefficienti, sono quindi problemi di programmazione lineare
 intera; i lavori di questo tipo sono descritti nella sezione seguente.
 
 
-\subsubsection{Formulazioni ILP}
+\subsubsection{Formulazioni \acs{ILP}}
 Il problema di effettuare lo scheduling di task di un'applicazione per 
 l'esecuzione su hardware, anche riconfigurabile, è un tema ampiamente discusso 
 in letteratura; molte sono le formulazioni che ricorrono alla programmazione 
@@ -467,19 +465,19 @@ soluzione, che può non essere la migliore se i problemi sono risolti
 separatamente, e la dimensione dello spazio delle soluzioni possibili, che 
 cresce nel caso in cui i problemi si risolvano congiuntamente.
 
-\paragraph{Modello ILP di Banerjee}
+\paragraph{Modello \acs{ILP} di Banerjee}
 Banerjee et al.~\cite{BanerjeePhysicalConstraints} propongono, nel loro 
-articolo, un modello ILP che prende in considerazione una tecnica utilizzata 
-anche in un altro loro lavoro \cite{BanerjeeReconfigurationOverhead}
-nell'ambito delle architetture riconfigurabili per ridurre il tempo di 
-esecuzione, dato il considerevole overhead introdotto dalle riconfigurazioni 
-che devono essere eseguite: il \emph{configuration prefetching}.
-Per ridurre il significativo overhead delle riconfigurazioni, il configuration 
-prefetching scompone un task nelle componenti di riconfigurazione e di 
-esecuzione. In questo modo si permette al componente relativo alla 
-riconfigurazione di essere eseguito separatamente dal task di esecuzione che 
-segue, eliminando le dipendenze dai dati rappresentate dagli archi entranti nel 
-task orginale.
+articolo, un modello \ac{ILP} che prende in considerazione una 
+tecnica utilizzata anche in un altro loro lavoro 
+\cite{BanerjeeReconfigurationOverhead}nell'ambito delle architetture 
+riconfigurabili per ridurre il tempo di esecuzione, dato il considerevole 
+overhead introdotto dalle riconfigurazioni che devono essere eseguite: il 
+\emph{configuration prefetching}. Per ridurre il significativo overhead delle 
+riconfigurazioni, il configuration prefetching scompone un task nelle componenti 
+di riconfigurazione e di esecuzione. In questo modo si permette al componente 
+relativo alla riconfigurazione di essere eseguito separatamente dal task di 
+esecuzione che segue, eliminando le dipendenze dai dati rappresentate dagli 
+archi entranti nel task orginale.
 
 \subparagraph{Vincoli di risorse hardware e comunicazioni}
 Nello stesso lavoro \cite{BanerjeePhysicalConstraints}, Banerjee et al.~tengono 
@@ -517,12 +515,12 @@ la fattibilità del piazzamento lineare non è garantita dall'utilizzo di un
 algoritmo esatto.
 
 \subparagraph{Modello e vincoli}
-Il modello ILP proposto nel loro lavoro prevede quindi la presenza di $n$ task 
-che possono avere più implementazioni possibili, sia di tipo SW che HW. Nel 
-caso delle implementazioni di tipo HW, ciascuna di esse ha un proprio requisito 
-in termini di numero di colonne richieste\footnote{Ricordiamo che poichè 
-l'architettura supporta la riconfigurazione solamente a una dimensione, è 
-sufficiente specificare il numero di colonne necessarie per 
+Il modello \ac{ILP} proposto nel loro lavoro prevede quindi la presenza di $n$ 
+task che possono avere più implementazioni possibili, sia di tipo SW che HW. 
+Nel caso delle implementazioni di tipo HW, ciascuna di esse ha un proprio 
+requisito in termini di numero di colonne richieste\footnote{Ricordiamo che 
+poichè l'architettura supporta la riconfigurazione solamente a una dimensione, 
+è sufficiente specificare il numero di colonne necessarie per 
 un'implementazione.}. I vincoli di risorse sono modellizzati considerando un 
 processore per l'esecuzione di task SW e fissando un parametro $m$ che 
 rappresenta il vincolo sul numero di colonne per il mapping dei task con 
@@ -554,9 +552,9 @@ dei moduli} ed eventuali tecniche per evitare un'eccessiva \emph{frammentazione}
 delle aree occupate dai task sulla scheda.
 
 
-\paragraph{Modelli ILP di Redaelli}
-La formulazione ILP proposta da Redaelli et al.~\cite{Redaelli1DILP} cerca di 
-superare alcune limitazioni che caratterizzano i lavori 
+\paragraph{Modelli \acs{ILP} di Redaelli}
+La formulazione \ac{ILP} proposta da Redaelli et al.~\cite{Redaelli1DILP} cerca 
+di superare alcune limitazioni che caratterizzano i lavori 
 \cite{BanerjeeHwSwPartitioning} e \cite{BanerjeePhysicalConstraints} visti nel 
 precedente paragrafo. % FIXME
 Il modello proposto consente infatti di tenere conto delle due tecniche 
@@ -570,7 +568,8 @@ frammentazione dello spazio disponibile sulla scheda, così da massimizzare la
 dimensione di aree libere (adiacenti).
 \end{itemize}
 
-\subparagraph{Modello ILP per architetture riconfigurabili a una dimensione}
+\subparagraph{Modello \acs{ILP} per architetture riconfigurabili a una 
+dimensione}
 Il primo modello proposto da Redaelli et al.~in \cite{Redaelli1DILP} è simile 
 al modello formulato in \cite{BanerjeePhysicalConstraints}, ma è esteso con 
 variabili e costanti che permettono di definire il concetto di riutilizzo dei 
@@ -584,14 +583,15 @@ I vincoli a cui è soggetto il modello sono formulati in modo da evitare la
 definizione dell'istante iniziale della riconfigurazione di particolari task, 
 nel caso in cui tali task sfruttino dei moduli riutilizzabili.
 
-\subparagraph{Modello ILP per architetture riconfigurabili a due dimensioni}
+\subparagraph{Modello \acs{ILP} per architetture riconfigurabili a due 
+dimensioni}
 Il modello proposto da in \cite{Redaelli1DILP} risolve la limitazione 
 riguardante la mancata considerazione della possibilità di riutilizzare alcuni 
 moduli per guadagnare in termini di overhead di riconfigurazione, ma rimane un 
 modello applicabile ad architetture piuttosto datate, dato che supporta 
 solamente la riconfigurazione a una dimensione. Per questo, Redaelli et al.~in 
-\cite{Redaelli2DILP} propongono una formulazione ILP adatta ad architetture con 
-riconfigurazione parziale dinamica a due dimensioni.
+\cite{Redaelli2DILP} propongono una formulazione \ac{ILP} adatta ad 
+architetture con riconfigurazione parziale dinamica a due dimensioni.
 
 % TODO spiegare vantaggi riconfigurazione bidimensionale, qui o 
 % nell'introduzione
@@ -611,19 +611,19 @@ da una coppia $(r,c)$ con $r \in R$ e $c \in C$, ed è composta da $\rho_u$
 \acp{CLB}.
 
 \subparagraph{Supporto alla riconfigurazione bidimensionale}
-Alcune variabili del modello ILP proposte in \cite{Redaelli1DILP} sono 
+Alcune variabili del modello \ac{ILP} proposte in \cite{Redaelli1DILP} sono 
 adattate per supportare la bidimensionalità dell'architettura; gli indici che 
 identificano la posizione di un task (o l'occupazione temporale di una certa 
 area della scheda) sono quindi due, uno per la colonna più a sinistra e uno per 
 la riga più in basso.
 
 
-\paragraph{Limitazioni formulazioni ILP}
+\paragraph{Limitazioni formulazioni \acs{ILP}}
 Oltre alla limitazione dovuta alle potenzialità dell'architettura 
 riconfigurabile considerata in \cite{BanerjeePhysicalConstraints}, esiste uno 
 svantaggio specifico per le formulazioni di programmazione lineare intera: il 
 costo computazionale eccessivo. Al crescere della complessità del modello, il 
-costo in termini di tempo d'esecuzione del \emph{solver ILP} aumenta 
+costo in termini di tempo d'esecuzione del \emph{solver \ac{ILP}} aumenta 
 esponenzialmente.
 
 Come riportato in \cite{Redaelli2DILP}, il tempo impiegato per risolvere in 
@@ -756,7 +756,8 @@ sfruttare le capacità di riconfigurazione della \ac{FPGA} obiettivo:
 riconfigurazione, ovvero la dimensione del \emph{bitstream}; partendo da task 
 che condividono parzialmente i dati necessari alla loro configurazione è 
 possibile configurare in maniera incrementale soltanto le porzioni dei 
-moduli che differiscono tra di loro.
+moduli che differiscono tra di loro, a condizione che tra le esecuzioni non si 
+verifichino riconfigurazioni dell'intera area.
 \end{itemize}
 
 
