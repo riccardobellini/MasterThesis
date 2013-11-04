@@ -1,3 +1,5 @@
+%%%%%% FIXME %%%%%%% sostituire ILP con relativo acronimo
+
 \chapter{Stato dell'arte}
 \label{chap:SOA}
 \vspace{1cm}
@@ -733,6 +735,31 @@ vengono impiegate tecniche per mascherare il tempo di riconfigurazione (come il
 \emph{configuration prefetching}), e il collo di bottiglia causato dalle 
 limitazioni del controllore della riconfigurazione, che impongono 
 riconfigurazioni non sovrapposte nel tempo.
+
+
+\subsubsection{\acl{EPR} e \acl{IR}}
+Jeong et al.~propongono in \cite{JeongHWSWCosynthesis} due metodi diversi per 
+risolvere problemi di \emph{hardware-software cosynthesis}: una formulazione 
+\ac{ILP} per risolvere in modo esatto il problema di hardware-software 
+cosynthesis e una euristica.
+
+L'algoritmo euristico si basa sull'euristica iterativa proposta da 
+Fiduccia-Mattheyses in \cite{FiducciaMattheyses} per risolvere il problema del 
+bipartizionamento di un ipergrafo.
+
+In entrambi i metodi (\ac{ILP} ed euristica) vengono incorporati due concetti 
+nel calcolo del trade-off del partizionamento hardware-software, per meglio 
+sfruttare le capacità di riconfigurazione della \ac{FPGA} obiettivo:
+\begin{itemize}
+ \item \ac{EPR}, rappresenta il concetto di \emph{configuration prefetching};
+ \item \ac{IR}, che consente di ridurre la quantità di dati necessari per la 
+riconfigurazione, ovvero la dimensione del \emph{bitstream}; partendo da task 
+che condividono parzialmente i dati necessari alla loro configurazione è 
+possibile configurare in maniera incrementale soltanto le porzioni dei 
+moduli che differiscono tra di loro.
+\end{itemize}
+
+
 
 % TODO scendere più nel dettaglio (rappresentazione cromosomi, fitness 
 % function, operatori utilizzati)
