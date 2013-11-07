@@ -730,6 +730,9 @@ di implementazione da utilizzare per ogni task (software o hardware), si usa un
 algoritmo genetico che al suo interno esegue lo scheduling come subroutine per 
 effettuare la valutazione di una determinata partizione.
 
+% TODO scendere più nel dettaglio (rappresentazione cromosomi, fitness 
+% function, operatori utilizzati)
+
 L'overhead introdotto dalla riconfigurazione parziale è tenuto in 
 considerazione e aggiunto al tempo di computazione dei task; tuttavia, non 
 vengono impiegate tecniche per mascherare il tempo di riconfigurazione (come il 
@@ -747,6 +750,8 @@ cosynthesis e una euristica.
 L'algoritmo euristico si basa sull'euristica iterativa proposta da 
 Fiduccia-Mattheyses in \cite{FiducciaMattheyses} per risolvere il problema del 
 bipartizionamento di un ipergrafo.
+
+% TODO parlare di euristica iterativa KLFM, move and lock, ecc.
 
 In entrambi i metodi (\ac{ILP} ed euristica) vengono incorporati due concetti 
 nel calcolo del trade-off del partizionamento hardware-software, per meglio 
@@ -783,31 +788,47 @@ come parte integrante dell'algoritmo di partizionamento e scheduling.
 
 \acrodef{BRAM}{Block Random Access Memory}
 
-Il loro approccio si basa, su un'euristica iterativa, come formulata da 
+\subparagraph{Approccio}
+Il loro approccio si basa su un'euristica iterativa, come formulata da 
 Kernighan-Lin \cite{KernighanLin} e Fiduccia-Mattheyses 
 \cite{FiducciaMattheyses}. Per tenere conto di possibili ottimizzazioni 
 effettuate dai compilatori, è supportata l'esistenza di più di una 
-implementazione per ogni task. Un'altra importante caratteristica 
-dell'euristica proposta, naturale conseguenza del tenere in considerazione i 
-vincoli hardware durante il piazzamento fisico dei moduli, è la possibilità di 
-estendere l'approccio per supportare l'eterogeneità di 
-risorse\footnote{L'eterogeneità delle risorse consiste nell'avere delle 
-risorse aggiuntive incorporate sul die, ad esempio memorie a blocchi 
-(\acs{BRAM}), \acp{DSP}, moltiplicatori. Ciò consente ai designer di 
-utilizzare le risorse aggiuntive presenti, senza bisogno di implementare 
-manualmente tutte le funzionalità necessarie. Le risorse incorporate sono 
-anche chiamate processori hardcore, in contrapposizione ai processori 
-softcore, che rappresentano unità computazionali implementate usando la logica 
-riconfigurabile messa a disposizione dall'\ac{FPGA}}, un fattore chiave per 
-l'incremento di prestazioni delle applicazioni implementate su \ac{FPGA} 
-moderne; dato che le risorse eterogenee sono disponibili soltanto in posizioni 
-``prefissate'' della scheda, l'attenzione nella scelta dell'area da assegnare a 
-un modulo risulta un fattore determinante per l'incremento delle performance 
-dell'applicazione da accelerare.
+implementazione per ogni task.
+
+Come nel lavoro \cite{JeongHWSWCosynthesis}, la parte di valutazione di una 
+``mossa'' nel partizionamento viene effettuata da uno scheduler list-based. La 
+priorità dei task è calcolata come combinazione lineare di una serie di 
+metriche, come l'istante al più presto di avvio, l'istante al più presto di 
+fine e il requisito in termini di area (colonne) occupata dal modulo.
 
 
-% TODO scendere più nel dettaglio (rappresentazione cromosomi, fitness 
-% function, operatori utilizzati)
+\subparagraph{Eterogeneità delle risorse}
+Un'altra importante caratteristica dell'euristica proposta, naturale 
+conseguenza del tenere in considerazione i vincoli hardware durante il 
+piazzamento fisico dei moduli, è la possibilità di estendere l'approccio per 
+supportare l'eterogeneità di risorse\footnote{L'eterogeneità delle risorse 
+consiste nell'avere delle risorse aggiuntive incorporate sul die, ad esempio 
+memorie a blocchi (\acs{BRAM}), \acp{DSP}, moltiplicatori. Ciò consente ai 
+designer di utilizzare le risorse aggiuntive presenti, senza bisogno di 
+implementare manualmente tutte le funzionalità necessarie. Le risorse 
+incorporate sono anche chiamate processori hardcore, in contrapposizione ai 
+processori softcore, che rappresentano unità computazionali implementate usando 
+la logica riconfigurabile messa a disposizione dall'\ac{FPGA}}, un fattore 
+chiave per l'incremento di prestazioni delle applicazioni implementate su 
+\ac{FPGA} moderne; dato che le risorse eterogenee sono disponibili soltanto in 
+posizioni ``prefissate'' della scheda, l'attenzione nella scelta dell'area da 
+assegnare a un modulo risulta un fattore determinante per l'incremento delle 
+performance dell'applicazione da accelerare.
+
+\subparagraph{Limitazioni}
+Nonostante la velocità di esecuzione dell'euristica proposta\footnote{Gli 
+autori affermano che task graph aventi una dimensione di centinaia di nodi 
+completano le fasi di partitioning, scheduling e placement nel giro di pochi 
+minuti.}, le limitazioni che caratterizzano questo metodo sono le stesse della 
+formulazione \ac{ILP} proposta nello stesso articolo. L'architettura target
+considerata è dotata di riconfigurazione parziale dinamica, ma soltanto a una 
+dimensione; inoltre il riutilizzo dei moduli per guadagnare tempo di esecuzione 
+non viene mai considerato.
 
 
 % TODO presentazione delle motivazioni che hanno portato allo sviluppo di un 
