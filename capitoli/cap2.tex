@@ -776,7 +776,31 @@ descritto anche un metodo euristico per la risoluzione dei problemi di
 partitionamento, scheduling e piazzamento fisico dei task rispettando i vincoli 
 architetturali.
 
-L'euristica proposta in \cite{BanerjeePhysicalConstraints} 
+L'euristica proposta in \cite{BanerjeePhysicalConstraints} cerca di porre 
+rimedio alle limitazioni del metodo proposto in \cite{JeongHWSWCosynthesis} 
+presentate nel paragrafo precedente, considerando il piazzamento dei moduli 
+come parte integrante dell'algoritmo di partizionamento e scheduling.
+
+\acrodef{BRAM}{Block Random Access Memory}
+
+Il loro approccio si basa, su un'euristica iterativa, come formulata da 
+Kernighan-Lin \cite{KernighanLin} e Fiduccia-Mattheyses 
+\cite{FiducciaMattheyses}. Per tenere conto di possibili ottimizzazioni 
+effettuate dai compilatori, è supportata l'esistenza di più di una 
+implementazione per ogni task. Un'altra importante caratteristica 
+dell'euristica proposta, naturale conseguenza del tenere in considerazione i 
+vincoli hardware durante il piazzamento fisico dei moduli, è la possibilità di 
+estendere l'approccio per supportare l'eterogeneità di 
+risorse\footnote{L'eterogeneità delle risorse consiste nell'avere delle 
+risorse aggiuntive incorporate sul die, ad esempio memorie a blocchi 
+(\acs{BRAM}), \acp{DSP}, moltiplicatori. Ciò consente ai designer di 
+utilizzare le risorse aggiuntive presenti, senza bisogno di implementare 
+manualmente tutte le funzionalità necessarie. Le risorse incorporate sono 
+anche chiamate processori hardcore, in contrapposizione ai processori 
+softcore, che rappresentano unità computazionali implementate usando la logica 
+riconfigurabile messa a disposizione dall'\ac{FPGA}}, un fattore chiave per 
+l'incremento di prestazioni delle applicazioni implementate su \ac{FPGA} 
+moderne.
 
 
 % TODO scendere più nel dettaglio (rappresentazione cromosomi, fitness 
