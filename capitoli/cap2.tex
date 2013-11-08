@@ -869,6 +869,8 @@ controller}.}
 \label{fig:slackRecController}
 \end{figure}
 
+%%% FIXME citare immagine (articolo PARLGRAN di Banerjee)
+
 
 La seconda tecnica, usata come metodo di ottimizzazione locale per ridurre la 
 frammentazione, permette di trarre vantaggio da eventuali periodi di inattività 
@@ -897,6 +899,47 @@ paralleli che lavorano su parti diverse di uno stesso insieme di dati. Inoltre,
 non è presente nessuna valutazione quantitativa della memoria disponibile per 
 i task; questo potrebbe diventare un problema nel caso in cui si debbano 
 risolvere particolari istanze.
+
+
+\subsubsection{Napoleon}
+\emph{Napoleon} è un algoritmo euristico presentato da Redaelli et al.~in 
+\cite{Redaelli2DILP}. Le sue caratteristiche distintive sono la capacità di 
+supportare architetture riconfigurabili bidimensionali e la possibilità di 
+sfruttare alcune tecniche viste in precedenza in diversi altri lavori e altre 
+nuove: \emph{configuration prefetching}, \emph{riutilizzo dei moduli} e 
+tecniche di \emph{anti-frammentazione}.
+
+In particolare, Napoleon adotta la tecnica chiamata \emph{limited 
+deconfiguration}\footnote{La deconfigurazione limitata consiste nel tenere 
+tutti i moduli configurati sull'\ac{FPGA} finchè altri task non richiedono le 
+loro risorse.}; grazie a questa si può incrementare la possibilità di 
+un eventuale riutilizzo dei moduli.
+
+Oltre ad applicare la deconfigurazione limitata, Napoleon si basa sul criterio 
+di \emph{farthest placement}\footnote{La tecnica di \emph{farthest placement} 
+mira a piazzare fisicamente il task nella zona che abbia area sufficiente per 
+contenere il task e sia più distante possibile dal centro della scheda.}, per 
+la fase di piazzamento dei task. Questo criterio ha come scopo il favorire il 
+piazzamento di task futuri: è infatti più facile piazzare moduli con grandi 
+requisiti di area al centro della scheda.
+
+L'euristica Napoleon supporta più di un controllore di riconfigurazione, 
+laddove l'architettura obiettivo abbia queste caratteristiche. Dai risultati 
+dei test sperimentali risulta che nel caso vengano utilizzati due 
+riconfiguratori, l'algoritmo ha calcolato la soluzione ottima in $7$ istanze su 
+$10$ benchmark diversi. In generale, ad un aumento del numero di 
+riconfiguratori disponibili corrisponde un aumento della qualità della 
+soluzione generata, in quanto è possibile sfruttare maggiormente tecniche di 
+ottimizzazione quali ad esempio il configuration prefetching.
+
+\subparagraph{Limitazioni}
+Nonostante la qualità dei risultati generati, il tempo di esecuzione più che 
+ragionevole e le tecniche di ottimizzazione utilizzate, il limite di Napoleon è 
+la mancata considerazione esplicita delle comunicazioni tra i task di 
+computazione. Inoltre, l'algoritmo euristico proposto non considera la 
+possibilità di avere task con implementazioni software che possano essere 
+eseguiti su uno o più processori general purpose, oltre ai task accelerati in 
+hardware.
 
 
 % TODO presentazione delle motivazioni che hanno portato allo sviluppo di un 
