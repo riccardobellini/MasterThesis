@@ -9,4 +9,5 @@
 *.toc
 *.backup
 *~
-
+!SlackRecController1.pdf
+!SlackRecController2.pdf
