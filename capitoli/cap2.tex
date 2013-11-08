@@ -831,18 +831,72 @@ dimensione; inoltre il riutilizzo dei moduli per guadagnare tempo di esecuzione
 non viene mai considerato.
 
 \paragraph{PARLGRAN}
-Gli stessi autori introducono in \cite{BanerjeePARLGRAN} in un lavoro 
-seguente, come soluzione migliorata ai problemi di scheduling e placement in 
-presenza di vincoli di risorse. L'obiettivo di PARLGRAN è selezionare il 
-miglior livello di granularità di parallelismo dei dati, per task che operano 
-su dati parallelizzabili. Allo scopo di considerare l'overhead di 
-riconfigurazione e possibili problemi nel piazzamento dei task, vengono 
-utilizzate due tecniche:
+Gli stessi autori introducono PARLGRAN in un lavoro seguente 
+\cite{BanerjeePARLGRAN}, come soluzione migliorata ai problemi di 
+scheduling e placement in presenza di vincoli di risorse. L'obiettivo di 
+PARLGRAN è selezionare il miglior livello di granularità di parallelismo dei 
+dati, per task che operano su dati parallelizzabili. Allo scopo di considerare 
+l'overhead di riconfigurazione e possibili problemi nel piazzamento dei task, 
+vengono utilizzate due tecniche:
 \begin{itemize}
- % descrivere simple fragmentation reduction
- % descrivere exploiting slack in reconfiguration controller
+ \item \emph{simple fragmentation reduction};
+ \item \emph{exploiting slack in reconfiguration controller}.
 \end{itemize}
+La prima tecnica consiste nell'evitare il più possibile che due task siano 
+piazzati in maniera adiacente sulla scheda; il piazzamento del secondo task 
+avviene invece su lato opposto della scheda, se possibile. In questo modo è 
+possibile sfruttare lo spazio libero per riconfigurare ed eseguire task con un 
+requisito di area maggiore.
 
+\begin{figure}[t]
+\begin{minipage}[b]{0.4\textwidth}
+ \begin{center}
+\includegraphics[width=\linewidth]{capitoli/figure/cap2/SlackRecController1.pdf}
+\subcaption{Più frammentazione}
+\label{fig:slackRecController1}
+ \end{center}
+\end{minipage}
+\hfill
+\begin{minipage}[b]{0.4\textwidth}
+ \begin{center}
+\includegraphics[width=\linewidth]{capitoli/figure/cap2/SlackRecController1.pdf}
+\subcaption{Meno frammentazione}
+\label{fig:slackRecController2}
+ \end{center}
+\end{minipage}
+\caption{Applicazione della tecnica \emph{exploiting slack in reconfiguration 
+controller}.}
+\label{fig:slackRecController}
+\end{figure}
+
+
+La seconda tecnica, usata come metodo di ottimizzazione locale per ridurre la 
+frammentazione, permette di trarre vantaggio da eventuali periodi di inattività 
+tra il termine di una riconfigurazione e l'esecuzione del task relativo. Un 
+esempio di applicazione di tale tecnica è mostrato in Figura 
+\ref{fig:slackRecController}. Nella Figura \ref{fig:slackRecController1} si può 
+vedere come vi sia un tempo morto tra la riconfigurazione del task $T3$ e la sua 
+esecuzione, che rallenta l'inizio della riconfigurazione del task $T4$. Il task 
+$T3$ può quindi essere piazzato in una diversa posizione, come raffigurato in 
+Figura \ref{fig:slackRecController2}, consentendo alla riconfigurazione del task 
+$T4$ di partire anticipatamente, senza che l'istante di fine esecuzione di $T3$ 
+sia influenzato dallo spostamento.
+
+L'utilizzo congiunto delle due tecniche sopra descritte permette di guadagnare 
+in termini di makespan dello schedule finale e di produrre quindi soluzioni di 
+miglior qualità, sempre con l'obiettivo principale di integrare i vincoli di 
+risorse e garantire la generazione di soluzioni fisicamente implementabili.
+
+%%% TODO parlare dello static pruning?
+
+\subparagraph{Limitazioni di PARLGRAN}
+La principale limitazione di PARLGRAN, oltre al mancato supporto di 
+architetture con riconfigurazione parziale dinamica bidimensionale, consiste 
+nella mancata considerazione della gestione della memoria nel caso di task 
+paralleli che lavorano su parti diverse di uno stesso insieme di dati. Inoltre, 
+non è presente nessuna valutazione quantitativa della memoria disponibile per 
+i task; questo potrebbe diventare un problema nel caso in cui si debbano 
+risolvere particolari istanze.
 
 
 % TODO presentazione delle motivazioni che hanno portato allo sviluppo di un 
