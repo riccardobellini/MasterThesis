@@ -986,7 +986,8 @@ $\tau$ è l'euristica globale determinata dal feromone. $\alpha$ e $\beta$
 rappresentano i pesi che vengono date alle due euristiche e che influenzano il 
 comportamento della formica nel processo decisionale. $\Omega_x$ è l'insieme che 
 contiene tutte le scelte possibili al passo corrente $x$. Alla fine di ogni 
-decisione, la matrice dei feromoni è aggiornata con la formula
+processo decisionale, avendo ottenuto diverse soluzioni, la matrice dei 
+feromoni è aggiornata con la formula
 \begin{equation}
  \tau_{x,y} = (1-\rho)\cdot \tau_{x,y} + \epsilon
 \end{equation}
@@ -995,6 +996,20 @@ rappresenta un coefficiente correttivo di rinforzo che evita di penalizzare
 tramite l'evaporazione anche le scelte migliori.
 
 
+\paragraph{Applicazioni}
+Ferrandi et al.~propongono in \cite{AntColonyOptimization} un algoritmo basato 
+sull'euristica \ac{ACO} per effettuare mapping e scheduling di task e 
+comunicazioni su un sistema \ac{MPSoC} eterogeneo. Il loro approccio considera 
+la presenza di più \emph{implementation point}, che rappresentano le diverse 
+implementazioni possibili per i task che compongono l'applicazione. Oltre a 
+questo, l'architettura è considerata formata da componenti di computazione e 
+componenti di comunicazione; ad ogni componente dell'archittettura è associato 
+un insieme di risorse \emph{rinnovabili} (ad esempio risorse che possono essere 
+riconfigurate dopo l'utilizzo) e \emph{non rinnovabili} (nel caso contrario).
+Grazie a questa formulazione l'algoritmo si adatta a diversi tipi di 
+architetture; inoltre, la differenza tra risorse rinnovabili e non modellizza 
+sia processori general purpose, risorse rinnovabili per definizione, sia core 
+implementati su logica riconfigurabile, rinnovabili tramite la riconfigurazione.
 
 
 % TODO presentazione delle motivazioni che hanno portato allo sviluppo di un 
