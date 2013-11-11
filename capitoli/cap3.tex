@@ -909,8 +909,26 @@ aggiunti in fase di preprocessing per quella comunicazione, considerando
 soltanto la presenza di un task di tipo \emph{WRITE}, il cui compito è inviare 
 tramite BUS i dati direttamente dal task sorgente al task destinazione.
 
-% TODO specificare cosa si fa in caso di riconfigurazioni e tempi di esecuzione 
-% comunicazione su BUS
+\subparagraph{Stima del tempo di esecuzione}
+Il calcolo della stima del tempo di esecuzione di una comunicazione effettuata 
+su BUS è più semplice rispetto alle comunicazioni tramite memoria e coinvolge 
+un numero inferiore di parametri. Infatti, è necessario sapere soltanto il rate 
+di trasferimento del BUS e ovviamente la dimensione dei dati da trasferire. 
+Noti i due parametri, la stima della durata della comunicazione si calcola 
+semplicemente come
+\begin{equation}
+ execTime = \ceil[\bigg]{\frac{produceRate}{transferRate}}
+\end{equation}
+
+\subparagraph{Accesso esclusivo al BUS}
+Un'importante differenza tra le comunicazioni basate su \acs{RAM} e quelle 
+tramite BUS consiste nel fatto che mentre la memoria può avere più di una porta 
+per la lettura/scrittura dei dati, il BUS non ammette l'esecuzione 
+di trasferimenti in parallelo. L'algoritmo quindi posticipa l'esecuzione di un 
+trasferimento su BUS se un altro trasferimento tiene occupata la risorsa.
+
+
+% TODO specificare cosa si fa in caso di riconfigurazioni (policy)
 
 
 \subsection{Gestione della memoria}
