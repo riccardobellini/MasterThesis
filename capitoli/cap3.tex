@@ -967,6 +967,32 @@ eliminato.
 
 \subsection{Gestione della memoria}
 \label{sec:gestioneMemoria}
+La gestione della memoria dell'algoritmo di scheduling è costituita dal 
+partizionamento della memoria disponibile: a ogni processing task viene 
+assegnata una quantità di memoria sotto forma di una tupla 
+$<\text{base\_address, size}>$.
+
+Quando un task di computazione è selezionato per lo scheduling, il gestore 
+della memoria si occupa di cercare una porzione di memoria libera 
+sufficientemente grande per contenere i dati prodotti dal task. Se non viene 
+trovata nessuna area riutilizzabile, viene assegnato un nuovo spazio di 
+indirizzi al task. Eventuali tecniche per evitare la frammentazione della 
+memoria non sono utilizzate, in quanto non di interesse per il lavoro dello 
+scheduler.
+
+Al momento di allocare memoria per il primo processing task, il gestore della 
+memoria parte dall'indirizzo \verb+0x0+ e riserva tanta memoria quanta ne 
+serve per contenere i dati prodotti per tutti i processing task successori nel 
+task graph, allineata a $4$ byte. Internamente, il gestore della memoria marca 
+quell'area come occupata dal task, e costruisce una lista di tutti i task 
+successori che hanno bisogno di recuperare dati da quell'area.
+% TODO figura esplicativa
+Ogni volta che una comunicazione che ha come sorgente il processing task per 
+cui è stata allocata memoria viene schedulata, il corrispondente successore 
+viene eliminato dalla lista dei processing task in attesa dei dati. Quando 
+tutti i successori sono stati eliminati e la lista è vuota, l'area di memoria è 
+marcata come libera, e una successiva allocazione di un task la può occupare, a 
+patto che la dimensione sia compatibile con il numero di dati da memorizzare.
 
 
 \section{Osservazioni conclusive}
