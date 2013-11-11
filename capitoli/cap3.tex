@@ -872,7 +872,20 @@ per il task destinatario della comunicazione.
 Questo schema segue l'aggiunta delle comunicazioni spiegata precedentemente 
 nella sezione sulla fase di preprocessing.
 
-% TODO tempi di esecuzione comunicazione su RAM
+\subparagraph{Stima del tempo di esecuzione}
+La stima del tempo di esecuzione di una comunicazione effettuata su \acs{RAM} è 
+calcolata partendo da una serie di parametri disponibili nell'XML del progetto 
+\ac{FASTER}: la lunghezza del burst di dati trasferiti, il tempo medio di upload 
+di un burst\footnote{Il tempo medio necessario perchè un burst di dati venga 
+effettivamente trasferito in memoria dal controller.}, oltre alla dimensione 
+dei dati da trasferire in memoria (ovvero il \emph{produce rate} del task). Da 
+questi dati è possibile calcolare una stima del tempo di esecuzione del task di 
+comunicazione come
+\begin{equation}
+execTime = \ceil[\bigg]{\frac{produceRate}{burstLength}} \cdot 
+mediumBurstUploadTime
+\end{equation}
+
 
 
 \paragraph{Comunicazione tramite \acs{RAM} e BUS}
