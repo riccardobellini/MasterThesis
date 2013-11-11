@@ -886,6 +886,17 @@ execTime = \ceil[\bigg]{\frac{produceRate}{burstLength}} \cdot
 mediumBurstUploadTime
 \end{equation}
 
+\subparagraph{Porte di lettura/scrittura}
+In fase di implementazione del template che prevede la comunicazione tramite 
+\acs{RAM} è stata fornita la possibilità di specificare come parametro nel file 
+XML del progetto l'eventuale numero di porte di lettura/scrittura disponibili 
+per la memoria, in modo da poter specificare quante letture/scritture è 
+possibile effettuare contemporaneamente in memoria senza bisogno di 
+serializzare le comunicazioni.
+
+L'algoritmo tiene conto del numero di porte disponibili e posticipa 
+l'esecuzione di task di comunicazione tramite \acs{RAM} se il massimo numero di 
+letture/scritture in parallelo è raggiunto.
 
 
 \paragraph{Comunicazione tramite \acs{RAM} e BUS}
