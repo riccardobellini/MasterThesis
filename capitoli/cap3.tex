@@ -840,9 +840,57 @@ assegnata ai task. La formula \ref{eq:writeBeforeRecPriority} sostituisce la
 \ref{eq:hardwarePriority} in questi casi.
 
 
+\acrodef{RAM}{Random Access Memory}
+
 \section{Elementi di comunicazione e gestione della memoria}
 \label{sec:elementiComunicazioneGestioneMemoria}
+In questa sezione viene presentata la struttura degli elementi di comunicazione 
+supportata dall'algoritmo di scheduling proposto in questo lavoro.
+Allo scopo di semplificare la gestione delle comunicazioni, è stato scelto 
+l'utilizzo di due \emph{template} di comunicazione standard, descritti nella 
+Sezione \ref{sec:templateComunicazione}.
 
+L'allocazione statica della memoria per i task di computazione, costituita da 
+un partizionamento della memoria \acs{RAM} effettuato per ogni task è invece 
+illustrata nella Sezione \ref{sec:gestioneMemoria}.
+
+
+\subsection{Template di comunicazione}
+\label{sec:templateComunicazione}
+
+\paragraph{Comunicazione tramite \acs{RAM}}
+Il primo template, più semplice, è rappresentato dallo scenario in cui tutti i 
+core (sia hard che soft, oltre a processori general purpose) presenti sulla 
+scheda possano comunicare tramite letture e scritture di dati su una memoria 
+\acs{RAM} condivisa. Ogni unità computazionale può pertanto comunicare con ogni 
+altra unità computazionale, utilizzando quindi due task di comunicazione:
+\begin{itemize}
+ \item un task \emph{WRITE} che scrive i dati di output in memoria;
+ \item un task \emph{READ} che legge i dati da memoria e li carica come input 
+per il task destinatario della comunicazione.
+\end{itemize}
+Questo schema segue l'aggiunta delle comunicazioni spiegata precedentemente 
+nella sezione sulla fase di preprocessing.
+
+% TODO tempi di esecuzione comunicazione su RAM
+
+
+\paragraph{Comunicazione tramite \acs{RAM} e BUS}
+Il secondo template, è un'estensione del primo: in questo scenario tutti i 
+core possono comunicare tra loro anche mediante un BUS, che rende possibile 
+effettuare dei collegamenti punto-punto tra tutti i core. Nel caso venga deciso 
+in fase di scheduling di usare il BUS invece che la comunicazione tramite 
+memoria per un determinato scambio di dati, è necessario ristrutturare i task 
+aggiunti in fase di preprocessing per quella comunicazione, considerando 
+soltanto la presenza di un task di tipo \emph{WRITE}, il cui compito è inviare 
+tramite BUS i dati direttamente dal task sorgente al task destinazione.
+
+% TODO specificare cosa si fa in caso di riconfigurazioni e tempi di esecuzione 
+% comunicazione su BUS
+
+
+\subsection{Gestione della memoria}
+\label{sec:gestioneMemoria}
 
 
 \section{Osservazioni conclusive}
