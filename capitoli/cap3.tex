@@ -3,8 +3,11 @@
 \vspace{1cm}
 Nel Capitolo \ref{chap:SOA} sono state descritte alcune soluzioni proposte 
 relative al lavoro oggetto di questa tesi, in particolare algoritmi esatti ed
-euristici di ottimizzazione basati su varie tecniche.
-% TODO & FIXME aggiungere qualcosa (tipo pro/contro)
+euristici di ottimizzazione atti a risolvere il problema di mapping e 
+scheduling, congiuntamente o separatamente. Alla luce delle limitazioni dei 
+lavori presentati è stato spiegato il motivo per cui si rende necessario questo 
+lavoro di sviluppo di un baseline scheduler nell'ambito del progetto 
+\ac{FASTER}.
 
 In questo capitolo verrà descritto l'approccio utilizzato per risolvere il 
 problema di scheduling dei task tenendo in considerazione le comunicazioni e 
@@ -19,9 +22,12 @@ con gli altri strumenti utilizzati nella toolchain di \acs{FASTER}; la Sezione
 dell'algoritmo di scheduling, fornendo una panoramica delle fasi in cui questo 
 si divide; la Sezione \ref{sec:euristicaSceltaTask} contiene una descrizione 
 dettagliata della fase più delicata del procedimento di scheduling, la scelta 
-del task migliore da considerare ad ogni passo di decisione; la Sezione 
-\ref{sec:osservazioniConclusive} fornisce un riepilogo dei concetti importanti 
-presentati in questo capitolo.
+del task migliore da considerare ad ogni passo di decisione; nella Sezione 
+\ref{sec:elementiComunicazioneGestioneMemoria} vengono introdotti i modelli di 
+comunicazione supportati dall'algoritmo proposto e una possibile allocazione 
+statica della memoria per i task di computazione svolta contemporaneamente allo 
+scheduling; infine, la Sezione \ref{sec:osservazioniConclusive} fornisce un 
+riepilogo dei concetti importanti presentati in questo capitolo.
 
 
 \section{Integrazione nella toolchain di \acs{FASTER}}
@@ -832,6 +838,11 @@ priorità è calcolata nel seguente modo:
 dove il termine aggiuntivo $EP$ rappresenta la priorità extra che viene 
 assegnata ai task. La formula \ref{eq:writeBeforeRecPriority} sostituisce la 
 \ref{eq:hardwarePriority} in questi casi.
+
+
+\section{Elementi di comunicazione e gestione della memoria}
+\label{sec:elementiComunicazioneGestioneMemoria}
+
 
 
 \section{Osservazioni conclusive}
