@@ -928,7 +928,41 @@ di trasferimenti in parallelo. L'algoritmo quindi posticipa l'esecuzione di un
 trasferimento su BUS se un altro trasferimento tiene occupata la risorsa.
 
 
-% TODO specificare cosa si fa in caso di riconfigurazioni (policy)
+% TODO introdurre la sezione all'inizio della sezione su comunicazioni e memoria
+\subsection{Policy di assegnazione delle comunicazioni}
+\label{sec:policyComunicazioni}
+Al momento di effettuare lo scheduling di una comunicazione, si possono 
+presentare due situazioni:
+\begin{enumerate}
+ \item le comunicazioni possono essere effettuate soltanto tramite \acs{RAM};
+ \item le comunicazioni possono essere effettuate sia tramite \acs{RAM} che su 
+BUS.
+\end{enumerate}
+Nel primo caso, la comunicazione viene banalmente assegnata all'esecuzione su 
+memoria e vengono calcolate le informazioni relative ai tempi di esecuzione, 
+basandosi sulla disponibilità del componente e sull'eventuale numero di porte 
+specificato.
+
+Nel secondo caso, dev'essere controllato se la comunicazione è ``eleggibile'' 
+per il BUS. Questa condizione dipende dai seguenti fattori:
+\begin{itemize}
+ \item se il task di comunicazione è del tipo \emph{WRITE}\footnote{Infatti, 
+task di comunicazione di tipo \emph{READ} indicherebbero che si sta 
+considerando per lo scheduling la seconda parte di una comunicazione tramite 
+memoria.};
+ \item se i processing task sorgente e destinazione della comunicazione non 
+sono su aree oggetto di riconfigurazione\footnote{In caso di riconfigurazione 
+di un'area è preferibile trasferire i dati in memoria prima di 
+effettuare la riconfigurazione, onde evitare perdite di dati.}.
+\end{itemize}
+Se queste condizioni si verificano, il task di comunicazione è eleggibile per 
+essere eseguito tramite BUS oltre che tramite memoria. In questo caso, è scelto 
+il mezzo di comunicazione che per primo è disponibile a eseguire il task.
+
+Nel caso venga scelto il BUS come mezzo di comunicazione, il task graph è 
+ristrutturato eliminando la comunicazione \emph{READ} correlata e collegando 
+il task di comunicazione con i nodi destinazione degli archi uscenti dal task 
+eliminato.
 
 
 \subsection{Gestione della memoria}
