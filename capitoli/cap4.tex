@@ -40,6 +40,25 @@ memorizzazione di informazioni o utilizzati come ``contenitori''; le classi
 (\verb+class+) vengono utilizzate invece per rappresentare oggetti che hanno 
 degli algoritmi al loro interno, invocabili come metodi.
 
+\paragraph{Organizzazione dei namespace}
+Nel codice si è deciso di includere le strutture e le classi dentro a 
+\emph{namespace}, allo scopo di prevenire eventuali conflitti di nomi e di 
+organizzare logicamente per categorie le varie parti della toolchain.
+
+\begin{figure}
+ \begin{center}
+\includegraphics[width=\textwidth]{capitoli/figure/cap4/FASTERNamespaces.pdf}
+\caption{Gerarchia dei namespace di \acs{FASTER}.}
+\label{fig:gerarchiaNamespace}
+ \end{center}
+\end{figure}
+
+Una rappresentazione della struttura dei namespace è visibile in Figura 
+\ref{fig:gerarchiaNamespace}. La maggior parte di questi namespace verrà 
+spiegata al momento di trattare classi o strutture che ne fanno parte 
+e sono rilevanti per il lavoro oggetto della tesi.
+
+% TODO parlare delle strutture dati di FASTER, prima o poi
 
 \section{Strutture dati}
 \label{sec:struttureDati}
@@ -47,9 +66,11 @@ L'obiettivo di questa sezione è presentare le più importanti strutture dati
 utilizzate dallo scheduler, che si trovano nella cartella 
 \emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/scheduler}.
 
+\subsection{Scheduler input}
+I file \emph{schedulerInput.hpp} e \emph{schedulerInput.cpp} contengono la 
+dichiarazione e l'implementazione della struttura \verb+SchedulerInput+, 
+rispettivamente.
 
-
-\
 
 \section{Classi e gerarchie principali}
 \label{sec:classiGerarchie}
