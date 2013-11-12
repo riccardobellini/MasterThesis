@@ -1,13 +1,17 @@
 *.aux
 *.bbl
 *.blg
+*.dvi
 *.lof
 *.log
 *.lot
 *.out
 *.pdf
+*.ps
+*.pyg
 *.toc
 *.backup
 *~
 !SlackRecController1.pdf
 !SlackRecController2.pdf
+!FASTERNamespaces.pdf
