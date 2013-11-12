@@ -64,12 +64,51 @@ e sono rilevanti per il lavoro oggetto della tesi.
 \label{sec:struttureDati}
 L'obiettivo di questa sezione è presentare le più importanti strutture dati 
 utilizzate dallo scheduler, che si trovano nella cartella 
-\emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/scheduler}.
+\emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/scheduler}. 
+Tutte le strutture che saranno esaminate in questa sezione appartengono al 
+namespace \verb+faster::applications::scheduler+.
 
 \subsection{Scheduler input}
 I file \emph{schedulerInput.hpp} e \emph{schedulerInput.cpp} contengono la 
 dichiarazione e l'implementazione della struttura \verb+SchedulerInput+, 
 rispettivamente.
+
+Il seguente frammento di codice mostra le parti rilevanti della 
+dichiarazione della struttura.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  struct SchedulerInput {
+  private:
+      FasterProjectPtr m_fasterProject;
+      explorer::ExplorerTrace m_explorerTrace;
+      std::vector<FasterTaskPtr> m_topologicalSorting;
+      CriticalPathInfoMap_t m_criticalPathInfo;
+      std::vector<ProcessingTaskPair_t> m_reconfigurationsList;
+      bool m_busAvailable;
+      FasterTaskGraphPtr m_taskGraph;
+      FasterReconfigurationElementPtr m_reconfigurationController;
+      FasterMemoryElementPtr m_ramElement;
+      FasterCommunicationElementPtr m_busElement;
+      SchedulerMemoryManagerPtr m_memoryManager;
+      int m_readPortsNum;
+      int m_writePortsNum;
+      // code...
+  }
+\end{minted}
+La struttura \verb+SchedulerInput+ contiene i dati principali che vengono usati 
+dallo scheduler nel corso dell'elaborazione, dal preprocessing allo scheduling 
+effettivo. In particolare, si notano il puntatore alla struttura 
+\verb+FasterProject+, che è necessaria per accedere alle informazioni 
+sull'architettura e sull'applicazione, come spiegato nella sezione precedente.
+Il dato membro \verb+m_taskGraph+ viene impostato in seguito alla fase di 
+preprocessing, e contiene in task graph arricchito delle comunicazioni e 
+riconfigurazioni da considerare nella fase di scheduling vera e propria. 
+\verb+m_explorerTrace+ contiene la lista di triple calcolata dal mapper per 
+l'iterazione corrente dell'esplorazione.
+
+Oltre a questi, vi sono anche dei puntatori al gestore della memoria e ai 
+componenti di riconfigurazione e di comunicazione (\acs{RAM} e BUS, se 
+presente), il numero di porte di lettura/scrittura disponibili sulla \acs{RAM}.
 
 
 \section{Classi e gerarchie principali}
