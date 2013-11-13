@@ -198,10 +198,10 @@ order=3
 
 [item:capitoli/cap4.tex]
 archive=true
-column=40
+column=29
 encoding=UTF-8
 highlight=LaTeX
-line=106
+line=100
 mode=LaTeX
 open=true
 order=4
@@ -281,7 +281,7 @@ archive=true
 column=0
 encoding=UTF-8
 highlight=LaTeX
-line=28
+line=0
 mode=LaTeX
 open=true
 order=0
@@ -341,8 +341,8 @@ JumpList=
 ViMarks=.,838,48,[,838,48,],838,48
 
 [view-settings,view=0,item:capitoli/cap4.tex]
-CursorColumn=40
-CursorLine=106
+CursorColumn=29
+CursorLine=100
 JumpList=
 ViMarks=
 
@@ -390,7 +390,7 @@ ViMarks=.,19,0,[,19,0,],19,0
 
 [view-settings,view=0,item:tesi.tex]
 CursorColumn=0
-CursorLine=28
+CursorLine=0
 JumpList=
 ViMarks=a,1,17
 
