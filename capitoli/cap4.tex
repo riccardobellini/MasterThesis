@@ -182,6 +182,7 @@ passo.
 
 Vengono inizialmente ridefiniti alcuni tipi di dato, per semplificare la 
 scrittura e la lettura del codice.
+\newline
 \begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
   typedef std::set<ScheduledTaskInfo> BusyInfoSeries_t;
   typedef std::unordered_map<std::string, BusyInfoSeries_t> GanttMap_t;
@@ -223,6 +224,60 @@ Sono a disposizione dei metodi pubblici per aggiungere le informazioni di
 scheduling relative a un task, per verificare se un determinato componente è 
 occupato in un determinato istante di tempo e per ottenere il primo istante di 
 tempo in cui un determinato componente è libero.
+
+\subsection{Scheduler Output}
+I file \emph{schedulerOutput.hpp} e \emph{schedulerOutput.cpp} contengono la 
+dichiarazione e la definizione della struttura \verb+SchedulerOutput+. Questa 
+struttura contiene i dati di output dello scheduler, che vengono 
+progressivamente aggiornati man mano che l'esecuzione dell'algoritmo avanza, e 
+alla fine sono utilizzati per il calcolo della metrica \emph{makespan}.
+
+
+Nel seguente frammento di codice sono presentate le ridefinizioni di tipo di 
+dato utilizzate in \emph{schedulerOutput.hpp}.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  typedef std::tr1::tuple<FasterTaskPtr,
+                          FasterComponentPtr, 
+                          FasterImplementationPtr> MappingStep_t;
+  typedef std::unordered_map<FasterTaskPtr,
+                             ScheduledTaskInfo, 
+                             utilities::HashUtility<FasterTaskPtr>, 
+                             utilities::EqualUtility<FasterTaskPtr> > 
+                             ScheduledTaskInfoMap_t;
+\end{minted}
+
+La seguente porzione di codice illustra invece la dichiarazione della struttura 
+\verb+SchedulerOutput+.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  struct SchedulerOutput {
+      private:
+          SchedulerGantt m_schedulingGantt;
+          ScheduledTaskInfoMap_t m_scheduledTaskInfo;
+          std::set<MappingStep_t> m_schedulerMapping;
+
+      public:
+          // code...
+          void addSchedulingTimeInfo(const ScheduledTaskInfo & timeInfo);
+          void addScheduledTaskInfo(const FasterTaskPtr & task,
+                  const ScheduledTaskInfo & info);
+          long int computeMakespan() const;
+  };
+\end{minted}
+Come si può vedere dal codice, la struttura agisce come wrapper attorno ai 
+metodi della struttura \verb+SchedulerGantt+ vista in precedenza, ed espone dei 
+metodi che permettono di aggiungere all'output le informazioni di scheduling 
+appena calcolate. Il metodo \verb+computeMakespan()+ permette di calcolare la 
+metrica di valutazione dello scheduling. Nella struttura sono presenti dati 
+membro aggiuntivi che rendono meglio accessibili le informazioni di scheduling 
+già ricavabili dal diagramma di Gantt. Da queste variabili aggiuntive è 
+possibile ricavare in maniera banale le informazioni per ogni task tramite la 
+mappa \verb+m_scheduledTaskInfo+ e il mapping assegnato dallo scheduler tramite 
+la variabile \verb+m_schedulerMapping+\footnote{Mentre il mapping determinato 
+dal mapper è specificato solamente per processing task (relativi al task 
+graph originale), il mapping presente nell'output dello scheduler è relativo ai 
+task del task graph preprocessato.}.
 
 
 \section{Classi e gerarchie principali}
