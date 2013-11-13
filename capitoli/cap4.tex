@@ -91,17 +91,30 @@ pointer per alcune strutture/classi del progetto; ad esempio, alla classe
 \verb+FasterTask+, che identifica un task (generico), corrisponde lo shared 
 pointer \verb+FasterTaskPtr+. 
 
-% TODO parlare delle strutture dati di FASTER, prima o poi
-
 \section{Strutture dati}
 \label{sec:struttureDati}
+In questa sezione vengono presentate alcune strutture dati della toolchain. La 
+sezione si divide in due sotto-sezioni: la Sezione 
+\ref{subsec:struttureDatiFaster} presenta le strutture dati generali della 
+toolchain, non relative allo scheduler; la Sezione 
+\ref{subsec:struttureDatiScheduler} presenta invece le strutture utilizzate 
+dall'algoritmo di scheduling.
+
+
+\subsection{\acs{FASTER}}
+\label{subsec:struttureDatiFaster}
+% TODO
+
+
+\subsection{Scheduler}
+\label{subsec:struttureDatiScheduler}
 L'obiettivo di questa sezione è presentare le più importanti strutture dati 
 utilizzate dallo scheduler, che si trovano nella cartella 
 \emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/scheduler}. 
 Tutte le strutture che saranno esaminate in questa sezione appartengono al 
 namespace \verb+faster::applications::scheduler+.
 
-\subsection{Scheduler input}
+\subsubsection{Scheduler input}
 I file \emph{schedulerInput.hpp} e \emph{schedulerInput.cpp} contengono la 
 dichiarazione e l'implementazione della struttura \verb+SchedulerInput+, 
 rispettivamente.
@@ -145,7 +158,7 @@ presente), il numero di porte di lettura/scrittura disponibili sulla \acs{RAM}
 e variabili aggiuntive che contengono le informazioni di percorso critico dei 
 task, dei task ordinati topologicamente e della lista delle riconfigurazioni.
 
-\subsection{Scheduler Data}
+\subsubsection{Scheduler Data}
 I file \emph{schedulerData.hpp} e \emph{schedulerData.cpp} contengono il codice 
 sorgente della struttura \verb+SchedulerData+, che contiene dati continuamente 
 aggiornati durante l'esecuzione dell'algoritmo di scheduling. A differenza dei 
@@ -172,7 +185,7 @@ la policy di scheduling delle comunicazioni scelga di utilizzare il BUS come
 mezzo di comunicazione, il task \emph{READ} corrispondente dev'essere 
 eliminato dalla lista dei task rimanenti.}.
 
-\subsection{Scheduler Gantt}
+\subsubsection{Scheduler Gantt}
 La struttura \verb+SchedulerGantt+ è definita nei file 
 \emph{schedulerGantt.hpp} e \emph{schedulerGantt.cpp}; la struttura contiene il 
 diagramma di Gantt utilizzato dall'algoritmo per visualizzare la soluzione 
@@ -225,7 +238,7 @@ scheduling relative a un task, per verificare se un determinato componente è
 occupato in un determinato istante di tempo e per ottenere il primo istante di 
 tempo in cui un determinato componente è libero.
 
-\subsection{Scheduler Output}
+\subsubsection{Scheduler Output}
 I file \emph{schedulerOutput.hpp} e \emph{schedulerOutput.cpp} contengono la 
 dichiarazione e la definizione della struttura \verb+SchedulerOutput+. Questa 
 struttura contiene i dati di output dello scheduler, che vengono 
@@ -279,7 +292,7 @@ dal mapper è specificato solamente per processing task (relativi al task
 graph originale), il mapping presente nell'output dello scheduler è relativo ai 
 task del task graph preprocessato.}.
 
-\subsection{Scheduler Utility}
+\subsubsection{Scheduler Utility}
 I file \emph{schedulerUtility.hpp} e \emph{schedulerUtility.cpp}, infine, 
 contengono la definizione di alcune strutture comunemente utilizzate dallo 
 scheduler e viste anche nei precedenti frammenti di codice sorgente.
