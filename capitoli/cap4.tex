@@ -65,12 +65,31 @@ delle strutture/classi:
  \item nomi di dati membro o metodi aventi specificatore di accesso 
 \verb+public+ o \verb+protected+ sono scritti normalmente;
  \item nomi di dati membro o metodi aventi specificatore di accesso 
-\verb+private+ sono scritti aggiungendo la stringa \verb+m_+ come prefisso.
+\verb+private+ sono scritti aggiungendo la stringa ``\verb+m_+'' come prefisso.
 \end{itemize}
 
 Eventuali tipi di dato ridefiniti tramite l'uso di \verb+typedef+ iniziano 
-con una lettera maiuscola e sono scritti aggiungendo la stringa \verb+_t+ come 
-suffisso.
+con una lettera maiuscola e sono scritti aggiungendo la stringa ``\verb+_t+'' 
+come suffisso.
+
+\paragraph{Puntatori e librerie esterne}
+Allo scopo di prevenire il verificarsi di \emph{memory leak} difficili da 
+identificare e debuggare, si è deciso all'inizio della progettazione di non 
+utilizzare i puntatori standard forniti dal linguaggio C++, in favore degli 
+shared pointer delle librerie \emph{Boost} \cite{BoostLibrary, BoostSharedPtr}.
+Infatti, un oggetto di tipo \verb+boost::shared_ptr+ gestisce automaticamente 
+la distruzione dell'oggetto a cui si riferisce una volta che l'ultimo shared 
+pointer che punta all'oggetto è distrutto.
+
+L'utilizzo degli shared pointer permette di istanziare l'oggetto tramite 
+allocazione dinamica una sola volta, utilizzando poi i puntatori associati per 
+l'accesso ai suoi dati e metodi o per il passaggio come parametro.
+
+Nel codice sorgente della toolchain sono presenti delle \verb+typedef+ globali 
+aventi il suffisso ``\verb+Ptr+'' che semplificano la definizione degli shared 
+pointer per alcune strutture/classi del progetto; ad esempio, alla classe 
+\verb+FasterTask+, che identifica un task (generico), corrisponde lo shared 
+pointer \verb+FasterTaskPtr+. 
 
 % TODO parlare delle strutture dati di FASTER, prima o poi
 
