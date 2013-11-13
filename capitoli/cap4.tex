@@ -155,6 +155,7 @@ invece fanno parte dell'input dell'algoritmo.
 
 Viene ora presentato un frammento di codice rilevante per la dichiarazione 
 della struttura.
+\newline
 \begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
   struct SchedulerData {
       TaskSet_t unscheduledTasksSet;
@@ -170,6 +171,58 @@ potrebbero dover fare delle modifiche on-the-fly\footnote{Ad esempio, nel caso
 la policy di scheduling delle comunicazioni scelga di utilizzare il BUS come 
 mezzo di comunicazione, il task \emph{READ} corrispondente dev'essere 
 eliminato dalla lista dei task rimanenti.}.
+
+\subsection{Scheduler Gantt}
+La struttura \verb+SchedulerGantt+ è definita nei file 
+\emph{schedulerGantt.hpp} e \emph{schedulerGantt.cpp}; la struttura contiene il 
+diagramma di Gantt utilizzato dall'algoritmo per visualizzare la soluzione 
+calcolata. All'inizio dell'elaborazione il diagramma è vuoto, viene 
+progressivamente riempito con le informazioni di scheduling calcolate ad ogni 
+passo.
+
+Vengono inizialmente ridefiniti alcuni tipi di dato, per semplificare la 
+scrittura e la lettura del codice.
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  typedef std::set<ScheduledTaskInfo> BusyInfoSeries_t;
+  typedef std::unordered_map<std::string, BusyInfoSeries_t> GanttMap_t;
+\end{minted}
+
+Nel seguente frammento di codice sono illustrate le parti rilevanti della 
+dichiarazione della struttura.
+\newline
+% FIXME aggiustare indentazione codice
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  struct SchedulerGantt {
+      private:
+          GanttMap_t m_gantt;
+          // code...
+      public:
+          // code...
+          void addBusyInfo(const ScheduledTaskInfo & timeInfo);
+          bool isOverlapping(const FasterComponentPtr & elem,
+                             const ScheduledTaskInfo & timeInfo) const;
+          bool isComponentBusy(const FasterComponentPtr & elem,
+                               long int timestamp) const;
+          std::unordered_map<std::string, BusyInfoSeries_t> 
+              getBusyComponentsGivenTime(long int timestamp) const;
+          BusyInfoSeries_t getBusyInfoGivenComponentAndTime(
+            const FasterComponentPtr & elem,
+            long int timestamp) const;
+          long int getFirstAvailableTime(
+            const FasterComponentPtr & elem, 
+            long int timestamp, long int execTime) const;
+          // code...
+  };
+\end{minted}
+Il diagramma di Gantt è quindi rappresentato tramite una mappa non ordinata 
+che ha per chiavi delle stringhe, gli id dei componenti, e per valori un 
+insieme di \verb+ScheduledTaskInfo+, struttura che contiene le informazioni di 
+scheduling di un task.
+
+Sono a disposizione dei metodi pubblici per aggiungere le informazioni di 
+scheduling relative a un task, per verificare se un determinato componente è 
+occupato in un determinato istante di tempo e per ottenere il primo istante di 
+tempo in cui un determinato componente è libero.
 
 
 \section{Classi e gerarchie principali}
