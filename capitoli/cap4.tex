@@ -93,7 +93,7 @@ dichiarazione della struttura.
       int m_readPortsNum;
       int m_writePortsNum;
       // code...
-  }
+  };
 \end{minted}
 La struttura \verb+SchedulerInput+ contiene i dati principali che vengono usati 
 dallo scheduler nel corso dell'elaborazione, dal preprocessing allo scheduling 
@@ -111,6 +111,32 @@ componenti di riconfigurazione e di comunicazione (\acs{RAM} e BUS, se
 presente), il numero di porte di lettura/scrittura disponibili sulla \acs{RAM} 
 e variabili aggiuntive che contengono le informazioni di percorso critico dei 
 task, dei task ordinati topologicamente e della lista delle riconfigurazioni.
+
+\subsection{Scheduler Data}
+I file \emph{schedulerData.hpp} e \emph{schedulerData.cpp} contengono il codice 
+sorgente della struttura \verb+SchedulerData+, che contiene dati continuamente 
+aggiornati durante l'esecuzione dell'algoritmo di scheduling. A differenza dei 
+dati contenuti in \verb+SchedulerInput+, questi dati sono racchiusi in una 
+struttura a sé stante perchè figurino come logicamente separati dai dati che 
+invece fanno parte dell'input dell'algoritmo.
+
+Viene ora presentato un frammento di codice rilevante per la dichiarazione 
+della struttura.
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  struct SchedulerData {
+      TaskSet_t unscheduledTasksSet;
+      std::vector<FasterTaskPtr> scheduledTasksList;
+      std::vector<FasterTaskPtr> readyTasksList;
+  };
+\end{minted}
+Come si può vedere, la struttura contiene l'insieme dei task non ancora 
+selezionati per lo scheduling e i vettori dei task già schedulati e pronti per 
+essere schedulati. Si è deciso di incapsulare questi dati in una struttura 
+modificabile da tutti i componenti dell'algoritmo perchè alcuni componenti 
+potrebbero dover fare delle modifiche on-the-fly\footnote{Ad esempio, nel caso 
+la policy di scheduling delle comunicazioni scelga di utilizzare il BUS come 
+mezzo di comunicazione, il task \emph{READ} corrispondente dev'essere 
+eliminato dalla lista dei task rimanenti.}.
 
 
 \section{Classi e gerarchie principali}
