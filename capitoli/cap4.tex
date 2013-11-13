@@ -279,6 +279,66 @@ dal mapper è specificato solamente per processing task (relativi al task
 graph originale), il mapping presente nell'output dello scheduler è relativo ai 
 task del task graph preprocessato.}.
 
+\subsection{Scheduler Utility}
+I file \emph{schedulerUtility.hpp} e \emph{schedulerUtility.cpp}, infine, 
+contengono la definizione di alcune strutture comunemente utilizzate dallo 
+scheduler e viste anche nei precedenti frammenti di codice sorgente.
+
+La struttura \verb+TaskTimes+ incapsula gli istanti di inizio e fine di un task.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  struct TaskTimes {
+      long int startTime;
+      long int endTime;
+      // constructor, destructor and operators
+  };
+\end{minted}
+
+La struttura \verb+CriticalPathInfo+ contiene le informazioni relative al 
+percorso critico di un task.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  struct CriticalPathInfo {
+      long int asap;
+      long int alap;
+      long int slack;
+  };
+\end{minted}
+
+La struttura \verb+ScheduledTaskInfo+ contiene le informazioni riguardanti lo 
+scheduling di un task.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  struct ScheduledTaskInfo {
+      FasterTaskPtr task;
+      FasterImplementationPtr implementation;
+      FasterComponentPtr component;
+      TaskTimes times_info;
+      long int executionTime;
+      // operators
+  };
+\end{minted}
+
+La struttura \verb+MemoryOccupationInfo+ contiene le informazioni relative a 
+un'area di memoria che viene allocata a un processing task.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  struct MemoryOccupationInfo {
+      unsigned long base_addr;
+      unsigned long data_size;
+      TaskSet_t consumersSet;
+      bool reusable_area;
+  };
+\end{minted}
+
+Infine, all'interno del file \emph{schedulerUtility.cpp} è presente un 
+namespace \verb+utilities+, che contiene due strutture che hanno l'operatore 
+\verb+()+ ridefinito. Queste strutture vengono utilizzate per testare 
+l'equivalenza o per calcolare l'hash di un oggetto del tipo specificato tramite 
+template. Vengono utilizzate nelle mappe e negli insiemi non ordinati mostrati 
+nelle strutture precedenti, e operano sul dato membro ``\verb+id+'' 
+dell'oggetto passato come parametro.
+
 
 \section{Classi e gerarchie principali}
 \label{sec:classiGerarchie}
