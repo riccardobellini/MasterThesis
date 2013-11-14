@@ -17,8 +17,8 @@ riguardo alle scelte implementative del progetto \ac{FASTER}; la Sezione
 all'implementazione dello scheduler; la Sezione \ref{sec:classiGerarchie} 
 descrive le classi e le gerarchie che compongono la parte della toolchain 
 relativa alla parte di mapping/scheduling (Sezione 
-\ref{subsec:strutturaToolchain}) e i componenti dell'algoritmo di scheduling nel 
-dettaglio (Sezione \ref{subsec:componentiScheduler}).
+\ref{subsec:algoritmoEsplorazione}) e i componenti dell'algoritmo di scheduling 
+nel dettaglio (Sezione \ref{subsec:componentiScheduler}).
 
 
 \section{Osservazioni generali}
@@ -89,7 +89,9 @@ Nel codice sorgente della toolchain sono presenti delle \verb+typedef+ globali
 aventi il suffisso ``\verb+Ptr+'' che semplificano la definizione degli shared 
 pointer per alcune strutture/classi del progetto; ad esempio, alla classe 
 \verb+FasterTask+, che identifica un task (generico), corrisponde lo shared 
-pointer \verb+FasterTaskPtr+. 
+pointer \verb+FasterTaskPtr+.
+
+% TODO parlare di compilazione, CMake e librerie
 
 \section{Strutture dati}
 \label{sec:struttureDati}
@@ -355,10 +357,54 @@ dell'oggetto passato come parametro.
 
 \section{Classi e gerarchie principali}
 \label{sec:classiGerarchie}
+In questa sezione vengono presentate le classi principali della toolchain 
+relativa all'algoritmo di esplorazione (mapper) e in particolare 
+dell'algoritmo di scheduling utilizzato per la valutazione quantitativa della 
+soluzione proposta dal mapper.
 
+\subsection{Algoritmo di esplorazione}
+\label{subsec:algoritmoEsplorazione}
+Il codice sorgente dell'algoritmo di esplorazione è localizzato nella cartella 
+\emph{toolchain/sources/explorer}. L'eseguibile dell'algoritmo di esplorazione 
+è compilato a partire dal \verb+main()+ che si trova nel file sorgente 
+\emph{explorerMain.cpp} nella suddetta cartella. Il main si occupa di 
+istanziare i vari componenti che verranno spiegati nelle prossime sezioni e di 
+lanciare la procedura di esplorazione. Al termine, viene generato un file di 
+output e stampate le statistiche dell'esplorazione.
 
-\subsection{Struttura toolchain}
-\label{subsec:strutturaToolchain}
+\subsubsection{Componente di esplorazione}
+Il componente di esplorazione viene istanziato dalla funzione \verb+main()+ e 
+si occupa di gestire l'esplorazione dal momento del lancio effettuato nel main, 
+fino alla terminazione. Il codice di questo componente è contenuto nei file 
+\emph{explore.hpp} ed \emph{explore.cpp}, presenti nella sottocartella 
+\emph{explore}.
+
+Poichè il componente di esplorazione rappresenta un oggetto contenente un 
+algoritmo invocabile, secondo la convenzione implementativa indicata nella 
+Sezione \ref{sec:osservazioniGenerali}, è implementato come \verb+class+ e 
+inserito nel namespace \verb+faster::applications::explorer+, come tutti i 
+componenti che vedremo di seguito relativi all'algoritmo di esplorazione.
+
+Il componente di esplorazione ha una propria interfaccia di input, definita 
+nella struttura \verb+ExplorerInput+, contenuta nella cartella 
+\emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/explorer}. 
+Al suo interno presenta dei riferimenti ai componenti di iterazione e di 
+terminazione. Entrambi questi componenti verranno descritti nelle prossime 
+sezioni, e si trovano nella sottocartella \emph{explore/exploreComponents}.
+
+\subsubsection{Componente di iterazione}
+Data l'ampia modularità decisa in fase di progettazione, il componente di 
+iterazione è rappresentato da una classe astratta che espone un metodo virtuale 
+puro\footnote{Un metodo virtuale puro deve essere implementato da tutte le 
+sottoclassi della classe che lo dichiara.} che si occupa di gestire una 
+iterazione dell'esplorazione.
+
+L'interfaccia della classe astratta è definita in 
+\emph{explore/exploreComponents/iteration/exploreIterationAlgorithm.hpp}; è 
+presente anche una sottoclasse che implementa la funzionalità iterativa, nella 
+sottocartella \emph{explore/exploreComponents/iteration/aco}. In ogni caso si 
+può estendere aggiungendo altri componenti come sottoclassi separate che 
+ridefiniscono il metodo per l'iterazione.
 
 
 \subsection{Componenti dello scheduler}
