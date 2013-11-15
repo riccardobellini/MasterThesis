@@ -536,3 +536,13 @@ calcolate, il task è considerato come schedulato, le informazioni sono aggiunte
 all'output (metodo \verb+addScheduledTaskInfo()+) e il task è rimosso dalla 
 lista ``ready'' e dall'insieme dei task non ancora schedulati. Il ciclo è 
 ripetuto fino a che vi sono task non schedulati.
+
+\subsubsection{Componente di preprocessing}
+Il codice del componente dedicato al preprocessing è contenuto nella 
+sottocartella \emph{schedule/scheduleComponents/preprocessing}; la classe 
+\verb+ScheduleRBPreprocessingAlgorithm+ è una classe astratta che espone un 
+metodo virtuale puro da reimplementare per poter personalizzare la fase di 
+preprocessing. La sottoclasse \verb+ScheduleRBAnalyzeTrace+ ne fornisce 
+un'implementazione, che è quella utilizzata nell'algoritmo di scheduling 
+trattato in questa tesi e descritta ad alto livello nella Sezione 
+\ref{subsec:fasePreprocessing}.
