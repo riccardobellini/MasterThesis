@@ -394,10 +394,10 @@ sezioni, e si trovano nella sottocartella \emph{explore/exploreComponents}.
 
 \subsubsection{Componente di iterazione}
 Data l'ampia modularità decisa in fase di progettazione, il componente di 
-iterazione è rappresentato da una classe astratta che espone un metodo virtuale 
-puro\footnote{Un metodo virtuale puro deve essere implementato da tutte le 
-sottoclassi della classe che lo dichiara.} che si occupa di gestire una 
-iterazione dell'esplorazione.
+iterazione è rappresentato da una classe astratta che espone 
+\verb+nextIteration()+, un metodo virtuale puro\footnote{Un metodo virtuale 
+puro deve essere implementato da tutte le sottoclassi della classe che lo 
+dichiara.} che si occupa di gestire una iterazione dell'esplorazione.
 
 L'interfaccia della classe astratta è definita in 
 \emph{explore/exploreComponents/iteration/exploreIterationAlgorithm.hpp}; è 
