@@ -166,7 +166,8 @@ sorgente della struttura \verb+SchedulerData+, che contiene dati continuamente
 aggiornati durante l'esecuzione dell'algoritmo di scheduling. A differenza dei 
 dati contenuti in \verb+SchedulerInput+, questi dati sono racchiusi in una 
 struttura a sé stante perchè figurino come logicamente separati dai dati che 
-invece fanno parte dell'input dell'algoritmo.
+invece fanno parte dell'input dell'algoritmo e sono inclusi nel namespace 
+\verb+faster::applications::scheduler::data+
 
 Viene ora presentato un frammento di codice rilevante per la dichiarazione 
 della struttura.
@@ -459,4 +460,79 @@ dell'algoritmo di esplorazione, come verrà spiegato nelle prossime sezioni per
 l'esame dei componenti dello scheduler. Tutte le classi che compongono 
 sono incluse nel namespace \verb+faster::applications::scheduler+.
 
+\subsubsection{Componente di scheduling}
+La sottocartella \emph{schedule} contiene la dichiarazione e definizione della 
+classe astratta \verb+Schedule+, che espone un metodo virtuale puro per il 
+calcolo dello scheduling. In questo modo è possibile utilizzare algoritmi 
+completamente differenti semplicemente creando una nuova sottoclasse di 
+\verb+Schedule+ che implementa il metodo \verb+computeSchedule()+.
+\newline
+% FIXME perchè c'è m_explorerInput dentro???
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  class Schedule {
+      protected:
+          const explorer::ExplorerInput & m_explorerInput;
+          SchedulerOutput m_schedulerOutput;
+      public:
+          // code
+          virtual SchedulerOutput computeSchedule(
+                  const explorer::ExplorerTrace & trace) = 0;
+  };
+\end{minted}
 
+La sottoclasse che implementa lo scheduler, come descritto nel Capitolo 
+\ref{chap:approccio}, è chiamata \verb+ScheduleRB+ ed è contenuta nella 
+sottocartella \emph{schedule/scheduleComponents}. Nel seguente frammento 
+vengono riportate le parti rilevanti della dichiarazione della classe, con 
+l'inclusione dei vari componenti.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  class ScheduleRB : public Schedule {
+    private:
+      SchedulerInput m_schedulerInput;
+      SchedulerBestSchedulableTaskAlgorithmPtr m_bestSchedulableAlgorithm;
+      SchedulerTimeAssignmentAlgorithmPtr m_timeAssignmentAlgorithm;
+      data::SchedulerData m_schedulerData;
+      // code...
+    public:
+      // code...
+      virtual SchedulerOutput computeSchedule(
+              const explorer::ExplorerTrace & trace);
+  };
+\end{minted}
+
+Viene di seguito presentato il core loop dell'algoritmo di scheduling.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  // code...
+  ScheduleRBAnalyzeTrace preprocessingAlgorithm(m_schedulerInput);
+  preprocessingAlgorithm.doPreprocessing();
+  // code...
+  do {
+    m_resolveDependencies();
+    FasterTaskPtr bestTask;
+    bestTask = m_bestSchedulableAlgorithm->bestSchedulableTask 
+                            (m_schedulerData.readyTasksList);
+    // code...
+    ScheduledTaskInfo taskInfo;
+    taskInfo = m_timeAssignmentAlgorithm->calculateSchedulingInfo(bestTask);
+    m_schedulerData.scheduledTasksList.push_back(bestTask);
+    m_lastScheduledTask = bestTask;
+    m_schedulerOutput.addScheduledTaskInfo(bestTask, taskInfo);
+    m_schedulerData.readyTasksList.erase 
+                (std::find(m_schedulerData.readyTasksList.begin(), 
+                 m_schedulerData.readyTasksList.end(), bestTask));
+    m_schedulerData.unscheduledTasksSet.erase(bestTask);
+  } while (!m_schedulerData.unscheduledTasksSet.empty());
+\end{minted}
+
+Il metodo \verb+m_resolveDependencies()+ riempie la lista di task pronti per 
+essere schedulati con i task che hanno tutte le precedenze soddisfatte; come si 
+può vedere dal frammento di codice precedente, il task migliore tra quelli 
+pronti viene selezionato da un componente dedicato alla selezione dei task e 
+schedulato da un altro componente dedicato all'assegnazione dei tempi. Una 
+volta che le informazioni di scheduling per il task selezionato sono state 
+calcolate, il task è considerato come schedulato, le informazioni sono aggiunte 
+all'output (metodo \verb+addScheduledTaskInfo()+) e il task è rimosso dalla 
+lista ``ready'' e dall'insieme dei task non ancora schedulati. Il ciclo è 
+ripetuto fino a che vi sono task non schedulati.
