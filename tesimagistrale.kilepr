@@ -46,7 +46,7 @@ Mode=LaTeX
 ReadWrite=true
 
 [document-settings,item:capitoli/cap3.tex]
-Bookmarks=838
+Bookmarks=839
 Encoding=UTF-8
 FoldedColumns=
 FoldedLines=
@@ -188,20 +188,20 @@ order=2
 
 [item:capitoli/cap3.tex]
 archive=true
-column=0
+column=31
 encoding=UTF-8
 highlight=LaTeX
-line=966
+line=205
 mode=LaTeX
 open=true
 order=3
 
 [item:capitoli/cap4.tex]
 archive=true
-column=47
+column=20
 encoding=UTF-8
 highlight=LaTeX
-line=401
+line=593
 mode=LaTeX
 open=true
 order=4
@@ -281,7 +281,7 @@ archive=true
 column=0
 encoding=UTF-8
 highlight=LaTeX
-line=0
+line=28
 mode=LaTeX
 open=true
 order=0
@@ -335,14 +335,14 @@ JumpList=
 ViMarks=.,958,0,[,958,0,],958,0
 
 [view-settings,view=0,item:capitoli/cap3.tex]
-CursorColumn=0
-CursorLine=966
+CursorColumn=31
+CursorLine=205
 JumpList=
-ViMarks=.,838,48,[,838,48,],838,48
+ViMarks=.,839,48,[,839,48,],839,48
 
 [view-settings,view=0,item:capitoli/cap4.tex]
-CursorColumn=47
-CursorLine=401
+CursorColumn=20
+CursorLine=593
 JumpList=
 ViMarks=
 
@@ -390,7 +390,7 @@ ViMarks=.,19,0,[,19,0,],19,0
 
 [view-settings,view=0,item:tesi.tex]
 CursorColumn=0
-CursorLine=0
+CursorLine=28
 JumpList=
 ViMarks=a,1,17
 
