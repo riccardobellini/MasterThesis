@@ -568,3 +568,28 @@ mathescape ]{c}
 Come si può vedere dal codice, la fase di preprocessing clona il task graph 
 originale del progetto, lo modifica di conseguenza integrando comunicazioni e 
 riconfigurazioni e lo imposta come input dell'algoritmo di scheduling.
+
+\subsubsection{Componente di scelta dei task}
+Il codice del componente di scelta dei task è contenuto nella sottocartella 
+\emph{schedule/scheduleComponents/bestTaskAlgorithm}; il suo compito è 
+implementare l'euristica di scelta dei task proposta nella Sezione 
+\ref{sec:euristicaSceltaTask}. In maniera simile ai componenti precedentemente 
+descritti, esiste una classe astratta base 
+\verb+SchedulerBestSchedulableTaskAlgorithm+ che contiene il metodo virtuale 
+puro che dev'essere reimplementato dalle sottoclassi nel caso si voglia 
+utilizzare un diverso criterio di scelta dei task.
+\newline
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
+  class SchedulerBestSchedulableTaskAlgorithm {
+    protected:
+      const SchedulerInput & m_schedulerInput;
+    public:
+      // constructor and destructor
+      virtual FasterTaskPtr bestSchedulableTask(const 
+        std::vector<FasterTaskPtr> & readyList) const = 0;
+  };
+\end{minted}
+
+% TODO continuare...
+
