@@ -20,6 +20,8 @@ relativa alla parte di mapping/scheduling (Sezione
 \ref{subsec:algoritmoEsplorazione}) e i componenti dell'algoritmo di scheduling 
 nel dettaglio (Sezione \ref{subsec:algoritmoScheduling}).
 
+%%% TODO cambiare font minted in footnotesize
+%%% TODO baselinestretch=1 in minted
 
 \section{Osservazioni generali}
 \label{sec:osservazioniGenerali}
@@ -546,3 +548,23 @@ preprocessing. La sottoclasse \verb+ScheduleRBAnalyzeTrace+ ne fornisce
 un'implementazione, che è quella utilizzata nell'algoritmo di scheduling 
 trattato in questa tesi e descritta ad alto livello nella Sezione 
 \ref{subsec:fasePreprocessing}.
+\newline
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape ]{c}
+  void ScheduleRBAnalyzeTrace::doPreprocessing()
+  {
+    std::vector<explorer::ExplorerTraceStep_t> traceSteps = 
+        m_schedulerInput.getExplorerTrace().getTrace();
+    m_taskGraph = 
+      m_schedulerInput.getFasterProject()->getPartition(0)->taskgraph->clone();
+    m_integrateCommunications(traceSteps);
+    m_integrateReconfigurations(traceSteps);
+    m_schedulerInput.setTaskGraph(m_taskGraph);
+    m_schedulerInput.setReconfigurations(m_reconfigurationsList);
+    m_computeCriticalPathInfo();
+  }
+\end{minted}
+
+Come si può vedere dal codice, la fase di preprocessing clona il task graph 
+originale del progetto, lo modifica di conseguenza integrando comunicazioni e 
+riconfigurazioni e lo imposta come input dell'algoritmo di scheduling.
