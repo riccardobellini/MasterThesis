@@ -405,6 +405,20 @@ presente anche una sottoclasse che implementa la funzionalità iterativa, nella
 sottocartella \emph{explore/exploreComponents/iteration/aco}. In ogni caso si 
 può estendere aggiungendo altri componenti come sottoclassi separate che 
 ridefiniscono il metodo per l'iterazione.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  class ExploreIterationAlgorithm {
+      protected:
+          const ExplorerInput& m_explorerInput;
+      public:
+          // constructor and destructor
+          virtual std::set<ExplorerOutput> nextIteration() = 0;
+          virtual ExplorerOutput getCurrentBestSolution() const = 0;
+          virtual std::set<ExplorerOutput> getLastIterationSolutions()
+              const = 0;
+  };
+\end{minted}
+
 
 
 \subsection{Componenti dello scheduler}
