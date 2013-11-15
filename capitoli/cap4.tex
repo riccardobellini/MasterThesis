@@ -18,7 +18,7 @@ all'implementazione dello scheduler; la Sezione \ref{sec:classiGerarchie}
 descrive le classi e le gerarchie che compongono la parte della toolchain 
 relativa alla parte di mapping/scheduling (Sezione 
 \ref{subsec:algoritmoEsplorazione}) e i componenti dell'algoritmo di scheduling 
-nel dettaglio (Sezione \ref{subsec:componentiScheduler}).
+nel dettaglio (Sezione \ref{subsec:algoritmoScheduling}).
 
 
 \section{Osservazioni generali}
@@ -445,6 +445,18 @@ specificato nel file di configurazione dell'explorer.
 
 % TODO metriche dell'algoritmo di esplorazione
 
-\subsection{Componenti dello scheduler}
-\label{subsec:componentiScheduler}
+\subsection{Algoritmo di scheduling}
+\label{subsec:algoritmoScheduling}
+L'obiettivo di questa sezione è presentare le porzioni più importanti del 
+codice dell'algoritmo di scheduling. Le interfacce di input/output e le 
+strutture dati utilizzate sono già state descritte nella Sezione 
+\ref{subsec:struttureDatiScheduler}, in questa sezione verranno esaminati i 
+vari componenti dello scheduler che gestiscono l'elaborazione.
+
+Il codice sorgente dell'algoritmo di scheduling è contenuto nella cartella 
+\emph{toolchain/sources/scheduler}; la sua struttura rispecchia quella 
+dell'algoritmo di esplorazione, come verrà spiegato nelle prossime sezioni per 
+l'esame dei componenti dello scheduler. Tutte le classi che compongono 
+sono incluse nel namespace \verb+faster::applications::scheduler+.
+
 
