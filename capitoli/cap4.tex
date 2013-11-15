@@ -420,6 +420,30 @@ ridefiniscono il metodo per l'iterazione.
 \end{minted}
 
 
+\subsubsection{Componente di terminazione}
+La terminazione dell'algoritmo di esplorazione viene decisa dal componente di 
+terminazione. Come per l'iterazione, anche il componente di iterazione è 
+composto da una classe astratta che espone un metodo che deve essere 
+reimplementato dalle sottoclassi, \verb+isTerminated()+.
+
+Come nel caso del componente di iterazione, è presente un'implementazione della 
+classe astratta, che termina quando il numero di iterazioni raggiunge il limite 
+specificato nel file di configurazione dell'explorer.
+\newline
+\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+  class ExploreTerminationAlgorithm {
+      protected:
+          const ExplorerInput & m_sd;
+      public:
+          // constructor and destructor
+          virtual bool isTerminated() const = 0;
+          virtual void updateState(std::set<ExplorerOutput>) = 0;
+          virtual faster::dataStructures::FasterPerformanceStatistics 
+              getStatistics() = 0;
+  };
+\end{minted}
+
+% TODO metriche dell'algoritmo di esplorazione
 
 \subsection{Componenti dello scheduler}
 \label{subsec:componentiScheduler}
