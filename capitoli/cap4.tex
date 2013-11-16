@@ -20,9 +20,6 @@ relativa alla parte di mapping/scheduling (Sezione
 \ref{subsec:algoritmoEsplorazione}) e i componenti dell'algoritmo di scheduling 
 nel dettaglio (Sezione \ref{subsec:algoritmoScheduling}).
 
-%%% TODO cambiare font minted in footnotesize
-%%% TODO baselinestretch=1 in minted
-
 \section{Osservazioni generali}
 \label{sec:osservazioniGenerali}
 La maggior parte della toolchain di \ac{FASTER} è sviluppata in C++, 
@@ -126,7 +123,8 @@ rispettivamente.
 Il seguente frammento di codice mostra le parti rilevanti della 
 dichiarazione della struttura.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   struct SchedulerInput {
   private:
       FasterProjectPtr m_fasterProject;
@@ -174,7 +172,8 @@ invece fanno parte dell'input dell'algoritmo e sono inclusi nel namespace
 Viene ora presentato un frammento di codice rilevante per la dichiarazione 
 della struttura.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   struct SchedulerData {
       TaskSet_t unscheduledTasksSet;
       std::vector<FasterTaskPtr> scheduledTasksList;
@@ -201,7 +200,8 @@ passo.
 Vengono inizialmente ridefiniti alcuni tipi di dato, per semplificare la 
 scrittura e la lettura del codice.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   typedef std::set<ScheduledTaskInfo> BusyInfoSeries_t;
   typedef std::unordered_map<std::string, BusyInfoSeries_t> GanttMap_t;
 \end{minted}
@@ -210,7 +210,8 @@ Nel seguente frammento di codice sono illustrate le parti rilevanti della
 dichiarazione della struttura.
 \newline
 % FIXME aggiustare indentazione codice
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   struct SchedulerGantt {
       private:
           GanttMap_t m_gantt;
@@ -254,7 +255,8 @@ alla fine sono utilizzati per il calcolo della metrica \emph{makespan}.
 Nel seguente frammento di codice sono presentate le ridefinizioni di tipo di 
 dato utilizzate in \emph{schedulerOutput.hpp}.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   typedef std::tr1::tuple<FasterTaskPtr,
                           FasterComponentPtr, 
                           FasterImplementationPtr> MappingStep_t;
@@ -268,7 +270,8 @@ dato utilizzate in \emph{schedulerOutput.hpp}.
 La seguente porzione di codice illustra invece la dichiarazione della struttura 
 \verb+SchedulerOutput+.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   struct SchedulerOutput {
       private:
           SchedulerGantt m_schedulingGantt;
@@ -304,7 +307,8 @@ scheduler e viste anche nei precedenti frammenti di codice sorgente.
 
 La struttura \verb+TaskTimes+ incapsula gli istanti di inizio e fine di un task.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   struct TaskTimes {
       long int startTime;
       long int endTime;
@@ -315,7 +319,8 @@ La struttura \verb+TaskTimes+ incapsula gli istanti di inizio e fine di un task.
 La struttura \verb+CriticalPathInfo+ contiene le informazioni relative al 
 percorso critico di un task.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   struct CriticalPathInfo {
       long int asap;
       long int alap;
@@ -326,7 +331,8 @@ percorso critico di un task.
 La struttura \verb+ScheduledTaskInfo+ contiene le informazioni riguardanti lo 
 scheduling di un task.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   struct ScheduledTaskInfo {
       FasterTaskPtr task;
       FasterImplementationPtr implementation;
@@ -340,7 +346,8 @@ scheduling di un task.
 La struttura \verb+MemoryOccupationInfo+ contiene le informazioni relative a 
 un'area di memoria che viene allocata a un processing task.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   struct MemoryOccupationInfo {
       unsigned long base_addr;
       unsigned long data_size;
@@ -409,7 +416,8 @@ sottocartella \emph{explore/exploreComponents/iteration/aco}. In ogni caso si
 può estendere aggiungendo altri componenti come sottoclassi separate che 
 ridefiniscono il metodo per l'iterazione.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   class ExploreIterationAlgorithm {
       protected:
           const ExplorerInput& m_explorerInput;
@@ -433,7 +441,8 @@ Come nel caso del componente di iterazione, è presente un'implementazione della
 classe astratta, che termina quando il numero di iterazioni raggiunge il limite 
 specificato nel file di configurazione dell'explorer.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   class ExploreTerminationAlgorithm {
       protected:
           const ExplorerInput & m_sd;
@@ -470,7 +479,8 @@ completamente differenti semplicemente creando una nuova sottoclasse di
 \verb+Schedule+ che implementa il metodo \verb+computeSchedule()+.
 \newline
 % FIXME perchè c'è m_explorerInput dentro???
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   class Schedule {
       protected:
           const explorer::ExplorerInput & m_explorerInput;
@@ -488,7 +498,8 @@ sottocartella \emph{schedule/scheduleComponents}. Nel seguente frammento
 vengono riportate le parti rilevanti della dichiarazione della classe, con 
 l'inclusione dei vari componenti.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   class ScheduleRB : public Schedule {
     private:
       SchedulerInput m_schedulerInput;
@@ -505,7 +516,8 @@ l'inclusione dei vari componenti.
 
 Viene di seguito presentato il core loop dell'algoritmo di scheduling.
 \newline
-\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
   // code...
   ScheduleRBAnalyzeTrace preprocessingAlgorithm(m_schedulerInput);
   preprocessingAlgorithm.doPreprocessing();
