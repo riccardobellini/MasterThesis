@@ -647,4 +647,60 @@ riconfigurazione, nella \verb+enum PriorityFunctionParameters+. Il dato membro
 \verb+m_decayFactor+ rappresenta il fattore di degrado che riduce la cifra di 
 merito corrispondente alle informazioni sul percorso critico.
 
+Viene ora presentato il codice della funzione che inizializza i valori delle 
+metriche nella struttura, con le relative funzioni per il calcolo delle singole 
+metriche.
+\newline
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
+  PriorityMetrics ScheduleRBPriorityHeuristic::m_computePriorityMetrics(const 
+                      FasterTaskPtr & task, bool isSoftCoreMapped) const
+  {
+    PriorityMetrics metrics;
+    metrics.task = task;
+    if (isSoftCoreMapped) {
+      metrics.longestPath = m_computeLongestPath(task);
+    } else {
+      metrics.longestPath = m_computeLongestPath(task);
+      metrics.est = m_computeEST(task);
+      metrics.eft = m_computeEFT(task);
+    }
+    return metrics;
+  }
+  // ...
+  float ScheduleRBPriorityHeuristic::m_computeLongestPath(const FasterTaskPtr & 
+                      task) const
+  {
+    const CriticalPathInfoMap_t & criticalPathInfo = 
+            m_schedulerInput.getCriticalPathInfo();
+    CriticalPathInfo info = criticalPathInfo.find(task)->second;
+    long int slack = info.slack;
+    if (slack >= 0 && slack <= SLACK_THRESHOLD) {
+      return PRIORITY_MAX * m_decayFactor;
+    }
+    float logSlack = ::log2(slack);
+    return 1 / logSlack;
+  }
+  // ...
+  float ScheduleRBPriorityHeuristic::m_computeEST(const FasterTaskPtr & task) 
+                      const
+  {
+    const CriticalPathInfoMap_t & criticalPathInfo = 
+            m_schedulerInput.getCriticalPathInfo();
+    CriticalPathInfo info = criticalPathInfo.find(task)->second;
+    return info.asap == 0 ? info.asap : ::log2(info.asap);
+  }
+  // ...
+  float ScheduleRBPriorityHeuristic::m_computeEFT(const FasterTaskPtr & task) 
+                      const
+  {
+    const CriticalPathInfoMap_t & criticalPathInfo = 
+            m_schedulerInput.getCriticalPathInfo();
+    CriticalPathInfo info = criticalPathInfo.find(task)->second;
+    long int asap = info.asap;
+    long int execTime = m_helperAlgorithms.computeExecTime(task);
+    return ::log2(asap + execTime);
+  }
+\end{minted}
+
 
