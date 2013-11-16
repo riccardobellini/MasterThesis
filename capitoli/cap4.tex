@@ -126,7 +126,7 @@ rispettivamente.
 Il seguente frammento di codice mostra le parti rilevanti della 
 dichiarazione della struttura.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   struct SchedulerInput {
   private:
       FasterProjectPtr m_fasterProject;
@@ -174,7 +174,7 @@ invece fanno parte dell'input dell'algoritmo e sono inclusi nel namespace
 Viene ora presentato un frammento di codice rilevante per la dichiarazione 
 della struttura.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   struct SchedulerData {
       TaskSet_t unscheduledTasksSet;
       std::vector<FasterTaskPtr> scheduledTasksList;
@@ -201,7 +201,7 @@ passo.
 Vengono inizialmente ridefiniti alcuni tipi di dato, per semplificare la 
 scrittura e la lettura del codice.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   typedef std::set<ScheduledTaskInfo> BusyInfoSeries_t;
   typedef std::unordered_map<std::string, BusyInfoSeries_t> GanttMap_t;
 \end{minted}
@@ -210,7 +210,7 @@ Nel seguente frammento di codice sono illustrate le parti rilevanti della
 dichiarazione della struttura.
 \newline
 % FIXME aggiustare indentazione codice
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   struct SchedulerGantt {
       private:
           GanttMap_t m_gantt;
@@ -254,7 +254,7 @@ alla fine sono utilizzati per il calcolo della metrica \emph{makespan}.
 Nel seguente frammento di codice sono presentate le ridefinizioni di tipo di 
 dato utilizzate in \emph{schedulerOutput.hpp}.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   typedef std::tr1::tuple<FasterTaskPtr,
                           FasterComponentPtr, 
                           FasterImplementationPtr> MappingStep_t;
@@ -268,7 +268,7 @@ dato utilizzate in \emph{schedulerOutput.hpp}.
 La seguente porzione di codice illustra invece la dichiarazione della struttura 
 \verb+SchedulerOutput+.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   struct SchedulerOutput {
       private:
           SchedulerGantt m_schedulingGantt;
@@ -304,7 +304,7 @@ scheduler e viste anche nei precedenti frammenti di codice sorgente.
 
 La struttura \verb+TaskTimes+ incapsula gli istanti di inizio e fine di un task.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   struct TaskTimes {
       long int startTime;
       long int endTime;
@@ -315,7 +315,7 @@ La struttura \verb+TaskTimes+ incapsula gli istanti di inizio e fine di un task.
 La struttura \verb+CriticalPathInfo+ contiene le informazioni relative al 
 percorso critico di un task.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   struct CriticalPathInfo {
       long int asap;
       long int alap;
@@ -326,7 +326,7 @@ percorso critico di un task.
 La struttura \verb+ScheduledTaskInfo+ contiene le informazioni riguardanti lo 
 scheduling di un task.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   struct ScheduledTaskInfo {
       FasterTaskPtr task;
       FasterImplementationPtr implementation;
@@ -340,7 +340,7 @@ scheduling di un task.
 La struttura \verb+MemoryOccupationInfo+ contiene le informazioni relative a 
 un'area di memoria che viene allocata a un processing task.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   struct MemoryOccupationInfo {
       unsigned long base_addr;
       unsigned long data_size;
@@ -409,7 +409,7 @@ sottocartella \emph{explore/exploreComponents/iteration/aco}. In ogni caso si
 può estendere aggiungendo altri componenti come sottoclassi separate che 
 ridefiniscono il metodo per l'iterazione.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   class ExploreIterationAlgorithm {
       protected:
           const ExplorerInput& m_explorerInput;
@@ -433,7 +433,7 @@ Come nel caso del componente di iterazione, è presente un'implementazione della
 classe astratta, che termina quando il numero di iterazioni raggiunge il limite 
 specificato nel file di configurazione dell'explorer.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   class ExploreTerminationAlgorithm {
       protected:
           const ExplorerInput & m_sd;
@@ -470,7 +470,7 @@ completamente differenti semplicemente creando una nuova sottoclasse di
 \verb+Schedule+ che implementa il metodo \verb+computeSchedule()+.
 \newline
 % FIXME perchè c'è m_explorerInput dentro???
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   class Schedule {
       protected:
           const explorer::ExplorerInput & m_explorerInput;
@@ -488,7 +488,7 @@ sottocartella \emph{schedule/scheduleComponents}. Nel seguente frammento
 vengono riportate le parti rilevanti della dichiarazione della classe, con 
 l'inclusione dei vari componenti.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   class ScheduleRB : public Schedule {
     private:
       SchedulerInput m_schedulerInput;
@@ -505,7 +505,7 @@ l'inclusione dei vari componenti.
 
 Viene di seguito presentato il core loop dell'algoritmo di scheduling.
 \newline
-\begin{minted}[frame=single,fontsize=\small,gobble=2,mathescape]{c}
+\begin{minted}[frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   // code...
   ScheduleRBAnalyzeTrace preprocessingAlgorithm(m_schedulerInput);
   preprocessingAlgorithm.doPreprocessing();
@@ -572,12 +572,12 @@ riconfigurazioni e lo imposta come input dell'algoritmo di scheduling.
 \subsubsection{Componente di scelta dei task}
 Il codice del componente di scelta dei task è contenuto nella sottocartella 
 \emph{schedule/scheduleComponents/bestTaskAlgorithm}; il suo compito è 
-implementare l'euristica di scelta dei task proposta nella Sezione 
-\ref{sec:euristicaSceltaTask}. In maniera simile ai componenti precedentemente 
-descritti, esiste una classe astratta base 
+implementare un generico metodo di scelta dei task. In maniera simile ai 
+componenti precedentemente descritti, esiste una classe astratta base 
 \verb+SchedulerBestSchedulableTaskAlgorithm+ che contiene il metodo virtuale 
-puro che dev'essere reimplementato dalle sottoclassi nel caso si voglia 
-utilizzare un diverso criterio di scelta dei task.
+puro \verb+bestSchedulableTask()+, che dev'essere reimplementato dalle 
+sottoclassi nel caso si voglia utilizzare un diverso criterio di scelta dei 
+task.
 \newline
 \begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
 mathescape]{c}
@@ -591,5 +591,48 @@ mathescape]{c}
   };
 \end{minted}
 
-% TODO continuare...
+La sottoclasse che implementa il metodo come visto nella Sezione 
+\ref{sec:euristicaSceltaTask} è chiamata \verb+ScheduleRBPriorityHeuristic+, e 
+si trova nella sottocartella 
+\emph{schedule/scheduleComponents/bestTaskAlgorithm/priorityHeuristic} ed è 
+dichiarata e definita nei file \emph{scheduleRBPriorityHeuristic.hpp} e 
+\emph{scheduleRBPriorityHeuristic.cpp}.
+\newline
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
+  struct PriorityMetrics {
+    FasterTaskPtr task;
+    float longestPath;
+    float est;
+    float eft;
+  };
+  class ScheduleRBPriorityHeuristic : public 
+          SchedulerBestSchedulableTaskAlgorithm {
+    private:
+      enum PriorityFunctionParameters {
+              LP = 10,
+              EST = 5,
+              EFT = 2,
+              WriteBeforeReconfiguration = 50
+      };
+      // code...
+      mutable float m_decayFactor;
+    public:
+      // constructor and destructor
+      virtual FasterTaskPtr bestSchedulableTask(
+              const std::vector<FasterTaskPtr> & readyList) const;
+  };
+\end{minted}
+
+Nel frammento di codice è inclusa la dichiarazione della 
+struttura \verb+PriorityMetrics+, che contiene le tre metriche utilizzate per 
+il calcolo della priorità di un task.
+
+All'interno della classe che implementa l'euristica si trovano invece i 
+parametri (pesi) assegnati alle varie metriche e il boost di priorità assegnato 
+ai task di comunicazione di tipo \emph{WRITE} che precedono una 
+riconfigurazione, nella \verb+enum PriorityFunctionParameters+. Il dato membro 
+\verb+m_decayFactor+ rappresenta il fattore di degrado che riduce la cifra di 
+merito corrispondente alle informazioni sul percorso critico.
+
 
