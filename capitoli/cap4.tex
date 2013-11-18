@@ -703,4 +703,53 @@ mathescape]{c}
   }
 \end{minted}
 
+% TODO spiegare formule calcolo metriche
+
+\subsubsection{Componente di assegnazione dei tempi}
+Il componente dell'algoritmo di scheduling che gestisce l'assegnazione dei 
+tempi è contenuto nella sottocartella 
+\emph{schedule/scheduleComponents/timeAssignmentAlgorithm}; il suo compito è 
+implementare la policy di assegnazione dei tempi ai vari task che vengono via 
+via selezionati. La classe astratta \verb+SchedulerTimeAssignmentAlgorithm+ 
+contiene un metodo virtuale puro che viene reimplementato dalle sottoclassi.
+\newline
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
+  class SchedulerTimeAssignmentAlgorithm {
+    protected:
+      const SchedulerInput & m_schedulerInput;
+    public:
+      // constructor and destructor
+      virtual ScheduledTaskInfo calculateSchedulingInfo(const 
+          FasterTaskPtr & task) const = 0;
+  };
+\end{minted}
+
+La sottoclasse che implementa il metodo nell'algoritmo trattato in questa tesi 
+è chiamata \verb+ScheduleRBASAPAlgorithm+, nel seguente frammento di codice ne 
+è illustrata la dichiarazione.
+\newline
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
+  class ScheduleRBASAPAlgorithm : public SchedulerTimeAssignmentAlgorithm {
+    private:
+      // code...
+      ScheduledTaskInfo m_calculateSchedulingInfoProcessingTask(const 
+          FasterTaskPtr & procTask) const;
+      ScheduledTaskInfo m_calculateSchedulingInfoCommunicationTask(const 
+          FasterTaskPtr & commTask) const;
+      ScheduledTaskInfo m_calculateSchedulingInfoReconfigurationTask(const 
+          FasterTaskPtr & reconfTask) const;
+      long int m_precTime;
+      const SchedulerOutput & m_schedulerOutput;
+    public:
+      // constructor and destructor
+      virtual ScheduledTaskInfo calculateSchedulingInfo(const 
+          FasterTaskPtr & task);
+  };
+\end{minted}
+Dal codice precedente è possibile vedere le dichiarazioni dei metodi che 
+calcolano le informazioni di scheduling per le tre principali categorie ditask. 
+Al momento di effettuare lo scheduling di un task di comunicazione, viene 
+istanziato l'oggetto che implementa la policy di scheduling delle comunicazioni.
 
