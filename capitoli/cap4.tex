@@ -740,8 +740,12 @@ mathescape]{c}
           FasterTaskPtr & commTask) const;
       ScheduledTaskInfo m_calculateSchedulingInfoReconfigurationTask(const 
           FasterTaskPtr & reconfTask) const;
-      long int m_precTime;
-      const SchedulerOutput & m_schedulerOutput;
+      ScheduledTaskInfo m_calculateSchedulingInfoCommWriteTask(const 
+          FasterCommunicationWriteTaskPtr & commWriteTask) const;
+      ScheduledTaskInfo m_calculateSchedulingInfoCommReadTask(const 
+          FasterCommunicationReadTaskPtr & commReadTask) const;
+      void m_allocateMemoryForTask(const FasterTaskPtr & task) const;
+      // code...
     public:
       // constructor and destructor
       virtual ScheduledTaskInfo calculateSchedulingInfo(const 
@@ -749,7 +753,37 @@ mathescape]{c}
   };
 \end{minted}
 Dal codice precedente è possibile vedere le dichiarazioni dei metodi che 
-calcolano le informazioni di scheduling per le tre principali categorie ditask. 
-Al momento di effettuare lo scheduling di un task di comunicazione, viene 
-istanziato l'oggetto che implementa la policy di scheduling delle comunicazioni.
+calcolano le informazioni di scheduling per le tre principali categorie di 
+task e per i due tipi di task di comunicazione. Al momento di effettuare lo 
+scheduling di un task di comunicazione, viene istanziato l'oggetto che 
+implementa la policy di scheduling delle comunicazioni.
 
+Il metodo \verb+m_allocateMemoryForTask()+ gestisce l'allocazione della memoria 
+per i task di computazione chiamando i metodi del gestore della memoria.
+
+\paragraph{Policy di scheduling delle comunicazioni}
+La classe \verb+ScheduleRBCommunicationPolicy+ gestisce lo scheduling dei task 
+di comunicazione e implementa la policy spiegata nella Sezione 
+\ref{subsec:policyComunicazioni}. La classe è dichiarata e definita nei file 
+\emph{scheduleRBCommunicationPolicy.hpp} e  \emph{scheduleRBCommunicationPolicy.cpp},
+contenuti nella sottocartella  \emph{schedule/scheduleComponents/timeAssignmentAlgorithm/asap/communicationPolicy}.
+\newline
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
+  class ScheduleRBCommunicationPolicy {
+    public:
+      // code...
+      ScheduledTaskInfo scheduleCommunicationTask(const
+          FasterCommunicationTaskPtr & commTask, long int precTime);
+    private:
+      void m_removeConsumers(const
+          FasterCommunicationTaskPtr & commTask, bool scheduledOnBus);
+      // other private members
+  };
+\end{minted}
+
+Il metodo \verb+scheduleCommunicationTask()+ implementa la policy di scheduling dei
+task di comunicazione vista nel capitolo precedente; una volta calcolate le informazioni
+di scheduling, viene invocato il metodo \verb+m_removeConsumers()+ che si occupa di
+eliminare il task target della comunicazione dalla lista dei task in attesa per
+i dati presenti in memoria.
