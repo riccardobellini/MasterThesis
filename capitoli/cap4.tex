@@ -787,3 +787,36 @@ task di comunicazione vista nel capitolo precedente; una volta calcolate le info
 di scheduling, viene invocato il metodo \verb+m_removeConsumers()+ che si occupa di
 eliminare il task target della comunicazione dalla lista dei task in attesa per
 i dati presenti in memoria.
+
+\subsubsection{Allocazione della memoria}
+La classe \verb+SchedulerMemoryManager+, dichiarata e definita nei file
+\emph{schedulerMemoryManager.hpp} e \emph{schedulerMemoryManager.cpp} contenuti nella cartella
+\emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/scheduler}, gestisce
+gestisce l'allocazione della memoria per i processing task che compongono l'applicazione.
+\newline
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
+  typedef std::unordered_map<FasterTaskPtr, MemoryOccupationInfo,
+        utilities::HashUtility<FasterTaskPtr> > MemoryOccupationMap_t;
+  class SchedulerMemoryManager {
+    public:
+      // constructor and destructor
+      void addMemoryInfo(const FasterTaskPtr & task,
+                         const MemoryOccupationInfo & info);
+      void addMemoryInfo(const FasterTaskPtr & task,
+                         unsigned long base_addr,
+                         unsigned long data_size,
+                         TaskSet_t consumersSet);
+      void allocateMemoryForTask(const FasterTaskPtr & task,
+                                 unsigned long data_size,
+                                 const TaskSet_t & consumersSet);
+      void removeConsumer(const FasterTaskPtr & consumer);
+      MemoryOccupationInfo getMemoryOccupationInfo(
+              const FasterTaskPtr & task) const;
+      MemoryOccupationMap_t getMemoryOccupationMap() const;
+      void setMemoryOccupationMap(const MemoryOccupationMap_t & map);
+    private:
+      unsigned long m_getFirstAvailableAddress(unsigned long data_size);          
+      MemoryOccupationMap_t m_memoryOccupationMap;          
+      unsigned long m_largestAvailableAddress;
+  };
+\end{minted}
