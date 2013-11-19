@@ -18,18 +18,18 @@ precedente.
 \label{sec:reconfComp}
 Oggigiorno, grazie al progresso tecnologico e alla costante riduzione della dimensione 
 dei transistor, è possibile integrare diversi componenti elettronici su un singolo chip; 
-questi sistemi, chiamati \ac{SoC} o \ac{MPSoC}, a seconda che il microprocessore abbia 
-uno o più core, comprendono oltre al processore anche vari moduli funzionali quali 
-blocchi di memoria, connettori per interfacce (USB, FireWire, Ethernet ecc.) e altre 
-periferiche, collegati tramite BUS.
+questi sistemi, chiamati \ac{SoC} \cite{SoCBook} o \ac{MPSoC} \cite{MPSoCBook} a seconda
+che il microprocessore abbia  uno o più core, comprendono oltre al processore anche vari
+moduli funzionali quali blocchi di memoria, connettori per interfacce (USB, FireWire,
+Ethernet ecc.) e altre periferiche, collegati tramite BUS.
 
 Questa integrazione tuttavia apre una serie di problemi, tra cui elevato costo di 
-progettazione dei sistemi, bassa affidabilità e necessità di controllare il consumo di 
-energia; i problemi sopra citati possono essere risolti grazie all'impiego del 
-\emph{reconfigurable computing}.
+progettazione dei sistemi, bassa affidabilità e, ultimo ma non meno importante,
+necessità di controllare il consumo di energia; i problemi sopra citati possono
+essere risolti grazie all'impiego del  \emph{reconfigurable computing}.
 
-Con il termine \emph{reconfigurable computing} si intende un'architettura hardware che 
-offre la possibilità di essere riconfigurata per implementare qualsiasi funzionalità 
+Con il termine \emph{reconfigurable computing} si intendono delle architetture hardware che 
+offrono la possibilità di essere riconfigurate per implementare qualsiasi funzionalità 
 l'utente desideri. Le caratteristiche e il fondamento logico alla base di questo tipo di 
 architetture sono descritte nelle prossime sezioni.
 
@@ -46,34 +46,36 @@ Il modello general-purpose è tuttora ampiamente utilizzato, soprattutto nei per
 computer che utilizziamo tutti i giorni. Questa architettura, proposta dal matematico
 John von Neumann nel 1945 \cite{First-Draft-Report-EDVAC}, è basata sul concetto di
 \emph{stored-program} computer; la particolarità di uno stored-program computer è quella
-di tenere le istruzioni dei programmi e i relativi dati nella memoria RAM. Un computer di
-questo tipo contiene una \ac{ISA} e può memorizzare un programma composto da un insieme
-di queste istruzioni che guideranno la computazione. Contrariamente alle architetture
-precedenti, che potevano eseguire solamente un programma preimpostato, il vantaggio
-dell'architettura general-purpose consiste nella possibilità di eseguire codice
-arbitrario.
+di tenere le istruzioni dei programmi e i relativi dati nella memoria RAM. Un calcolatore di
+questo tipo contiene una \ac{ISA}\footnote{Il termine \acl{ISA} viene usato per descrivere
+una serie di caratteristiche dell'architettura di un computer, ad esempio le istruzioni
+a disposizione, i registri, l'architettura della memoria, le modalità di indirizzamento, etc.}
+e può memorizzare un programma composto da un insieme di queste istruzioni che guideranno
+la computazione. Contrariamente alle architetture precedenti, che potevano eseguire
+solamente un programma preimpostato, il vantaggio dell'architettura general-purpose consiste
+nella possibilità di eseguire codice arbitrario.
 
 \subsubsection{Il modello application-specific}
 Mentre il modello visto nella sezione precedente consente di avere una maggiore
 flessibilità a discapito però delle prestazioni che può fornire, il modello
 application-specific si posiziona all'estremo opposto rispetto al primo: è infatti
 caratterizzato da elevate prestazioni e da un basso consumo di potenza. Questo modello
-computazionale viene realizzato mediante l'impiego di \acp{ASIC}, dei circuiti integrati
-progettati per svolgere un'unica funzionalità. Questo guadagno in prestazioni comporta 
-tuttavia uno svantaggio in termini di costi di produzione e, naturalmente, una minore 
-flessibilità.
+computazionale viene realizzato mediante l'impiego di componenti chiamati \acp{ASIC},
+dei circuiti integrati -progettati per svolgere un'unica funzionalità. Questo guadagno
+in prestazioni comporta tuttavia uno svantaggio in termini di costi di produzione e,
+naturalmente, una minore flessibilità.
 
 Nella prossima sezione viene spiegato come il reconfigurable computing cerca di combinare
 i vantaggi di entrambi gli approcci.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%% FIXME %%%%%%%%%%%%%%%%%%%
+%%%%%%%%%% FIXME titolo sezione %%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsubsection{In medio stat virtus}
 Secondo l'informatico Reiner Hartenstein, le architetture riconfigurabili introducono un
 cambio di paradigma rispetto all'architettura di von Neumann
 \cite{HartensteinParadigmShift}. In un articolo del 1991, Hartenstein et al.~presentano
-una nuova metodologia di design per lo sviluppo rapido di \ac{ASIC} ad alte prestazioni
+una nuova metodologia di design per lo sviluppo rapido di \ac{ASIC} ad alte prestazioni,
 partendo da specifiche di algoritmi ad alto livello \cite{HartensteinNovelASICDesign};
 questa metodologia è basata su un nuovo paradigma di macchina sequenziale, chiamata da
 Hartenstein \emph{anti macchina}\footnote{Così definita per le sue differenze rispetto al
@@ -91,8 +93,7 @@ avviene tramite il trasporto dei dati, che vengono scritti nelle \emph{triggerin
 delle \acp{DPU}.}.
 
 \begin{table}[ht]
-\caption{Classificazione dei paradigmi secondo Nick Tredennick.}
-\label{tab:TredennickClassificationScheme}
+\begin{center}
  \begin{tabular}{l | l}
  \hline
  \textbf{Historic computers} & \textbf{Programming source}\\
@@ -110,6 +111,9 @@ delle \acp{DPU}.}.
  resources variable & configware\\
  algorithms variable (anti machine) & flowware (data streams)
  \end{tabular}
+ \caption{Classificazione dei paradigmi secondo Nick Tredennick.}
+ \label{tab:TredennickClassificationScheme}
+ \end{center}
 \end{table}
 
 Le differenze tra il paradigma del reconfigurable computing e gli altri paradigmi di
@@ -118,20 +122,22 @@ computazione sono illustrati da Nick Tredennick nella Tabella
 osservare che le architetture riconfigurabili offrono la possibilità di configurare sia le
 risorse per la computazione (\emph{configware}) sia gli algoritmi da eseguire
 (\emph{flowware}). Tale soluzione porta a un minore costo di progettazione e
-maggiore flessibilità rispetto a circuiti dedicati e a prestazioni superiori rispetto a
-soluzioni general-purpose.
+maggiore flessibilità rispetto a circuiti dedicati; si osservano inoltre prestazioni
+superiori rispetto a soluzioni general-purpose.
 
 Viene ora illustrata la struttura generica di un'architettura riconfigurabile.
 
 \subsubsection{I dispositivi riconfigurabili}
 Le architetture riconfigurabili sono composte da un processore general-purpose e da una
-porzione di logica riconfigurabile: lo scopo del processore è controllare le
+porzione di logica riconfigurabile; lo scopo del processore è controllare le
 attività (d'ora in avanti definite \emph{task}) in esecuzione sulla logica
-riconfigurabile e di gestire le comunicazioni da e verso l'esterno. Le informazioni per la
-(ri)configurazione che devono essere ``caricate'' sul dispositivo sono contenute in un
-file chiamato \emph{bitstream}.
+riconfigurabile e di gestire le comunicazioni provenienti da e dirette verso l'esterno.
+Le informazioni per la (ri)configurazione che devono essere ``caricate'' sul dispositivo
+sono contenute in un file chiamato \emph{bitstream}.
 
-Esempi molto diffusi di dispositivi riconfigurabili sono le schede \emph{\acp{FPGA}},
+% TODO struttura bitstream?
+
+Esempi molto diffusi di dispositivi riconfigurabili sono le schede \emph{\ac{FPGA}},
 introdotte attorno alla metà degli anni '80, che contengono sia logica che comunicazioni
 programmabili. La logica può essere configurata per rappresentare delle porte logiche
 oppure per sintetizzare dei core \ac{IP}.
@@ -150,6 +156,7 @@ esecuzione su altre regioni del dispositivo.
 \end{enumerate}
 
 % TODO: applicazioni del reconfigurable computing?
+% TODO qualcosa di più sulla riconfigurazione (aree, regioni di clock, etc.)
 
 Nella prossima sezione vengono descritte le motivazioni e la problematica oggetto del
 lavoro.
@@ -161,7 +168,7 @@ riconfigurabili, con le relative problematiche che emergono.
 
 \subsection{Hardware/Software Co-design}
 Come visto nella precedente sezione, il reconfigurable computing offre elevate
-prestazioni senza sacrificare la flessibilità, e rappresenta un'area di
+prestazioni senza sacrificare la flessibilità, rappresentando pertanto un'area di
 ricerca in continua crescita. Per questo motivo, date anche la crescente complessità
 delle applicazioni e la richiesta di elevate prestazioni, i sistemi embedded
 eterogenei\footnote{I sistemi embedded eterogenei sono dispositivi progettati per
@@ -169,12 +176,36 @@ svolgere un numero limitato di funzioni con requisiti di alte prestazioni, basso
 energetico e prestazioni in tempo reale, come i normali sistemi embedded; si
 differenziano da questi perchè parte dell'applicazione può essere eseguita da
 acceleratori hardware (ad esempio una porzione di scheda riconfigurabile FPGA), da
-hardware general-purpose oppure da \acp{DSP}.} stanno guadagnando popolarità.
+hardware general-purpose oppure da \ac{DSP}.} stanno guadagnando popolarità.
 
 Il nuovo paradigma introdotto dalle architetture riconfigurabili procura vantaggi
 soprattutto nel design \ac{ESL}, in particolare l'\mbox{hardware/software} co-design.
-Prima delle architetture riconfigurabili, le due parti (hardware e software) erano
-sviluppate separatamente e integrate successivamente; la ricerca su 
+Inizialmente, le due parti (hardware e software) erano sviluppate separatamente e integrate
+successivamente, verso la fine del processo di design; in caso di problemi nella fase di
+integrazione, modificare oppportunamente l'hardware o il software comportava delle difficoltà
+aggiuntive, complicando la manutenibilità del progetto.
+
+L'HW-SW co-design è stato proposto per colmare le limitazioni della metodologia classica di
+sviluppo. Il concetto chiave dell'HW-SW co-design è la continua integrazione tra hardware e software
+durante il flusso di sviluppo. In questo modo si facilita la verifica del software e l'assenza di
+errori nella parte hardware.
+
+\paragraph{Reconfigurable computing in HW-SW co-design}
+Nonostante la maggiore integrazione, caratteristica dell'HW-SW co-design, il design dell'hardware
+è un processo costoso in termini di tempo; lo sviluppo della parte hardware infatti include il
+design del sistema, il debug, la produzione dell'hardware e infine il test. L'uso di linguaggi
+di modeling dell'hardware come SystemC \cite{SystemCBook} per simulare il comportamento del
+sistema non rappresentano una soluzione definitiva, principalmente perchè la velocità della
+simulazione rappresenta un problema.
+
+L'impiego di architetture riconfigurabili come prototipizzazione dell'hardware finale permette
+di abbattere i costi dovuti allo sviluppo e al debug di una piattaforma hardware e di ottenere
+risultati molto più realistici di quelli che può fornire un simulatore. Il reconfigurable
+computing velocizza quindi il processo di HW-SW co-design, riducendo il time-to-market.
+
+% TODO parlare del flusso di design automatizzato
+
+La ricerca su 
 \mbox{hardware/software} co-design invece ha come obiettivo la creazione di strumenti che 
 permettano lo sviluppo contemporaneo delle due componenti, con possibilità di esplorare e 
 analizzare trade-off durante il design del sistema. In questo modo si permette al 
