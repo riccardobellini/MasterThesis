@@ -155,8 +155,42 @@ può essere riconfigurata tramite un bitstream parziale, senza interrompere i ta
 esecuzione su altre regioni del dispositivo.
 \end{enumerate}
 
-% TODO: applicazioni del reconfigurable computing?
 % TODO qualcosa di più sulla riconfigurazione (aree, regioni di clock, etc.)
+
+\acrodef{DCT}{Discrete Cosine Transform}
+
+\subsubsection{Applicazioni del reconfigurable computing}
+\paragraph{Applicazioni multimediali}
+La caratteristica principale delle applicazioni multimediali è la grande quantità di dati che
+vengono processati, unitamente a dei requisiti di soft real-time. L'utilizzo del reconfigurable
+computing permette di velocizzare l'esecuzione di queste applicazioni. Oltre al miglioramento
+in termini di velocità di esecuzione, grazie all'impiego del reconfigurable computing si possono
+riutilizzare diversi moduli \ac{IP} comuni a diverse applicazioni, ad esempio codifica di
+Huffman, quantizzazione e \ac{DCT}.
+
+\paragraph{Calcolo e simulazioni scientifiche}
+Il calcolo in ambito scientifico necessita di eseguire velocemente e in maniera efficiente
+una serie di operazioni su una grossa mole di dati, allo scopo di effettuare simulazioni o
+calcoli matematici. La caratteristica di questi sistemi è il rapido cambiamento dei dati in
+input, che possono richiedere un adattamento in tempo reale della computazione.
+
+In questo caso l'impiego del reconfigurable computing permette di adattare velocemente
+l'applicazione ai dati in input, oltre ad aumentare la scalabilità delle implementazioni
+di questi sistemi.
+
+\acrodef{AES}{Advanced Encryption Standard}
+\acrodef{DES}{Data Encryption Standard}
+\acrodef{SHA}{Secure Hash Algorithm}
+
+\paragraph{Sicurezza delle reti}
+La necessità di scambiare i dati in modo sicuro attraverso Internet ha portato allo sviluppo
+di diversi algoritmi crittografici, sia per lo scambio di informazioni (ad esempio
+\ac{AES} e \ac{DES}), sia per meccanismi di autenticazione e verifica dell'integrità
+(MD5 e \ac{SHA}).
+
+Il reconfigurable computing permette di adattare facilmente i sistemi di sicurezza
+all'impiego dei diversi standard utilizzati per la cifratura e decifratura dei dati, in
+maniera dinamica.
 
 Nella prossima sezione vengono descritte le motivazioni e la problematica oggetto del
 lavoro.
@@ -181,8 +215,8 @@ hardware general-purpose oppure da \ac{DSP}.} stanno guadagnando popolarità.
 Il nuovo paradigma introdotto dalle architetture riconfigurabili procura vantaggi
 soprattutto nel design \ac{ESL}, in particolare l'\mbox{hardware/software} co-design.
 Inizialmente, le due parti (hardware e software) erano sviluppate separatamente e integrate
-successivamente, verso la fine del processo di design; in caso di problemi nella fase di
-integrazione, modificare oppportunamente l'hardware o il software comportava delle difficoltà
+successivamente, verso la fine del processo di design; tuttavia, in caso di problemi nella fase di
+integrazione, modificare opportunamente l'hardware o il software comportava delle difficoltà
 aggiuntive, complicando la manutenibilità del progetto.
 
 L'HW-SW co-design è stato proposto per colmare le limitazioni della metodologia classica di
@@ -194,7 +228,7 @@ errori nella parte hardware.
 Nonostante la maggiore integrazione, caratteristica dell'HW-SW co-design, il design dell'hardware
 è un processo costoso in termini di tempo; lo sviluppo della parte hardware infatti include il
 design del sistema, il debug, la produzione dell'hardware e infine il test. L'uso di linguaggi
-di modeling dell'hardware come SystemC \cite{SystemCBook} per simulare il comportamento del
+di modellazione dell'hardware come SystemC \cite{SystemCBook} per simulare il comportamento del
 sistema non rappresentano una soluzione definitiva, principalmente perchè la velocità della
 simulazione rappresenta un problema.
 
@@ -205,10 +239,9 @@ computing velocizza quindi il processo di HW-SW co-design, riducendo il time-to-
 
 % TODO parlare del flusso di design automatizzato
 
-La ricerca su 
-\mbox{hardware/software} co-design invece ha come obiettivo la creazione di strumenti che 
-permettano lo sviluppo contemporaneo delle due componenti, con possibilità di esplorare e 
-analizzare trade-off durante il design del sistema. In questo modo si permette al 
+La ricerca su \mbox{hardware/software} co-design invece ha come obiettivo la creazione di
+strumenti che permettano lo sviluppo contemporaneo delle due componenti, con possibilità di
+esplorare e analizzare trade-off durante il design del sistema. In questo modo si permette al 
 designer di concentrarsi sullo sviluppo dell'applicazione ad alto livello, parzialmente 
 astraendo dal livello più basso (ad esempio generazione dei core che implementano i vari 
 task, oppure delle direttive di sincronizzazione).
