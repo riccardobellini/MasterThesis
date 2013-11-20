@@ -237,40 +237,10 @@ di abbattere i costi dovuti allo sviluppo e al debug di una piattaforma hardware
 risultati molto più realistici di quelli che può fornire un simulatore. Il reconfigurable
 computing velocizza quindi il processo di HW-SW co-design, riducendo il time-to-market.
 
-% TODO parlare del flusso di design automatizzato
-
-La ricerca su \mbox{hardware/software} co-design invece ha come obiettivo la creazione di
-strumenti che permettano lo sviluppo contemporaneo delle due componenti, con possibilità di
-esplorare e analizzare trade-off durante il design del sistema. In questo modo si permette al 
-designer di concentrarsi sullo sviluppo dell'applicazione ad alto livello, parzialmente 
-astraendo dal livello più basso (ad esempio generazione dei core che implementano i vari 
-task, oppure delle direttive di sincronizzazione).
-
-Il flusso di design automatizzato dovrebbe consentire la realizzazione della sintesi ad 
-alto livello (\emph{high-level synthesis}): partendo da un'applicazione scritta in un
-linguaggio ad alto livello, opportunamente annotata per istruire il tool sui vari task
-da eseguire, e da una descrizione dell'architettura riconfigurabile, il tool deve gestire
-le seguenti fasi:
-\begin{enumerate}
- \item \emph{mapping}: in questa fase viene deciso quale task deve essere eseguito su 
-quale processing 
-element (\mbox{hardware/software} partitioning) e, nel caso di più implementazioni per 
-ogni task, quale implementazione eseguire;
- \item \emph{scheduling}: assegnazione dei tempi di inizio/fine esecuzione dei task;
- \item \emph{floorplacement} o \emph{floorplanning}: in questa fase si identificano i 
-task che idealmente dovrebbero essere posti fisicamente ``vicini'' sulla scheda, ad 
-esempio per minimizzare la latenza della comunicazione, rispettando i vincoli di area 
-riconfigurabile a disposizione.
-\end{enumerate}
-
-Il lavoro descritto in questa tesi si concentra su una possibile soluzione per il 
-problema di scheduling dei task, che verrà spiegato più in dettaglio nella prossima 
-sezione.
-
-
-\subsection{La fase di scheduling}
-L'obiettivo dello scheduler è assegnare i tempi di inizio e di fine dell'esecuzione ai
-task che compongono l'applicazione.
+\subsection{Design di hardware riconfigurabile}
+In questa sezione viene descritto come sia possibile progettare un sistema che esegue
+un'applicazione parzialmente accelerata sfruttando le potenzialità fornite dall'hardware
+riconfigurabile.
 
 \begin{figure}[ht]
 \begin{center}
@@ -295,26 +265,115 @@ task che compongono l'applicazione.
 \end{center}
 \end{figure}
 
-Lo scheduler riceve i dati relativi all'applicazione sotto forma di ``task graph''.
-In Figura \ref{fig:taskGraphExample} è raffigurato un esempio di task graph: esso è un 
-grafo orientato aciclico\footnote{\ac{DAG}.} in cui i nodi rappresentano i vari task da 
-eseguire, e gli archi rappresentano le precedenze tra questi task.
-Le precedenze esplicitano relazioni produttore-consumatore, ovvero un arco orientato 
-$(i,j)$ simboleggia un trasferimento dell'output della computazione del task $i$ in 
-memoria (locale o condivisa), per essere utilizzato successivamente come input per il 
-task $j$; gli archi introducono quindi delle comunicazioni che devono necessariamente 
-essere prese in considerazione nella fase di scheduling.
+\subsubsection{Modello}
+
+La specifica dell'applicazione da accelerare è data sotto forma di un grafo che
+rappresenta il flusso dei dati dell'applicazione, un \ac{DFG}. In Figura
+\ref{fig:taskGraphExample} è possibile vedere un esempio di \ac{DFG}. Il grafo che
+rappresenta l'applicazione è composto da \emph{task}, che rappresentano unità
+computazionali. Il \ac{DFG} che rappresenta l'applicazione è nella forma
+$\langle S, P \rangle$, dove $S$ è l'insieme dei task (nodi del grafo) e $P$
+rappresenta le precedenze tra i task (archi del grafo).
+
+A ogni task corrispondono una o più \emph{implementazioni}, ovvero diversi modi di
+realizzarne la funzionalità; le implementazioni possono essere di due tipi: software
+oppure hardware. Le implementazioni software sono prodotte dai compilatori, ne possono
+esistere più versioni per ogni task date da differenti ottimizzazioni abilitate dal
+compilatore.
+
+Le implementazioni hardware non sono sempre assegnabili ai task; può capitare infatti
+che un particolare task non sia sintetizzabile a causa di particolari costrutti che
+contiene. Solitamente, possono esistere più implementazioni hardware per un singolo task,
+che differiscono per il tempo di esecuzione e l'area che occupano su scheda.
+
+Il dispositivo riconfigurabile viene abitualmente rappresentato come una griglia di \ac{RU}, 
+costituita da un insieme di righe $R=\left\{r_1, r_2, \dots, r_{\vert R \vert}\right\}$ e 
+di colonne $C=\left\{c_1, c_2, \dots, c_{\vert C \vert}\right\}$. Ogni unità 
+riconfigurabile è rappresentata da una tupla $(r,c) \in U$ con $r \in R$ e $c \in C$, e 
+composta da un numero $\rho_{u}$ di \ac{CLB}.
+
+Le implementazioni sono realizzate tramite particolari combinazioni di risorse (\ac{RU}),
+e vengono definite \ac{EU}. A ogni task può quindi corrispondere una o più \ac{EU}.
+
+\subsubsection{Partizionamento e scheduling}
+Sfruttando la notazione introdotta nella sezione precedente e tratta da \cite{ModelloRedaelli}
+e \cite{ReconfigurableSystemDesignVerification}, è possibile formulare il problema
+di partizionamento e scheduling su architetture riconfigurabili come illustrato in questa
+sezione. I task devono essere mappati su un insieme $E$ di \acp{EU}, 
+ottenute configurando le unità riconfigurabili tramite bitstream che specificano 
+l'implementazione di tali task.
+
+Nell'ipotesi di poter calcolare o stimare il tempo di esecuzione $l_{s}$, di 
+riconfigurazione $d_{s}$ e l'area occupata $r_{s}$ da un task, si può quindi modellizzare 
+la ricerca della soluzione come la definizione di una funzione 
+che, dati questi input, specifica per ogni task:
+\begin{itemize}
+ \item l'\ac{EU} $e_s \in E$ su cui deve essere mappato, e il suo posizionamento 
+all'interno dell'\ac{FPGA} in termini di \ac{RU};
+ \item il tempo di inizio della riconfigurazione per l'\ac{EU}, $\bar{t}_s \in T$;
+ \item il tempo di inizio dell'esecuzione del task $t_s \in T$.
+\end{itemize}
+
+In maniera formale:
+\begin{equation}
+\label{formula:mappingScheduling}
+ \sigma : S \rightarrow E \times 2^{U} \times T \times T
+\end{equation}
+
+Data la formulazione appena introdotta, si possono identificare diverse fasi nel
+design di sistemi riconfigurabili:
+\begin{enumerate}
+ \item \emph{partitioning}: in questa fase viene stabilito quali task devono essere
+ eseguiti in software e quali in hardware;
+ \item \emph{mapping}: decisione della particolare implementazione e \emph{processing
+ element}\footnote{Il concetto di processing element è simile a quello di combinazione
+ di \ac{RU}; tuttavia, mentre una combinazione di \ac{RU} rappresenta solo una generica
+ area su logica riconfigurabile, il termine ``processing element`` racchiude anche unità
+ di computazione non riconfigurabili, come core implementati staticamente su scheda oppure
+ microprocessori.}
+ con cui realizzare la funzionalità di ogni task;
+ \item \emph{scheduling}: assegnazione dei tempi di inizio/fine esecuzione dei task,
+ rispettando le precedenze;
+ \item \emph{floorplacement} o \emph{floorplanning}: in questa fase si identificano i 
+task che idealmente dovrebbero essere posti fisicamente ``vicini'' sulla scheda, ad 
+esempio per minimizzare la latenza della comunicazione, rispettando i vincoli di area 
+riconfigurabile a disposizione.
+\end{enumerate}
+Il lavoro descritto in questa tesi si concentra su una possibile soluzione per il 
+problema di scheduling dei task, che verrà spiegato più in dettaglio nella prossima 
+sezione.
+
+
+% La ricerca su \mbox{hardware/software} co-design invece ha come obiettivo la creazione di
+% strumenti che permettano lo sviluppo contemporaneo delle due componenti, con possibilità di
+% esplorare e analizzare trade-off durante il design del sistema. In questo modo si permette al 
+% designer di concentrarsi sullo sviluppo dell'applicazione ad alto livello, parzialmente 
+% astraendo dal livello più basso (ad esempio generazione dei core che implementano i vari 
+% task, oppure delle direttive di sincronizzazione).
+
+
+\subsection{La fase di scheduling}
+L'obiettivo dello scheduler è assegnare i tempi di inizio e di fine dell'esecuzione ai
+task che compongono l'applicazione. Dato un task graph come quello in Figura
+\ref{fig:taskGraphExample}, le precedenze esplicitano relazioni produttore-consumatore,
+ovvero un arco orientato $(i,j)$ simboleggia un trasferimento dell'output della
+computazione del task $i$ in memoria (locale o condivisa), per essere utilizzato
+successivamente come input per il task $j$; gli archi introducono quindi delle
+comunicazioni che devono necessariamente essere prese in considerazione nella fase 
+di scheduling.
 
 Oltre alle comunicazioni, lo scheduler deve anche gestire il verificarsi di 
 riconfigurazioni nel corso dell'esecuzione dell'applicazione. Ad esempio, se due task $i$ 
 e $j$ durante la fase di mapping vengono assegnati a uno stesso processing element su 
 scheda con due implementazioni diverse, è necessario riconfigurare quella porzione di 
-scheda dopo l'esecuzione di $i$ e prima dell'esecuzione di $j$.
+scheda nell'intervallo di tempo che intercorre tra l'esecuzione di $i$ e quella di $j$.
 
-\subsection{Obiettivi dello scheduling}
+\subsubsection{Obiettivi dello scheduling}
 Un \ac{DFG} rappresentante i task ammette diversi possibili schedule che ne rispettino le 
-precedenze; tra questi, il tool deve scegliere quelli ottimi o sub-ottimi dal punto di 
-vista di varie metriche, ad esempio:
+precedenze. Sfortunatamente, non tutti gli schedule che soddisfano i vincoli di precedenza
+hanno uguale ``desiderabilità'' dal punto di vista della soluzione finale. Quindi, un buon
+algoritmo di scheduling deve scegliere quelli ottimi o sub-ottimi dal punto di vista di
+varie metriche, tra le più importanti si ricordano:
 \begin{itemize}
  \item \emph{makespan}: minimizzare la durata totale dell'esecuzione dello schedule;
  \item \emph{power consumption}; limitare il consumo di energia richiesto 
@@ -323,6 +382,11 @@ dall'esecuzione dei task.
 
 
 \subsubsection{Complessità}
+Come evidenziato da \eqref{formula:mappingScheduling}, lo spazio di ricerca è 
+estremamente ampio, e la complessità delle fasi di mapping e scheduling se effettuate 
+contemporaneamente rende quasi impossibile risolvere (in maniera ottima) problemi non 
+banali.
+
 Il problema di fissare uno schedule per i task di un'applicazione è un classico esempio 
 di \ac{RCSP}; tale problema appartiene alla classe di complessità computazionale dei 
 problemi NP-difficili (si veda l'Appendice \ref{chap:appA} per un riepilogo delle classi 
@@ -333,55 +397,20 @@ polinomiale, e si pensa che non ne esistano\footnote{Vedi la Sezione
 \mathcal{NP}$.}.
 
 Oltre a questo, un'altra difficoltà che si incontra è che il problema dello scheduling 
-dei task non è indipendente dalla fase di mapping; le due fasi sono strettamente 
+dei task non è indipendente dalla fase di partitioning/mapping; le due fasi sono strettamente 
 collegate e devono essere risolte contemporaneamente per garantire il raggiungimento 
 degli obiettivi ottimali. Tuttavia, ciò aumenta ulteriormente la complessità del 
-problema, il cui modello, tratto da \cite{ModelloRedaelli} e da 
-\cite{ReconfigurableSystemDesignVerification}, è descritto nel paragrafo seguente.
+problema.
 
-
-\paragraph{Modello del problema}
-Il dispositivo riconfigurabile viene rappresentato come una griglia di \ac{RU}, 
-costituita da un insieme di righe $R=\left\{r_1, r_2, \dots, r_{\vert R \vert}\right\}$ e 
-di colonne $C=\left\{c_1, c_2, \dots, c_{\vert C \vert}\right\}$. Ogni unità 
-riconfigurabile è rappresentata da una tupla $(r,c) \in U$ con $r \in R$ e $c \in C$, e 
-composta da un numero $\rho_{u}$ di \ac{CLB}. L'applicazione è rappresentata da un 
-\acp{DFG} $\langle S, P \rangle$, dove $S$ è l'insieme dei task e $P$ rappresenta le 
-precedenze tra i task. I task devono essere mappati su un insieme $E$ di \acp{EU}, 
-ottenute configurando le unità riconfigurabili tramite bitstream che specificano 
-l'implementazione di tali task.
-
-Nell'ipotesi di poter calcolare o stimare il tempo di esecuzione $l_{S}$, di 
-riconfigurazione $d_{S}$ e l'area occupata $r_{S}$ da un task, si può quindi modellizzare 
-la ricerca della soluzione come la definizione di una funzione 
-che, dati questi input, specifica per ogni task:
-\begin{enumerate}
- \item l'\ac{EU} $e_s \in E$ su cui deve essere mappato, e il suo posizionamento 
-all'interno dell'\ac{FPGA} in termini di \ac{RU};
- \item il tempo di inizio della riconfigurazione per l'\ac{EU}, $\bar{t}_s \in T$;
- \item il tempo di inizio dell'esecuzione del task $t_s \in T$.
-\end{enumerate}
-
-In maniera formale:
-\begin{equation}
-\label{formula:mappingScheduling}
- \sigma : S \rightarrow E \times 2^{U} \times T \times T
-\end{equation}
-Come evidenziato da \eqref{formula:mappingScheduling}, lo spazio di ricerca è 
-estremamente ampio, e la complessità delle fasi di mapping e scheduling se effettuate 
-contemporaneamente rende quasi impossibile risolvere (in maniera ottima) problemi non 
-banali.
-
-Nella prossima sezione verranno elencati brevemente i possibili algoritmi per la 
-risoluzione della fase di scheduling.
 
 \subsubsection{Algoritmi utilizzabili}
 Esistono diversi algoritmi per risolvere il problema dello scheduling, alcuni esatti 
 basati sulla \ac{PLI}, altri basati su euristiche più o meno complesse che ricercano 
 soluzioni sub-ottime, entrambi i tipi saranno discussi più nel dettaglio nel Capitolo 
-\ref{chap:SOA}. Lo svantaggio a livello pratico degli algoritmi esatti è l'eccessivo tempo 
+\ref{chap:SOA}, in particolare nella Sezione \ref{sec:algoritmiProposti}.
+Lo svantaggio a livello pratico degli algoritmi esatti è l'eccessivo tempo 
 impiegato per lo scheduling di applicazioni non banali, limitazione che tende a far 
 preferire l'uso di metodi non esatti ma più veloci quali le euristiche, per ottenere 
-risultati buoni in tempi accettabili; in questo lavoro l'algoritmo per la fase di 
+risultati buoni in tempi accettabili; in questo lavoro l'algoritmo proposto per la fase di 
 scheduling è di tipo euristico, le motivazioni per questa scelta verranno illustrate nel 
 Capitolo \ref{chap:approccio}.
