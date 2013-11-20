@@ -4,22 +4,22 @@
 In questo capitolo verrà fornito un esame dello stato dell'arte e verranno presentate 
 alcune soluzioni relative al lavoro oggetto di questa tesi.
 
-Nella Sezione \ref{sec:progettoFASTER} è descritto il progetto europeo 
+Nella sezione \ref{sec:progettoFASTER} è descritto il progetto europeo 
 \acs{FASTER} con una spiegazione sulla metodologia proposta per la toolchain e 
 l'algoritmo che effettua l'analisi esplorativa delle soluzioni, che interagisce 
 con lo scheduler.
 
-Nella Sezione \ref{sec:algoritmiProposti} si esaminano i vari approcci proposti 
+Nella sezione \ref{sec:algoritmiProposti} si esaminano i vari approcci proposti 
 dagli autori nell'ambito del problema dello scheduling dei task su dispositivi 
-riconfigurabili, divisi in algoritmi esatti, trattati nella Sezione 
-\ref{sec:algoritmiEsatti}, ed euristici, trattati nella Sezione 
+riconfigurabili, divisi in algoritmi esatti, trattati nella sezione 
+\ref{sec:algoritmiEsatti}, ed euristici, trattati nella sezione 
 \ref{sec:algoritmiEuristici}.
 
 
 \section[Il progetto \acs{FASTER}]{Il progetto \acs{FASTER}}
 \label{sec:progettoFASTER}
-In questa sezione vengono presentate il fondamento logico e le motivazioni alla 
-base del progetto \acs{FASTER}. La Sezione \ref{sec:fasterIntro} fornisce 
+In questa sezione vengono presentati il fondamento logico e le motivazioni alla 
+base del progetto \acs{FASTER}. La Sezione \ref{subsec:fasterIntro} fornisce 
 un'introduzione al progetto e spiega gli obiettivi e le motivazioni alla 
 base che hanno portato alla creazione del progetto; infine, la Sezione 
 \ref{sec:fasterMetodologia} illustra la metodologia tramite la quale si possono 
@@ -36,26 +36,26 @@ raggiungere gli obiettivi prefissati.
 
 
 \subsection{Introduzione}
-\label{sec:fasterIntro}
+\label{subsec:fasterIntro}
 \acs{FASTER} è l'acronimo di \emph{\acl{FASTER}}, un progetto\footnote{Sito del 
 progetto: \url{http://www.fp7-faster.eu/}.} organizzato dalla comunità europea 
-che coinvolge diverse aziende e atenei\footnote{I collaboratori del progetto 
+che coinvolge diverse aziende e atenei,\footnote{I collaboratori del progetto 
 sono: l'\ac{ICS} di \ac{FORTH} in Grecia, Chalmers University of Technology in 
 Svezia, l'università di Ghent in Belgio, l'Imperial College di Londra, il 
-Politecnico di Milano e le aziende Maxeler, ST Microelectronics e Synelixis.}, 
-tra cui il Politecnico di Milano. Il progetto è stato avviato il 1 settembre 
-2011, ha una durata di 36 mesi ed è supportato tramite fondi stanziati dalla 
+Politecnico di Milano e le aziende Maxeler, ST Microelectronics e Synelixis.} 
+tra cui il Politecnico di Milano. Il progetto è stato avviato l'1/09/2011,
+ha una durata di 36 mesi ed è supportato tramite fondi stanziati dalla 
 comunità europea.
 
 \subsubsection{Motivazioni e obiettivi del progetto}
 L'ambito di applicazione del progetto \ac{FASTER} sono le architetture 
-riconfigurabili; in particolare, \ac{FASTER} è pensato, come il nome 
+riconfigurabili; in particolare \ac{FASTER} è pensato, come il nome 
 suggerisce, per facilitare la definizione e l'uso di sistemi implementati in 
 hardware \cite{FasterPaper}.
 
 Sfruttando le potenzialità delle promettenti architetture hardware basate sulla 
-logica riconfigurabile, introdotte nel Capitolo \ref{chap:intro}, si possono 
-infatti estendere le funzionalità (e quindi la durata della vita) di 
+logica riconfigurabile, introdotte nel capitolo \ref{chap:intro}, si possono 
+infatti estendere le funzionalità (e quindi la durata utile della vita) di 
 un'applicazione senza dover riprogettare interamente l'hardware necessario per 
 eseguirla, consentendo allo stesso tempo di raggiungere performance equiparabili 
 a quelle di un'esecuzione su hardware dedicato.
@@ -69,23 +69,6 @@ essere aggiunte costantemente, con il crescere della lista delle minacce. In
 risposta a questi requisiti di velocità e dinamicità dell'applicazione, la 
 logica riconfigurabile rappresenta una soluzione per il soddisfacimento di 
 entrambi i requisiti.
-
-% Extending product functionality and lifetime requires constant addition of new 
-% features to satisfy the growing customer needs and the evolving market and 
-% technology trends. Software component adaptivity is straightforward but not 
-% enough: recent products include hardware accelerators - for reasons of 
-% performance and power efficiency - that also need to adapt to new 
-% requirements.For example, a Network Intrusion Detection System (NIDS) needs to 
-% scan all incoming network packets for suspicious content. The scanning has to be 
-% fast so that the monitored communication links are not slowed down, while the 
-% list of threats to check for is extended and updated on a daily basis.
-% 
-% Reconfigurable logic allows the definition of new functions to be implemented in 
-% dynamically instantiated hardware units, combining adaptivity with hardware 
-% speed and efficiency. For the Intrusion Detection System example, new rules can 
-% be hardcoded into the reconfigurable logic, achieving high performance, while 
-% providing the necessary adaptivity to new threats.
-
 
 Nonostante il vantaggio di utilizzare architetture riconfigurabili rispetto 
 all'eseguire le applicazioni puramente in software, il design e 
@@ -140,7 +123,7 @@ precedenza.}.
 quanto ha come obiettivo l'introduzione della riconfigurazione parziale 
 dinamica come un concetto di design esplicito, fornendo anche i metodi per 
 supportare la riconfigurazione a run-time nell'intera metodologia di design.
-Il progetto \ac{FASTER}, quindi, deve possedere le seguenti caratteristiche:
+Il progetto \ac{FASTER} quindi, deve possedere le seguenti caratteristiche:
 \begin{enumerate}
  \item deve fornire supporto per l'inclusione della riconfigurazione parziale 
 dinamica, sia region-based che micro-riconfigurazione, in maniera trasparente 
@@ -158,7 +141,7 @@ sviluppate in hardware in presenza di vincoli sul consumo energetico e
 riduzione del costo totale di proprietà\footnote{In inglese \emph{\ac{TCO}}, 
 rappresenta l'insieme di tutti i costi da sostenere per l'intero ciclo di 
 vita di un sistema o un'apparecchiatura IT.} per sistemi come \ac{NIDS} e 
-\ac{RTM} implementati su hardware riconfigurabile, grazie alla minore 
+\ac{RTM} \cite{RTMArticle} implementati su hardware riconfigurabile, grazie alla minore 
 manutenzione richiesta.
 
 Nella prossima sezione verranno illustrate le piattaforme hardware supportate 
@@ -191,15 +174,15 @@ scheda \emph{University Program XUPV5-LX110T} di \emph{Xilinx} o la scheda
 Oltre a supportare queste differenti piattaforme, \ac{FASTER} ha come obiettivo 
 l'aumento delle performance di tre applicazioni provenienti da diversi ambiti:
 \begin{itemize}
- \item \acf{RTM}, un algoritmo applicato nella tomografia sismica per 
+ \item \acf{RTM} \cite{RTMArticle}, un algoritmo applicato nella tomografia sismica per 
 fornire una rappresentazione più realistica del sottosuolo in aree 
 geologicamente complesse e caratterizzate da differenti velocità di 
 propagazione delle onde sismiche;
- \item Global Illumination and Image Analysis, un insieme di algoritmi 
-utilizzati per rendere più realistici oggetti e scene rappresentati in grafica 
-computerizzata tridimensionale;
  \item sistemi di riconoscimento di intrusione in una rete, descritti in 
 precedenza;
+ \item Global Illumination and Image Analysis, un insieme di algoritmi 
+utilizzati per rendere più realistici oggetti e scene rappresentati in grafica 
+computerizzata tridimensionale; un esempio è l'algoritmo di \emph{ray tracing}.
 \end{itemize}
 
 \subsubsection{Descrizione del framework}
@@ -216,7 +199,7 @@ alto livello.
  \end{center}
 \end{figure}
 
-La Figura \ref{fig:FASTERWorkflow} illustra la panoramica della metodologia 
+La figura \ref{fig:FASTERWorkflow} illustra la panoramica della metodologia 
 adottata da \ac{FASTER} e il flusso di lavoro che, partendo dalla specifica 
 dell'applicazione annotata e dalla descrizione dell'architettura target, riesce 
 a derivare un bitfile utilizzabile per configurare l'architettura ed eseguire 
@@ -226,10 +209,10 @@ L'approccio adottato da \ac{FASTER} prevede che i vari componenti del framework
 si interfaccino tra loro mediante l'uso di file XML. L'input di un progetto 
 \ac{FASTER} è costituito dall'applicazione da sintetizzare, che può 
 essere scritta in un linguaggio ad alto livello (ad esempio, il linguaggio C) e 
-provvista di annotazioni, ad esempio in formato OpenMP\footnote{OpenMP è un 
+provvista di annotazioni, ad esempio in formato OpenMP,\footnote{OpenMP è un 
 formato standard per la specifica di applicazioni parallele, che permette di 
 specificare quali funzioni di un'applicazione sono parallelizzabili e di 
-suddividere l'applicazione nei vari task.}, che ne consentono la suddivisione 
+suddividere l'applicazione nei vari task.} che ne consentono la suddivisione 
 iniziale in task e dalla descrizione delle funzionalità di riconfigurazione a 
 disposizione dell'architettura. Oltre all'applicazione possono essere presenti 
 degli attributi specificati dal designer che impongono vincoli particolari 
@@ -243,7 +226,7 @@ design riconfigurabile che mette in relazione i requisiti dell'applicazione con
 determinate metriche di valutazione delle performance.
 
 Tramite questo processo si possono identificare dei componenti e determinare le 
-performance delle relative implementazioni: esempi di parametri relativi ad 
+performance delle relative implementazioni: esempi di parametri relativi a
 un'implementazione sono le stime di risorse occupate, dell'overhead introdotto 
 dalle riconfigurazioni o del consumo di energia in base all'area occupata su 
 scheda.
@@ -275,7 +258,7 @@ hardware su logica riconfigurabile.
 \paragraph{Baseline scheduling}
 A questo punto, partendo dalle informazioni calcolate nei passi precedenti, 
 viene calcolato un baseline schedule dei task sulla piattaforma target. Lo 
-schedule viene calcolato da uno scheduler euristico che deve essere conscio 
+schedule viene calcolato da uno scheduler euristico che deve essere consapevole
 delle riconfigurazioni che vengono introdotte. Lo scheduler deve quindi 
 avere le seguenti funzionalità:
 \begin{itemize}
@@ -294,7 +277,8 @@ minore makespan possibile, non necessariamente il minimo assoluto.
 Il floorplanner viene eseguito in questa fase e si occupa del piazzamento dei 
 moduli sull'area della scheda \ac{FPGA}; vengono definiti i vincoli spaziali e 
 la dimensione delle aree su cui configurare i moduli da eseguire, e viene 
-stabilito se un determinato piazzamento è fattibile oppure viola alcuni vincoli.
+stabilito se un determinato piazzamento è fattibile oppure se il posizionamento
+viola alcuni vincoli.
 
 \paragraph{Generazione del codice} % TODO sistemare e ampliare
 In questa fase viene generato il codice necessario per eseguire l'applicazione 
@@ -326,7 +310,7 @@ relativi pregi e difetti di ognuna.
 In questa sezione verranno esaminate diverse soluzioni al problema dello 
 scheduling, proposte in altri lavori.
 
-Come anticipato nel Capitolo \ref{chap:intro}, il problema di trovare uno 
+Come anticipato nel capitolo \ref{chap:intro}, il problema di trovare uno 
 schedule di lunghezza minima per un insieme di task in presenza di vincoli di 
 risorse appartiene alla classe dei problemi di ottimizzazione 
 $\mathcal{NP}$-difficili. Tutte le soluzioni proposte appartengono a una 
@@ -341,17 +325,18 @@ volta in sottocategorie in base al loro funzionamento, tra le più importanti
 ricordiamo:
  \begin{itemize}
   \item euristiche basate su una lista, in cui i task vengono schedulati 
-secondo l'ordine in cui compaiono nella lista ordinata per priorità decrescenti;
+secondo l'ordine in cui compaiono nella lista, ordinata per priorità decrescenti;
   \item meta-euristiche, che comprendono algoritmi evolutivi o ispirati al 
 comportamento di sistemi presenti in natura.
  \end{itemize}
 \end{enumerate}
 
-\begin{figure}
+\begin{figure}[b!]
  \begin{center}
   \includegraphics[width=0.7\textwidth]
   {capitoli/figure/cap2/MetaheuristicsClassification.pdf}
-  \caption{Classificazione delle varie categorie di meta-euristiche. Immagine 
+  \caption[Classificazione degi algoritmi meta-euristici]{Classificazione delle
+  varie categorie di meta-euristiche. Immagine 
 realizzata da Johann Dréo e tradotta in inglese da Caner Candan.}
 \label{fig:metaheuristicsClassification}
  \end{center}
@@ -362,16 +347,16 @@ realizzata da Johann Dréo e tradotta in inglese da Caner Candan.}
 %%%%%%%%%%
 
 La classificazione dei diversi tipi di algoritmi meta-euristici è illustrata in 
-Figura \ref{fig:metaheuristicsClassification}. Diversi lavori forniscono 
+figura \ref{fig:metaheuristicsClassification}. Diversi lavori forniscono 
 un'analisi di questo tipo di algoritmi euristici, ad esempio lo studio condotto 
 da Bianchi et al. \cite{SurveyMetaheuristicSCOP} analizza l'impiego delle 
 meta-euristiche per la risoluzione di \acp{SCOP} o l'analisi effettuata da Blum 
 et al. \cite{MetaheuristicCombinatorialOptimization} per problemi di 
 ottimizzazione combinatoria.
 
-Il resto della sezione è organizzato come segue: nella Sezione 
+Il resto della sezione è organizzato come segue: nella sezione 
 \ref{sec:algoritmiEsatti} vengono descritte le soluzioni proposte per il 
-problema dello scheduling basate su algoritmi esatti; la Sezione 
+problema dello scheduling basate su algoritmi esatti; la sezione 
 \ref{sec:algoritmiEuristici} presenta invece le soluzioni basate su metodi 
 euristici.
 
@@ -393,11 +378,11 @@ Nelle prossime sezioni verranno esaminate alcune soluzioni proposte per
 ottenere una soluzione ottima al problema oggetto del lavoro.
 
 \subsubsection{Programmazione lineare}
-La programmazione lineare, in inglese \ac{LP}, è un metodo matematico che, 
-applicato a un modello con requisiti sotto forma di vincoli \emph{lineari}, 
-permette di ricavare la soluzione ottima tra tutte le soluzioni possibili che 
-soddisfano i requisiti. L'ottimità della soluzione è determinata in base a una 
-funzione (lineare) detta \emph{funzione obiettivo}.
+La programmazione lineare, in inglese \ac{LP} \cite{DantzigLinearProgramming}, è
+un metodo matematico che, applicato a un modello con requisiti sotto forma di
+vincoli \emph{lineari}, permette di ricavare la soluzione ottima tra tutte le
+soluzioni possibili che soddisfano i requisiti. L'ottimalità della soluzione è
+determinata in base a una funzione (lineare) detta \emph{funzione obiettivo}.
 
 Il problema è tradotto matematicamente nei termini di un modello, 
 caratterizzato da \emph{variabili}, \emph{parametri} e \emph{vincoli}.
@@ -410,8 +395,8 @@ come:
 &  && \mathbf{x} \ge \mathbf{0}
 \end{align*}
 
-Alternativamente, si può esprimere in maniera equivalente utilizzando la 
-\emph{forma standard}:
+Alternativamente, il problema si può esprimere in maniera equivalente utilizzando
+la  \emph{forma standard}:
 
 \begin{align*}
  & \text{maximize}   && \mathbf{c}^\mathrm{T} \mathbf{x}\\
@@ -430,14 +415,14 @@ permettono di eliminare le disequazioni nei vincoli; le variabili del problema
 che non presentano vincoli di segno possono essere sostituite dalla differenza 
 tra due variabili aventi vincoli di segno.
 
-Un problema di programmazione lineare intera, a differenza da un problema di 
-programmazione lineare (come mostrato nelle precedenti forme), aggiunge un 
-vincolo di interezza per le variabili decisionali contenute nel vettore 
+Un problema di programmazione lineare intera, in inglese \ac{ILP}, a differenza
+di un problema di programmazione lineare (come mostrato nelle precedenti forme),
+aggiunge un vincolo di interezza per le variabili decisionali contenute nel vettore 
 $\mathbf{x}$; inoltre, i coefficienti dei vettori $\mathbf{c}$ e $\mathbf{b}$ 
 e della matrice $\mathbf{A}$ sono numeri interi.
 
-I vincoli di interezza possono anche riguardare soltanto alcune variabili o 
-coefficienti, in tal caso si parla di problemi \ac{MILP}.
+I vincoli di interezza possono anche riguardare soltanto alcune delle variabili o 
+dei coefficienti, in tal caso si parla di problemi \ac{MILP}.
 
 Nel caso dello scheduling di un grafo di task, le formulazioni proposte nello 
 stato dell'arte presentano modelli con vincoli di interezza per tutte le 
