@@ -415,11 +415,11 @@ permettono di eliminare le disequazioni nei vincoli; le variabili del problema
 che non presentano vincoli di segno possono essere sostituite dalla differenza 
 tra due variabili aventi vincoli di segno.
 
-Un problema di programmazione lineare intera, in inglese \ac{ILP}, a differenza
-di un problema di programmazione lineare (come mostrato nelle precedenti forme),
-aggiunge un vincolo di interezza per le variabili decisionali contenute nel vettore 
-$\mathbf{x}$; inoltre, i coefficienti dei vettori $\mathbf{c}$ e $\mathbf{b}$ 
-e della matrice $\mathbf{A}$ sono numeri interi.
+Un problema di programmazione lineare intera, in inglese \ac{ILP}
+\cite{ILPBook}, a differenza di un problema di programmazione lineare (come mostrato
+nelle precedenti forme), aggiunge un vincolo di interezza per le variabili decisionali
+contenute nel vettore $\mathbf{x}$; inoltre, i coefficienti dei vettori $\mathbf{c}$
+e $\mathbf{b}$ e della matrice $\mathbf{A}$ sono numeri interi.
 
 I vincoli di interezza possono anche riguardare soltanto alcune delle variabili o 
 dei coefficienti, in tal caso si parla di problemi \ac{MILP}.
@@ -439,10 +439,10 @@ ricerca di una soluzione per lo scheduling, il modello consente anche di
 determinare un mapping adeguato che minimizzi il tempo di esecuzione finale
 dell'applicazione.
 
-Come visto nel Capitolo \ref{chap:intro}, infatti, la minimizzazione assoluta 
+Come visto nella sezione \ref{subsec:faseSchedulingIntro}, infatti, la minimizzazione assoluta 
 del tempo di esecuzione può essere ottenuta solamente risolvendo unitamente le 
 fasi di mapping, scheduling e floorplanning (per verificare che la soluzione 
-sia implementabile). In generale, la risoluzione separata delle fasi, in 
+sia fisicamente implementabile). In generale, la risoluzione separata delle fasi, in 
 particolare la separazione di mapping e scheduling, non porta alla 
 minimizzazione assoluta del tempo di esecuzione. La scelta tra queste due 
 possibilità implica il dover fare un compromesso tra l'accuratezza della 
@@ -452,33 +452,33 @@ cresce nel caso in cui i problemi si risolvano congiuntamente.
 
 \paragraph{Modello \acs{ILP} di Banerjee}
 \label{par:BanerjeeILP}
-Banerjee et al.~\cite{BanerjeePhysicalConstraints} propongono, nel loro 
-articolo, un modello \ac{ILP} che prende in considerazione una 
-tecnica utilizzata anche in un altro loro lavoro 
-\cite{BanerjeeReconfigurationOverhead}nell'ambito delle architetture 
+Banerjee et al.~propongono, nel loro 
+articolo \cite{BanerjeePhysicalConstraints}, un modello \ac{ILP} che prende in
+considerazione una tecnica utilizzata anche in un altro loro lavoro 
+\cite{BanerjeeReconfigurationOverhead} nell'ambito delle architetture 
 riconfigurabili per ridurre il tempo di esecuzione, dato il considerevole 
 overhead introdotto dalle riconfigurazioni che devono essere eseguite: il 
 \emph{configuration prefetching}. Per ridurre il significativo overhead delle 
 riconfigurazioni, il configuration prefetching scompone un task nelle componenti 
 di riconfigurazione e di esecuzione. In questo modo si permette al componente 
 relativo alla riconfigurazione di essere eseguito separatamente dal task di 
-esecuzione che segue, eliminando le dipendenze dai dati rappresentate dagli 
+computazione che segue, eliminando le dipendenze dai dati rappresentate dagli 
 archi entranti nel task orginale.
 
 \subparagraph{Vincoli di risorse hardware e comunicazioni}
-Nello stesso lavoro \cite{BanerjeePhysicalConstraints}, Banerjee et al.~tengono 
+Nello stesso lavoro \cite{BanerjeePhysicalConstraints}, gli autori tengono 
 in considerazione i vincoli di piazzamento dei task per verificare che la 
 soluzione sia esatta e implementabile: infatti, tutti i task selezionati per 
 l'esecuzione su scheda nella fase di partizionamento devono essere 
-posizionabili senza violare la disponibilità delle risorse o le possibilità del 
+posizionabili senza violare la disponibilità delle risorse o l'utilizzo esclusivo del 
 controllore di riconfigurazione.
 
-\begin{figure}[!htb]
+\begin{figure}[!hb]
  \begin{center}
   \includegraphics[width=0.3\textwidth]
 {./capitoli/figure/cap2/InfeasiblePlacement.pdf}
 \caption[Piazzamento ottimo non implementabile]{Esempio di piazzamento ottimo 
-ma non implementabile\footnotemark.}
+ma non implementabile.\footnotemark}
 \label{fig:infeasiblePlacement}
  \end{center}
 \end{figure}
@@ -489,10 +489,10 @@ ma non implementabile\footnotemark.}
 Un esempio di piazzamento di una soluzione ricavata tramite un algoritmo esatto 
 per il partizionamento e lo scheduling di task nel caso di 
 architettura con riconfigurazione monodimensionale è rappresentato in 
-Figura \ref{fig:infeasiblePlacement}. Si ipotizzi che i requisiti di area per i 
-task $T_1$, $T_2$ e $T_3$ siano $1$, $2$, e $1$ colonne, rispettivamente, e che 
-sia dato il seguente mapping: $\langle T_1, C_1 \rangle$, $\langle T_2, \{C_2, 
-C_3\} \rangle$ e $\langle T_3, C_4 \rangle$. Dovendo piazzare un nuovo task 
+figura \ref{fig:infeasiblePlacement}. Si ipotizzi che i requisiti di area per i 
+task $T_1$, $T_2$ e $T_3$ siano $1$, $2$, e $1$ colonne, rispettivamente. Inoltre, si
+ipotizzi che sia dato il seguente mapping: $\langle T_1, C_1 \rangle$, $\langle
+T_2, \{C_2, C_3\} \rangle$ e $\langle T_3, C_4 \rangle$. Dovendo piazzare un nuovo task 
 $T_4$, il cui requisito di area è pari a due colonne, un algoritmo che non 
 considera le posizioni in cui vengono piazzati i vari task, vedrebbe che al 
 tempo $t_2$ vi sono due colonne libere; tuttavia, non essendo colonne 
