@@ -1,7 +1,7 @@
 \chapter{Approccio proposto}
 \label{chap:approccio}
 \vspace{1cm}
-Nel Capitolo \ref{chap:SOA} sono state descritte alcune soluzioni proposte 
+Nel capitolo \ref{chap:SOA} sono state descritte alcune soluzioni proposte 
 relative al lavoro oggetto di questa tesi, in particolare algoritmi esatti ed
 euristici di ottimizzazione atti a risolvere il problema di mapping e 
 scheduling, congiuntamente o separatamente. Alla luce delle limitazioni dei 
@@ -10,23 +10,23 @@ lavoro di sviluppo di un baseline scheduler nell'ambito del progetto
 \ac{FASTER}.
 
 In questo capitolo verrà descritto l'approccio utilizzato per risolvere il 
-problema di scheduling dei task tenendo in considerazione le comunicazioni e 
-riconfigurazioni introdotte.
+problema di scheduling dei task tenendo in considerazione le comunicazioni ed
+eventualmente le riconfigurazioni introdotte.
 
-Il capitolo è organizzato secondo la seguente struttura: nella Sezione 
+Il capitolo è organizzato secondo la seguente struttura: nella sezione 
 \ref{sec:integrazioneToolchainFASTER} viene descritta l'integrazione 
 dell'algoritmo di scheduling con il componente che gestisce il mapping dei task, 
 con accenni alle interfacce esterne che collegano il componente 
-con gli altri strumenti utilizzati nella toolchain di \acs{FASTER}; la Sezione 
+con gli altri strumenti utilizzati nella toolchain di \acs{FASTER}; la sezione 
 \ref{sec:panoramicaMetodologia} descrive ad alto livello il funzionamento 
 dell'algoritmo di scheduling, fornendo una panoramica delle fasi in cui questo 
-si divide; la Sezione \ref{sec:euristicaSceltaTask} contiene una descrizione 
+si divide; la sezione \ref{sec:euristicaSceltaTask} contiene una descrizione 
 dettagliata della fase più delicata del procedimento di scheduling, la scelta 
-del task migliore da considerare ad ogni passo di decisione; nella Sezione 
+del task migliore da considerare ad ogni passo di decisione; nella sezione 
 \ref{sec:elementiComunicazioneGestioneMemoria} vengono introdotti i modelli di 
 comunicazione supportati dall'algoritmo proposto e una possibile allocazione 
-statica della memoria per i task di computazione svolta contemporaneamente allo 
-scheduling; infine, la Sezione \ref{sec:osservazioniConclusive} fornisce un 
+statica della memoria per i task di computazione, svolta contemporaneamente allo 
+scheduling; infine, la sezione \ref{sec:osservazioniConclusive} fornisce un 
 riepilogo dei concetti importanti presentati in questo capitolo.
 
 
@@ -59,16 +59,16 @@ informazioni calcolate dall'algoritmo, rispettivamente.
 \end{figure}
 
 A livello dell'algoritmo di esplorazione delle soluzioni, dunque, si avrà un 
-flusso di lavoro come rappresentato nella Figura \ref{fig:mapperWorkflow}, in 
+flusso di lavoro come rappresentato nella figura \ref{fig:mapperWorkflow}, in 
 cui è messo in evidenza dove si colloca la fase di scheduling oggetto del 
 lavoro, con le relative interfacce di input e output.
 
-Anche la fase di mapping, che precede l'invocazione del tool che gestisce lo 
+Anche la fase di mapping, che si occupa dell'invocazione del tool che gestisce lo 
 scheduling, è caratterizzata dalle proprie interfacce di input e output. Come 
-si può vedere nella Figura \ref{fig:mapperWorkflow}, poichè la fase di 
-scheduling è immediatamente successiva a quella di mapping, l'interfaccia di 
+si può vedere nella figura \ref{fig:mapperWorkflow}, l'interfaccia di 
 output del mapper e l'interfaccia di input dello scheduler avranno alcuni dati 
-in comune.
+in comune, poichè la fase di scheduling è immediatamente successiva a quella di mapping
+nel flusso dell'algoritmo di esplorazione.
 
 
 \subsection{Interfaccia di input}
@@ -128,7 +128,7 @@ core hardware su scheda oppure un soft core (processore);
 dividere in implementazione software o hardware a seconda che il task debba 
 essere eseguito su scheda o su un processore.
 \end{enumerate}
-Nella Figura \ref{fig:taskGraphAndMapping} sono rappresentati un esempio di 
+Nella figura \ref{fig:taskGraphAndMapping} sono rappresentati un esempio di 
 task graph e di output della fase di mapping basato su quel task graph.
 
 Le informazioni provenienti dal mapper vengono quindi utilizzate per 
