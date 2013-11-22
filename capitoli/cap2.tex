@@ -15,6 +15,10 @@ riconfigurabili, divisi in algoritmi esatti, trattati nella sezione
 \ref{sec:algoritmiEsatti}, ed euristici, trattati nella sezione 
 \ref{sec:algoritmiEuristici}.
 
+La sezione \ref{sec:osservazioniConclusiveSoA} riepiloga quanto visto in questo capitolo
+e fornisce le motivazioni alla base dello sviluppo dell'algoritmo di scheduling
+trattato in questa tesi.
+
 
 \section[Il progetto \acs{FASTER}]{Il progetto \acs{FASTER}}
 \label{sec:progettoFASTER}
@@ -504,10 +508,10 @@ algoritmo esatto.
 Il modello \ac{ILP} proposto nel loro lavoro prevede quindi la presenza di $n$ 
 task che possono avere più implementazioni possibili, sia di tipo SW che HW. 
 Nel caso delle implementazioni di tipo HW, ciascuna di esse ha un proprio 
-requisito in termini di numero di colonne richieste\footnote{Ricordiamo che 
+requisito in termini di numero di colonne richieste.\footnote{Ricordiamo che 
 poichè l'architettura supporta la riconfigurazione solamente a una dimensione, 
 è sufficiente specificare il numero di colonne necessarie per 
-un'implementazione.}. I vincoli di risorse sono modellizzati considerando un 
+un'implementazione.} I vincoli di risorse sono modellizzati considerando un 
 processore per l'esecuzione di task SW e fissando un parametro $m$ che 
 rappresenta il vincolo sul numero di colonne per il mapping dei task con 
 implementazione di tipo HW.
@@ -531,9 +535,10 @@ La principale limitazione del lavoro proposto in
 \cite{BanerjeePhysicalConstraints} è costituita dal fatto che il modello è 
 adatto solo ad architetture che supportano la riconfigurazione parziale a una 
 dimensione con un singolo controllore di riconfigurazione, un tipo di 
-architettura molto semplice rispetto ai dispositivi utilizzabili oggigiorno. 
+architettura molto semplice rispetto ai dispositivi utilizzabili oggigiorno,
+nei quali è possibile sfruttare l'utilizzo della riconfigurazione 2D. 
 Inoltre, non sono considerate alcune caratteristiche sfruttabili grazie ai 
-dispositivi aventi riconfigurazione parziale dinamica, ovvero il \emph{riuso 
+dispositivi aventi riconfigurazione parziale dinamica, ovvero il \emph{riutilizzo 
 dei moduli} ed eventuali tecniche per evitare un'eccessiva \emph{frammentazione} 
 delle aree occupate dai task sulla scheda.
 
@@ -541,7 +546,7 @@ delle aree occupate dai task sulla scheda.
 \paragraph{Modelli \acs{ILP} di Redaelli}
 La formulazione \ac{ILP} proposta da Redaelli et al.~\cite{Redaelli1DILP} cerca 
 di superare alcune limitazioni che caratterizzano i lavori 
-\cite{BanerjeeHwSwPartitioning} e \cite{BanerjeePhysicalConstraints} visti nel 
+\cite{BanerjeeHwSwPartitioning} e \cite{BanerjeePhysicalConstraints}, visti nel 
 precedente paragrafo. % FIXME
 Il modello proposto consente infatti di tenere conto delle due tecniche 
 sopracitate:
@@ -574,8 +579,8 @@ dimensioni}
 Il modello proposto da in \cite{Redaelli1DILP} risolve la limitazione 
 riguardante la mancata considerazione della possibilità di riutilizzare alcuni 
 moduli per guadagnare in termini di overhead di riconfigurazione, ma rimane un 
-modello applicabile ad architetture piuttosto datate, dato che supporta 
-solamente la riconfigurazione a una dimensione. Per questo, Redaelli et al.~in 
+modello applicabile ad architetture piuttosto datate, dato il supporto limitato
+solamente a riconfigurazioni a una dimensione. Per questo, Redaelli et al.~in 
 \cite{Redaelli2DILP} propongono una formulazione \ac{ILP} adatta ad 
 architetture con riconfigurazione parziale dinamica a due dimensioni.
 
@@ -588,7 +593,7 @@ riconfigurazione e delle aree da piazzare sul dispositivo.
 
 \subparagraph{Descrizione del problema}
 In primo luogo, a differenza del precedente lavoro dello stesso autore e 
-del lavoro di Banerjee, cambia la descrizione del problema riguardo alla 
+dei lavori di Banerjee et al.~, cambia la descrizione del problema riguardo alla 
 modellazione del dispositivo riconfigurabile. Esso non è più rappresentato 
 solamente tramite un insieme di colonne $C = \{c_1,c_2,\dots,c_{\vert C 
 \vert}\}$, ma anche tramite un insieme $R = \{r_1,r_2,\dots,r_{\vert R \vert}\}$ 
@@ -601,18 +606,19 @@ Alcune variabili del modello \ac{ILP} proposte in \cite{Redaelli1DILP} sono
 adattate per supportare la bidimensionalità dell'architettura; gli indici che 
 identificano la posizione di un task (o l'occupazione temporale di una certa 
 area della scheda) sono quindi due, uno per la colonna più a sinistra e uno per 
-la riga più in basso.
+la riga più in basso dell'area decisa per il piazzamento del task.
 
 
 \paragraph{Limitazioni formulazioni \acs{ILP}}
 Oltre alla limitazione dovuta alle potenzialità dell'architettura 
 riconfigurabile considerata in \cite{BanerjeePhysicalConstraints}, esiste uno 
-svantaggio specifico per le formulazioni di programmazione lineare intera: il 
-costo computazionale eccessivo. Al crescere della complessità del modello, il 
-costo in termini di tempo d'esecuzione del \emph{solver \ac{ILP}} aumenta 
-esponenzialmente.
+svantaggio intrinseco nelle formulazioni di programmazione lineare intera: il 
+costo computazionale eccessivo \cite{CombinatorialOptimizationComplexity}. Al
+crescere della complessità del modello, il costo in termini di tempo d'esecuzione
+del \emph{solver \ac{ILP}} aumenta esponenzialmente.
 
-Come riportato in \cite{Redaelli2DILP}, il tempo impiegato per risolvere in 
+A titolo esemplificativo della complessità instrinseca dei problemi di programmazione
+intera, come riportato in \cite{Redaelli2DILP}, il tempo impiegato per risolvere in 
 maniera ottima un'istanza del problema con $10$ task da mappare su una 
 \ac{FPGA} con $5$ righe, $5$ colonne e $2$ controllori di riconfigurazione è di 
 $39$ giorni, troppo per essere applicabile ad esempi concreti.
@@ -642,7 +648,7 @@ comunicazioni nel tempo di esecuzione dei task.
   \includegraphics[width=0.5\textwidth]
 {capitoli/figure/cap2/BoxModules.pdf}
 \caption[Piazzamento dei moduli con rappresentazione tridimensionale]{Esempio 
-di piazzamento dei moduli con rappresentazione tridimensionale\footnotemark.}
+di piazzamento dei moduli con rappresentazione tridimensionale.\footnotemark}
 \label{fig:boxModules}
  \end{center}
 \end{figure}
@@ -651,12 +657,12 @@ di piazzamento dei moduli con rappresentazione tridimensionale\footnotemark.}
 
 \paragraph{Modello matematico}
 I moduli sono rappresentati nel modello come box di forma tridimensionale, come 
-mostrato in Figura \ref{fig:boxModules}. Nella rappresentazione utilizzata, gli 
+mostrato in figura \ref{fig:boxModules}. Nella rappresentazione utilizzata, gli 
 assi $x$ e $y$ identificano le due dimensioni spaziali (per il piazzamento del 
 modulo sulla scheda), mentre l'asse $t$ identifica la dimensione temporale 
 (ovvero il tempo di esecuzione). È importante quindi che i moduli vengano 
-piazzati dentro all'area disponibile e non si sovrappongano se eseguiti 
-simultaneamente.
+piazzati dentro all'area disponibile e non siano sovrapposti nel caso di esecuzione
+simultanea.
 
 L'idea alla base del metodo è di trattare i task come scatole tridimensionali e 
 i possibili schedule \emph{feasible} come disposizioni di tali scatole che 
@@ -678,12 +684,12 @@ Dopo aver fornito una panoramica degli algoritmi esatti vengono ora esaminate
 alcune soluzioni euristiche presenti nello stato dell'arte. In generale, le 
 soluzioni prodotte da algoritmi euristici per un problema non sono ottime 
 (esatte). Si ricorre all'impiego di algoritmi euristici qualora altri metodi 
-esatti non possono essere applicati oppure sono troppo lenti nel risolvere il 
+esatti non possano essere applicati oppure siano troppo lenti nel risolvere il 
 problema; in questi casi, si deve sempre trovare un compromesso tra la 
-``bontà'' della soluzione trovata e il tempo impiegato per giungere a quella 
+qualità della soluzione trovata e il tempo impiegato per giungere a quella 
 soluzione.
 
-Le euristiche si classificano in base al modo di trovare una soluzione 
+Le euristiche si classificano in base al modo di ricercare o costruire una soluzione 
 approssimata.
 %%%%%%%%%%%%% FIXME controllare
 Uno stesso problema può essere risolto utilizzando più di una 
@@ -704,11 +710,10 @@ task software. Ad esempio, Mei et al.~propongono in
 \cite{MeiPartitioningScheduling} un approccio basato sulla combinazione di un 
 algoritmo genetico standard\footnote{Gli algoritmi genetici appartengono alle 
 meta-euristiche di tipo evolutivo ispirate al funzionamento di sistemi presenti 
-in natura, come rappresentato in Figura 
-\ref{fig:metaheuristicsClassification}.} con un'euristica basata su lista di 
-priorità. Il loro metodo è adatto ad architetture riconfigurabili dinamicamente 
-e risolve, oltre allo scheduling, anche il partizionamento dei task che 
-compongono l'applicazione.
+in natura, come rappresentato in figura \ref{fig:metaheuristicsClassification}.}
+con un'euristica basata su lista di priorità. Il loro metodo è adatto ad
+architetture riconfigurabili dinamicamente e risolve, oltre allo scheduling,
+anche il partizionamento dei task che compongono l'applicazione.
 
 Per la fase di partizionamento, nella quale viene deciso il tipo 
 di implementazione da utilizzare per ogni task (software o hardware), si usa un 
@@ -721,7 +726,7 @@ effettuare la valutazione di una determinata partizione.
 L'overhead introdotto dalla riconfigurazione parziale è tenuto in 
 considerazione e aggiunto al tempo di computazione dei task; tuttavia, non 
 vengono impiegate tecniche per mascherare il tempo di riconfigurazione (come il 
-\emph{configuration prefetching}), e il collo di bottiglia causato dalle 
+\emph{configuration prefetching}) e il collo di bottiglia causato dalle 
 limitazioni del controllore della riconfigurazione, che impongono 
 riconfigurazioni non sovrapposte nel tempo.
 
@@ -729,18 +734,18 @@ riconfigurazioni non sovrapposte nel tempo.
 \subsubsection{\acl{EPR} e \acl{IR}}
 Jeong et al.~propongono in \cite{JeongHWSWCosynthesis} due metodi diversi per 
 risolvere problemi di \emph{hardware-software cosynthesis}: una formulazione 
-\ac{ILP} per risolvere in modo esatto il problema di hardware-software 
-cosynthesis e una euristica.
+\ac{ILP} per ricavare una soluzione esatta e una euristica.
 
 L'algoritmo euristico si basa sull'euristica iterativa proposta da 
-Fiduccia-Mattheyses in \cite{FiducciaMattheyses} per risolvere il problema del 
-bipartizionamento di un ipergrafo.
+Fiduccia-Mattheyses per risolvere il problema del bipartizionamento di un
+ipergrafo \cite{FiducciaMattheyses}.
 
 % TODO parlare di euristica iterativa KLFM, move and lock, ecc.
 
 In entrambi i metodi (\ac{ILP} ed euristica) vengono incorporati due concetti 
 nel calcolo del trade-off del partizionamento hardware-software, per meglio 
-sfruttare le capacità di riconfigurazione della \ac{FPGA} obiettivo:
+sfruttare le capacità di riconfigurazione della \ac{FPGA} su cui dev'essere
+eseguita l'applicazione:
 \begin{itemize}
  \item \ac{EPR}, rappresenta il concetto di \emph{configuration prefetching};
  \item \ac{IR}, che consente di ridurre la quantità di dati necessari per la 
@@ -761,7 +766,7 @@ ottime o sub-ottime (nel caso si usi l'euristica).
 
 \subsubsection{Euristica di Banerjee}
 Nel lavoro di Banerjee et al.~\cite{BanerjeePhysicalConstraints}, lo stesso in 
-cui è presentata la formulazione \ac{ILP} vista in \ref{par:BanerjeeILP}, è 
+cui è presentata la formulazione \ac{ILP} vista nella sezione \ref{par:BanerjeeILP}, è 
 descritto anche un metodo euristico per la risoluzione dei problemi di 
 partitionamento, scheduling e piazzamento fisico dei task rispettando i vincoli 
 architetturali.
@@ -791,14 +796,14 @@ fine e il requisito in termini di area (colonne) occupata dal modulo.
 Un'altra importante caratteristica dell'euristica proposta, naturale 
 conseguenza del tenere in considerazione i vincoli hardware durante il 
 piazzamento fisico dei moduli, è la possibilità di estendere l'approccio per 
-supportare l'eterogeneità di risorse\footnote{L'eterogeneità delle risorse 
+supportare l'eterogeneità di risorse,\footnote{L'eterogeneità delle risorse 
 consiste nell'avere delle risorse aggiuntive incorporate sul die, ad esempio 
 memorie a blocchi (\acs{BRAM}), \acp{DSP}, moltiplicatori. Ciò consente ai 
 designer di utilizzare le risorse aggiuntive presenti, senza bisogno di 
 implementare manualmente tutte le funzionalità necessarie. Le risorse 
 incorporate sono anche chiamate processori hardcore, in contrapposizione ai 
 processori softcore, che rappresentano unità computazionali implementate usando 
-la logica riconfigurabile messa a disposizione dall'\ac{FPGA}}, un fattore 
+la logica riconfigurabile messa a disposizione dall'\ac{FPGA}} un fattore 
 chiave per l'incremento di prestazioni delle applicazioni implementate su 
 \ac{FPGA} moderne; dato che le risorse eterogenee sono disponibili soltanto in 
 posizioni ``prefissate'' della scheda, l'attenzione nella scelta dell'area da 
@@ -806,13 +811,13 @@ assegnare a un modulo risulta un fattore determinante per l'incremento delle
 performance dell'applicazione da accelerare.
 
 \subparagraph{Limitazioni}
-Nonostante la velocità di esecuzione dell'euristica proposta\footnote{Gli 
+Nonostante la velocità di esecuzione dell'euristica proposta,\footnote{Gli 
 autori affermano che task graph aventi una dimensione di centinaia di nodi 
 completano le fasi di partitioning, scheduling e placement nel giro di pochi 
-minuti.}, le limitazioni che caratterizzano questo metodo sono le stesse della 
+minuti.} le limitazioni che caratterizzano questo metodo sono le stesse della 
 formulazione \ac{ILP} proposta nello stesso articolo. L'architettura target
 considerata è dotata di riconfigurazione parziale dinamica, ma soltanto a una 
-dimensione; inoltre il riutilizzo dei moduli per guadagnare tempo di esecuzione 
+dimensione; inoltre, il riutilizzo dei moduli per guadagnare tempo di esecuzione 
 non viene mai considerato.
 
 \paragraph{PARLGRAN}
@@ -829,7 +834,7 @@ vengono utilizzate due tecniche:
 \end{itemize}
 La prima tecnica consiste nell'evitare il più possibile che due task siano 
 piazzati in maniera adiacente sulla scheda; il piazzamento del secondo task 
-avviene invece su lato opposto della scheda, se possibile. In questo modo è 
+avviene infatti su lato opposto della scheda, se possibile. In questo modo è 
 possibile sfruttare lo spazio libero per riconfigurare ed eseguire task con un 
 requisito di area maggiore.
 
@@ -849,25 +854,27 @@ requisito di area maggiore.
 \label{fig:slackRecController2}
  \end{center}
 \end{minipage}
-\caption{Applicazione della tecnica \emph{exploiting slack in reconfiguration 
-controller}.}
+\caption[Applicazione della tecnica exploiting slack in reconfiguration 
+controller]{Applicazione della tecnica \emph{exploiting slack in reconfiguration 
+controller}.\footnotemark}
 \label{fig:slackRecController}
 \end{figure}
-
-%%% FIXME citare immagine (articolo PARLGRAN di Banerjee)
 
 
 La seconda tecnica, usata come metodo di ottimizzazione locale per ridurre la 
 frammentazione, permette di trarre vantaggio da eventuali periodi di inattività 
 tra il termine di una riconfigurazione e l'esecuzione del task relativo. Un 
-esempio di applicazione di tale tecnica è mostrato in Figura 
-\ref{fig:slackRecController}. Nella Figura \ref{fig:slackRecController1} si può 
+esempio di applicazione di tale tecnica è mostrato in figura 
+\ref{fig:slackRecController}. Nella figura \ref{fig:slackRecController1} si può 
 vedere come vi sia un tempo morto tra la riconfigurazione del task $T3$ e la sua 
 esecuzione, che rallenta l'inizio della riconfigurazione del task $T4$. Il task 
 $T3$ può quindi essere piazzato in una diversa posizione, come raffigurato in 
-Figura \ref{fig:slackRecController2}, consentendo alla riconfigurazione del task 
+figura \ref{fig:slackRecController2}, consentendo alla riconfigurazione del task 
 $T4$ di partire anticipatamente, senza che l'istante di fine esecuzione di $T3$ 
 sia influenzato dallo spostamento.
+
+\footnotetext{Immagine tratta da \cite{BanerjeePARLGRAN}.}
+
 
 L'utilizzo congiunto delle due tecniche sopra descritte permette di guadagnare 
 in termini di makespan dello schedule finale e di produrre quindi soluzioni di 
@@ -891,25 +898,25 @@ risolvere particolari istanze.
 \cite{Redaelli2DILP}. Le sue caratteristiche distintive sono la capacità di 
 supportare architetture riconfigurabili bidimensionali e la possibilità di 
 sfruttare alcune tecniche viste in precedenza in diversi altri lavori e altre 
-nuove: \emph{configuration prefetching}, \emph{riutilizzo dei moduli} e 
+tecniche nuove: \emph{configuration prefetching}, \emph{riutilizzo dei moduli} e 
 tecniche di \emph{anti-frammentazione}.
 
 In particolare, Napoleon adotta la tecnica chiamata \emph{limited 
-deconfiguration}\footnote{La deconfigurazione limitata consiste nel tenere 
+deconfiguration};\footnote{La deconfigurazione limitata consiste nel tenere 
 tutti i moduli configurati sull'\ac{FPGA} finchè altri task non richiedono le 
-loro risorse.}; grazie a questa si può incrementare la possibilità di 
+loro risorse.} grazie a questa si può incrementare la possibilità di 
 un eventuale riutilizzo dei moduli.
 
 Oltre ad applicare la deconfigurazione limitata, Napoleon si basa sul criterio 
-di \emph{farthest placement}\footnote{La tecnica di \emph{farthest placement} 
+di \emph{farthest placement},\footnote{La tecnica di \emph{farthest placement} 
 mira a piazzare fisicamente il task nella zona che abbia area sufficiente per 
-contenere il task e sia più distante possibile dal centro della scheda.}, per 
+contenere il task e sia il più distante possibile dal centro della scheda.} per 
 la fase di piazzamento dei task. Questo criterio ha come scopo il favorire il 
 piazzamento di task futuri: è infatti più facile piazzare moduli con grandi 
 requisiti di area al centro della scheda.
 
 L'euristica Napoleon supporta più di un controllore di riconfigurazione, 
-laddove l'architettura obiettivo abbia queste caratteristiche. Dai risultati 
+laddove l'architettura obiettivo possegga queste caratteristiche. Dai risultati 
 dei test sperimentali risulta che nel caso vengano utilizzati due 
 riconfiguratori, l'algoritmo ha calcolato la soluzione ottima in $7$ istanze su 
 $10$ benchmark diversi. In generale, ad un aumento del numero di 
@@ -935,7 +942,7 @@ l'algoritmo cerca di riprodurre il procedimento seguito da una colonia di
 formiche alla ricerca di cibo; la colonia deve poter giungere al cibo seguendo 
 il percorso più breve, che rappresenta una soluzione (subottima) trovata.
 
-L'algoritmo \ac{ACO}, una meta-euristica moderna, è stato inizialmente 
+L'algoritmo \ac{ACO}, una meta-euristica di recente sviluppo, è stato inizialmente 
 utilizzato per risolvere il problema del commesso viaggiatore (\acs{TSP}) 
 \cite{AntSystem} e poi esteso anche ad altri problemi di ottimizzazione 
 combinatoria.
@@ -945,7 +952,7 @@ Quando una colonia va alla ricerca di cibo, tutte le formiche partono dalla
 colonia seguendo direzioni casuali, lasciando una traccia di 
 \emph{feromone}\footnote{Il feromone è una sostanza emessa da alcuni esseri 
 viventi con funzione di segnalare qualcosa agli individui riceventi 
-appartenenti alla stessa specie: una traccia, un pericolo, una modificazione 
+della stessa specie: una traccia, un pericolo, una modificazione 
 comportamentale per il ricevente.} sul loro cammino. La traccia di feromone 
 evapora con il tempo, ma il percorso più breve dalla colonia al cibo conterrà 
 sempre più feromoni, attirando le altre formiche su quel percorso invece che su 
@@ -968,7 +975,7 @@ calcolo della probabilità è la seguente:
 dove $x$ è la posizione corrente nel processo decisionale, $y$ è la 
 destinazione della ricerca, $\eta$ è l'euristica locale legata al problema e 
 $\tau$ è l'euristica globale determinata dal feromone. $\alpha$ e $\beta$ 
-rappresentano i pesi che vengono date alle due euristiche e che influenzano il 
+rappresentano i pesi che vengono dati alle due euristiche e che influenzano il 
 comportamento della formica nel processo decisionale. $\Omega_x$ è l'insieme che 
 contiene tutte le scelte possibili al passo corrente $x$. Alla fine di ogni 
 processo decisionale, avendo ottenuto diverse soluzioni, la matrice dei 
@@ -988,7 +995,7 @@ comunicazioni su un sistema \ac{MPSoC} eterogeneo. Il loro approccio considera
 la presenza di più \emph{implementation point}, che rappresentano le diverse 
 implementazioni possibili per i task che compongono l'applicazione. Oltre a 
 questo, l'architettura è considerata formata da componenti di computazione e 
-componenti di comunicazione; ad ogni componente dell'archittettura è associato 
+componenti di comunicazione; ad ogni componente dell'architettura è associato 
 un insieme di risorse \emph{rinnovabili} (ad esempio risorse che possono essere 
 riconfigurate dopo l'utilizzo) e \emph{non rinnovabili} (nel caso contrario).
 Grazie a questa formulazione l'algoritmo si adatta a diversi tipi di 
@@ -997,12 +1004,33 @@ sia processori general purpose, risorse rinnovabili per definizione, sia core
 implementati su logica riconfigurabile, rinnovabili tramite la riconfigurazione.
 
 
-% TODO presentazione delle motivazioni che hanno portato allo sviluppo di un 
-% algoritmo iterativo basato su una lista e non esplorativo
+\section{Osservazioni conclusive}
+\label{sec:osservazioniConclusiveSoA}
+In questo capitolo è stato innanzitutto presentato il progetto europeo \ac{FASTER},
+il cui obiettivo è fornire un framework ai designer per l'esecuzione di applicazioni
+su diverse architetture riconfigurabili, considerando la riconfigurazione parziale come
+concetto esplicito nel design del sistema per migliorare le prestazioni dell'applicazione.
 
-% Il flusso di esecuzione della toolchain prevede l'invocazione del tool di 
-% scheduling statico come componente esterno da parte dell'algoritmo di 
-% esplorazione dello spazio di design del sistema, per la valutazione di una 
-% particolare metrica, la stima del tempo di esecuzione totale dello schedule 
-% dato un determinato mapping. Poichè la fase di mapping è implementata sotto 
-% forma di un  
+La toolchain è composta da diverse parti, sviluppate dai partner del progetto,
+e si occupa della gestione nella maniera più automatizzata possibile dell'analisi
+del codice, delle possibilità di (micro)riconfigurazione, delle fasi di partitioning,
+scheduling e floorplanning dei moduli che compongono l'applicazione.
+
+Sono stati presentati, inoltre, alcuni algoritmi ideati da vari autori per risolvere
+il problema di scheduling (congiuntamente oppure separatamente rispetto a
+partitioning/mapping). In particolare, sono stati descritti gli algoritmi esatti e quelli
+euristici, in due sezioni separate, con relative limitazioni.
+
+Il flusso di esecuzione della toolchain di \ac{FASTER} prevede l'invocazione del tool di baseline
+scheduling statico come componente esterno, chiamato dall'algoritmo di esplorazione dello spazio
+di design per il mapping; il componente di scheduling effettua la valutazione di una particolare
+metrica, la stima del tempo di esecuzione totale dello schedule calcolato. Poichè la fase
+di mapping è implementata come un algoritmo esplorativo evolvibile che chiama lo scheduler
+baseline come componente di valutazione della metrica riguardante il makespan, l'algoritmo di
+scheduling deve necessariamente essere veloce, per non rallentare eccessivamente l'esplorazione.
+
+Alla luce di queste considerazioni, si è deciso di sviluppare un algoritmo basato su
+un'euristica, per soddisfare i requisiti di velocità. L'algoritmo di scheduling non
+dovrebbe essere un'euristica esplorativa, quanto più un algoritmo veloce di tipo list-based,
+con una funzione di calcolo delle priorità che gli consenta di essere sufficientemente preciso,
+restituendo quindi degli schedule di buona qualità.
