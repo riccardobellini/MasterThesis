@@ -113,7 +113,7 @@ dell'esecuzione. In particolare, i dati definiti prima dell'invocazione sono:
 \begin{itemize}
  \item dati provenienti dal file XML di specifica del progetto correntemente in 
 elaborazione dalla toolchain, relativi alla descrizione dell'architettura, del 
-task graph, delle implementazioni e dei vari elementi 
+task graph che rappresenta l'applicazione, delle implementazioni e dei vari elementi 
 di computazione, di 
 comunicazione e di memoria presenti;
  \item dati provenienti dall'output della fase di mapping.
@@ -123,13 +123,16 @@ task, processing element, implementazione$>$} calcolata dal mapper, che
 specifica per ogni task:
 \begin{enumerate}
  \item l'elemento di computazione che dovrà eseguire il task, può essere un 
-core hardware su scheda oppure un soft core (processore);
+core hardware su scheda oppure un core software (processore);\footnote{Il termine
+\emph{core software} non deve essere confuso con il termine \emph{softcore} introdotto
+nella sezione \ref{sec:algoritmiEuristici}, che rappresenta un core implementato su
+logica riconfigurabile invece che un processore.}
  \item l'implementazione da utilizzare per l'esecuzione del task, si può 
 dividere in implementazione software o hardware a seconda che il task debba 
 essere eseguito su scheda o su un processore.
 \end{enumerate}
 Nella figura \ref{fig:taskGraphAndMapping} sono rappresentati un esempio di 
-task graph e di output della fase di mapping basato su quel task graph.
+task graph e di un possibile output della fase di mapping basato su quel task graph.
 
 Le informazioni provenienti dal mapper vengono quindi utilizzate per 
 determinare se alcune aree dovranno essere riconfigurate durante l'esecuzione 
@@ -140,8 +143,8 @@ vari componenti del dispositivo.
 \subsection{Interfaccia di output}
 
 Il compito dello scheduler è assegnare delle stime di tempo di inizio e di fine 
-esecuzione ad ogni task in modo che le precedenze tra i task imposte dal task 
-graph vengano rispettate, e che nessun altro vincolo sia violato: ad esempio, 
+esecuzione ad ogni task in modo che le precedenze imposte dal task graph
+vengano rispettate, e che nessun altro vincolo sia violato: ad esempio, 
 task che devono essere eseguiti sullo stesso componente non possono avere tempi 
 di esecuzione sovrapposti. Tutte queste informazioni sulle stime calcolate 
 dallo scheduler vengono memorizzate nell'interfaccia di output, che è composta 
@@ -152,7 +155,9 @@ per ogni componente quando questo è occupato nell'esecuzione di un task;
  \item per ogni task, una lista delle informazioni riguardanti lo scheduling, 
 ad esempio il tempo d'esecuzione stimato, il componente su cui deve essere 
 eseguito, l'implementazione che ne caratterizza l'esecuzione e le stime di 
-inizio e fine esecuzione che gli sono state assegnate.
+inizio e fine esecuzione che gli sono state assegnate;
+ \item le informazioni relative agli indirizzi di memoria assegnati ai task
+ di computazione.
 \end{itemize}
 
 Nella prossima sezione verrà spiegato in dettaglio il flusso di 
@@ -197,20 +202,20 @@ esecuzione dell'applicazione sul dispositivo riconfigurabile; consiste in una
 parziale rielaborazione dell'output prodotto dalla fase di scheduling ed è 
 chiamata \emph{fase di postprocessing}.
 
-Le tre fasi sono rappresentate nella Figura \ref{fig:schedulerWorkflow}, che 
+Le tre fasi sono rappresentate nella figura \ref{fig:schedulerWorkflow}, che 
 illustra il flusso di lavoro dello scheduler, con i relativi dati di input per 
-ogni fase. Nelle prossime sezioni, ogni fase verrà analizzata nel dettaglio.
+ogni fase. Nelle prossime sezioni ogni fase verrà analizzata nel dettaglio.
 
 
 \subsection{Fase di preprocessing}
 \label{subsec:fasePreprocessing}
 La fase di preprocessing è la prima ad essere eseguita dopo l'invocazione del 
-tool di scheduling da parte dell'algoritmo di esplorazione. Ha come obiettivo 
+tool di scheduling da parte dell'algoritmo di esplorazione; ha come obiettivo 
 principale l'identificazione delle comunicazioni e delle riconfigurazioni che 
 devono essere prese in considerazione per la corretta esecuzione 
 dell'applicazione sul dispositivo. Un obiettivo secondario è il calcolo di 
 informazioni aggiuntive che verranno poi utilizzate nella fase di scheduling 
-per quanto concerne la scelta del task migliore (vedi Sezione 
+per quanto concerne la scelta del task migliore (vedi sezione 
 \ref{sec:euristicaSceltaTask}).
 
 Per ottenere questi obiettivi, la fase di preprocessing si divide in tre 
@@ -220,23 +225,23 @@ sotto-fasi eseguite nel seguente ordine:
 comunicazione} vengono aggiunti al task graph originale, a rappresentare le 
 comunicazioni che si verificano tra i task di computazione;
  \item aggiunta delle riconfigurazioni: può non essere richiesto e dipende 
-dagli assegnamenti stabiliti dal mapping, consiste nell'introduzione di nuovi 
+dagli assegnamenti stabiliti dal mapper, consiste nell'introduzione di nuovi 
 task, detti \emph{task di riconfigurazione}, dove necessario;
- \item computazione delle informazioni sul percorso critico.
+ \item calcolo delle informazioni sul percorso critico.
 \end{enumerate}
 
 \subsubsection{Aggiunta delle comunicazioni}
 L'inserimento dei task di comunicazione viene fatto solamente in base 
 all'analisi del task graph dell'applicazione, in quanto indipendente dal 
-mapping: dato che ogni arco in tale grafo rappresenta una relazione 
-produttore-consumatore tra due task\footnote{Ovvero, denominati $i$ e $j$ i due 
+mapping: poichè ogni arco in tale grafo rappresenta una relazione 
+produttore-consumatore tra due task,\footnote{Ovvero, denominati $i$ e $j$ i due 
 task, un arco $(i,j)$ indica che l'output della computazione del task $i$ viene 
-utilizzato come input per la computazione del task $j$.}, ogni arco viene 
+utilizzato come input per la computazione del task $j$.} ogni arco viene 
 trattato come una comunicazione.
 
 Dati due task di computazione $i$, $j$ e un 
 arco $(i,j)$ nel task graph, vi sono due tipi di task di comunicazione, che si 
-differenziano per come operano il trasferimento dei dati:
+differenziano per come viene operato il trasferimento dei dati:
 \begin{itemize}
  \item task di comunicazione di tipo \emph{WRITE}, che \emph{scrivono} 
 l'output del task $i$ in una memoria;
@@ -269,22 +274,22 @@ comunicazioni.}
 \end{figure}
 
 
-Si veda la Figura \ref{fig:taskGraphCommunicationExample}
-per un esempio di come viene modificato il task graph della Figura 
+Si veda la figura \ref{fig:taskGraphCommunicationExample}
+per un esempio di come viene modificato il task graph della figura 
 \ref{fig:taskGraphExample2} in seguito all'aggiunta dei task di 
-comunicazione\footnote{Gli archi del grafo originale sono stati 
+comunicazione.\footnote{Gli archi del grafo originale sono stati 
 tratteggiati per evidenziare come la struttura generale non sia cambiata ma 
-siano stati soltanto introdotti nuovi nodi e archi nel grafo.}.
+siano stati soltanto introdotti nuovi nodi e archi nel grafo.}
 
 Dopo l'inserimento dei task di comunicazione, viene eseguito l'inserimento dei 
 task di riconfigurazione, qualora il particolare mapping utilizzato lo 
-richieda. Nel caso, si procede come descritto nel prossimo paragrafo.
+richieda; nel caso, si procede come descritto nel prossimo paragrafo.
 
 
 \subsubsection{Aggiunta delle riconfigurazioni}
 \label{sec:aggiuntaRiconfigurazioni}
 L'inserimento dei task di riconfigurazione avviene in seguito all'analisi della 
-lista dei mapping fornita dal mapper ed è necessario nel caso in cui gli 
+lista di tuple fornita dal mapper ed è necessario nel caso in cui gli 
 assegnamenti stabiliti dal mapper verifichino le seguenti condizioni:
 \begin{enumerate}
  \item due task di comunicazione sono mappati sullo stesso componente 
@@ -294,7 +299,7 @@ i due task devono essere eseguiti su logica riconfigurabile: questa condizione
 implica che il modulo hardware non sia riutilizzabile da parte del secondo task.
 \end{enumerate}
 Se queste condizioni sussistono per una qualsiasi coppia di task, allora 
-un nuovo task di riconfigurazione deve essere aggiunto al grafo. Nella Tabella 
+un nuovo task di riconfigurazione deve essere aggiunto al grafo. Nella tabella 
 \ref{tab:esempioRiconfigurazione} è illustrato un esempio di quando si 
 verificano le precedenti condizioni ed è necessario introdurre un nuovo task di 
 riconfigurazione.
@@ -314,7 +319,7 @@ riconfigurazione.
     D & p3 & impl\textunderscore3\\
     \hline
 \end{tabular}
-\caption{Esempio di riconfigurazione necessaria.}
+\caption{Esempio di mapping con riconfigurazione necessaria.}
 \label{tab:esempioRiconfigurazione}
 \end{center}
 \end{table}
@@ -354,10 +359,10 @@ riconfigurazioni.}
 \end{figure}
 
 
-Nella Figura \ref{fig:taskGraphCommRecExample} è rappresentata l'evoluzione del 
+Nella figura \ref{fig:taskGraphCommRecExample} è rappresentata l'evoluzione del 
 task graph successiva all'introduzione dei task di riconfigurazione, sulla 
-base dei mapping riportati nella Figura \ref{tab:listaMapping} e nella
-Tabella \ref{tab:esempioRiconfigurazione}. Si può vedere il nuovo task di 
+base dei mapping riportati nella figura \ref{tab:listaMapping} e nella
+tabella \ref{tab:esempioRiconfigurazione}. Si può vedere il nuovo task di 
 riconfigurazione introdotto, di colore rosso; gli archi entranti e uscenti dal 
 nuovo task impongono le precedenze sopra elencate.
 
@@ -381,12 +386,12 @@ task graph.
 
 \subsubsection{Calcolo delle informazioni sul percorso critico}
 Le informazioni calcolate durante questa fase vengono utilizzate per stabilire 
-quali task sono sul percorso critico\footnote{In inglese \emph{critical path}, 
+quali task sono sul percorso critico;\footnote{In inglese \emph{critical path}, 
 avendo un grafo che simboleggia un progetto composto da attività (nodi) con 
 precedenze (archi), rappresenta un cammino dal nodo iniziale al nodo finale del 
 grafo costituito da attività che non possono essere ritardate senza allungare 
-il tempo di esecuzione del progetto.}; verranno poi utilizzate nella fase di 
-scheduling vero e proprio per l'assegnazione della priorità ai task
+il tempo di esecuzione del progetto.} nella fase di scheduling vero e proprio
+saranno poi utilizzate per l'assegnazione della priorità ai task.
 
 Tali informazioni consistono in tre dati, calcolati per ogni task del grafo 
 preprocessato:
@@ -399,13 +404,14 @@ più presto.
 I task con scarto pari a $0$ fanno parte del percorso critico.
 
 Il calcolo delle tre informazioni sopra elencate viene effettuato tramite un 
-semplice algoritmo comunemente utilizzato in ricerca operativa: il \ac{CPM}.
+semplice algoritmo comunemente utilizzato in ricerca operativa: il \emph{metodo
+del percorso critico}, in inglese \ac{CPM}.
 Vengono quindi aggiunti due \emph{nodi dummy}: sorgente, collegato ai nodi del 
 grafo senza predecessori e destinazione, collegato ai nodi senza successori.
-Il grafo viene poi ordinato topologicamente\footnote{Si noti che il task graph 
-è aciclico quindi l'ordinamento topologico è sempre possibile.}, e l'algoritmo 
+Il grafo viene poi ordinato topologicamente,\footnote{Si noti che il task graph 
+è aciclico quindi l'ordinamento topologico è sempre possibile.} e l'algoritmo 
 \ac{CPM} viene eseguito. Lo pseudocodice dell'algoritmo di ordinamento 
-topologico è illustrato nell'Algoritmo \ref{alg:CPM}, dove $\delta^-(i)$ e 
+topologico è illustrato nell'algoritmo \ref{alg:CPM}, dove $\delta^-(i)$ e 
 $\delta^+(i)$ rappresentano il taglio entrante e il taglio uscente del nodo 
 $i$, rispettivamente.
 
@@ -437,17 +443,17 @@ preprocessing. Al termine di questa fase, il task graph presente
 nell'interfaccia di input dello scheduler viene sostituito con il grafo 
 arricchito di comunicazioni e riconfigurazioni; le informazioni sul percorso 
 critico appena calcolate sono aggiunte all'interfaccia, per essere utilizzate 
-dalla fase successiva.
+nella fase successiva.
 
 
 \subsection{Fase di scheduling}
 \label{subsec:faseScheduling}
 La fase di scheduling effettivo gestisce l'assegnazione di tempi di inizio e 
 fine dell'esecuzione di ogni task, sia esso di computazione, comunicazione o 
-riconfigurazione. In particolare, a condizione che le stime sulla durata dei 
-task siano il più precise possibile, la fase di scheduling assegna un ordine di 
+riconfigurazione. In particolare, la fase di scheduling assegna un ordine di 
 esecuzione dei task che rispetti tutte le precedenze imposte dal task graph e 
-che cerchi di minimizzare il tempo di esecuzione \emph{stimato}.
+che cerchi di minimizzare il tempo di esecuzione \emph{stimato}, a condizione
+che le stime sulla durata dei task siano il più precise possibile.
 
 \IncMargin{1em}
 \begin{algorithm}
@@ -478,12 +484,12 @@ che cerchi di minimizzare il tempo di esecuzione \emph{stimato}.
 \end{algorithm}
 \DecMargin{1em}
 
-Come si può vedere nell'Algoritmo \ref{alg:faseScheduling}, la fase di 
+Come si può vedere nell'algoritmo \ref{alg:faseScheduling}, la fase di 
 scheduling è costituita principalmente da un ciclo ripetuto finchè vi sono 
 task che non sono ancora stati schedulati. A ogni ripetizione del ciclo viene 
 prima aggiornato l'insieme dei task che sono ``pronti'' per l'assegnazione dei 
 tempi, ossia i task le cui precedenze sono state tutte già considerate. Tra 
-questi, tramite un'opportuna euristica di scelta (vedi Sezione 
+questi, tramite un'opportuna euristica di scelta (vedi sezione 
 \ref{sec:euristicaSceltaTask}) viene eletto il miglior task da considerare al 
 passo corrente; a questo vengono poi assegnate le stime dei tempi, 
 successivamente inserite nell'interfaccia di output dello scheduler e nel 
@@ -507,9 +513,9 @@ vengano rispettati nel corso di una reale esecuzione dell'applicazione sulla
 piattaforma riconfigurabile. Ciò vale soprattutto per i task la cui
 durata di esecuzione è fortemente dipendente dalla quantità di dati da 
 scambiare, da possibili conflitti sul BUS o sul canale di comunicazione 
-utilizzato che rendono necessario serializzare le esecuzioni, nel caso di 
+utilizzato che rendono necessario serializzare le esecuzioni nel caso di 
 task di comunicazione, oppure dalla dimensione dell'area da configurare e 
-dalle caratteristiche dell'architettura sottostante, nel caso di task di 
+dalle caratteristiche dell'architettura sottostante nel caso di task di 
 riconfigurazione.
 
 Di fronte a questi errori nelle stime, non si può ritenere accurato il piano di 
@@ -539,41 +545,38 @@ dal grafo e l'ordine stabilito dallo scheduler.
 \end{figure}
 
 \paragraph{Definizione dell'ordine di scheduling}
-Durante l'esecuzione dell'algoritmo di scheduling illustrato nella Sezione 
+Durante l'esecuzione dell'algoritmo di scheduling illustrato nella sezione 
 \ref{subsec:faseScheduling} si possono avere più task eleggibili per essere 
 schedulati nello stesso passo, ovvero più task con le stesse precedenze 
-soddisfatte. Si consideri la Figura \ref{fig:schedulingConflict} per un 
-semplice esempio di conflitto tra due task. La Figura 
+soddisfatte. Si consideri la figura \ref{fig:schedulingConflict} per un 
+semplice esempio di conflitto tra due task. La figura 
 \ref{fig:schedulingConflictA} rappresenta una parte del task graph, 
 nell'ipotesi che al passo corrente il task $A$, di colore grigio, sia già stato 
 schedulato mentre i due task di comunicazione $W\_AB$ e $W\_AC$, di colore 
-azzurro, sono eleggibili per il passo di scheduling successivo. Quando questa
+azzurro, siano eleggibili per il passo di scheduling successivo. Quando questa
 situazione si verifica, l'algoritmo deve effettuare una decisione su quale 
-task è meglio considerare per primo; tale scelta esplicita una relazione 
+task sia meglio considerare per primo; tale scelta esplicita una relazione 
 d'ordine tra i task in conflitto, rappresentata da un arco aggiuntivo inserito 
-nella fase di postprocessing. La Figura \ref{fig:schedulingConflictB} 
+nella fase di postprocessing. La figura \ref{fig:schedulingConflictB} 
 rappresenta l'arco aggiuntivo inserito tra i due task di comunicazione, 
-nell'ipotesi che il task $W\_AB$ sia stato scelto prima di $W\_AC$.
+nell'ipotesi che nella fase di scheduling il task $W\_AB$ sia stato scelto
+prima di $W\_AC$.
 
 È importante evidenziare come i conflitti effettivi si abbiano solo tra task 
-che sono eleggibili per lo scheduling in uno stesso passo e, soprattutto, che 
-il componente su cui sono mappati sia lo stesso. Infatti, è sempre possibile 
+che sono eleggibili per lo scheduling in uno stesso passo. Inoltre, è sempre possibile 
 che più task eleggibili durante lo stesso passo vengano poi eseguiti in 
 parallelo, a prescindere dall'ordine con cui sono stati considerati 
 dall'algoritmo; si ha un vero conflitto solo quando la loro esecuzione implica 
 l'utilizzo di uno stesso componente. In tal caso, infatti, le esecuzioni devono 
-necessariamente essere serializzate, per questo motivo tali task sono in 
-conflitto.
+necessariamente essere serializzate.
 
 \paragraph{Analisi dell'output dello scheduler}
-I conflitti descritti nel precedente paragrafo sono ricavati dall'analisi 
-dell'output dello scheduler durante la fase di postprocessing. Il diagramma di 
-Gantt viene analizzato per ricavare le informazioni su tutti i task schedulati 
-per ogni componente. A questo punto, partendo dalla lista dei task ordinata 
-secondo l'ordine di esecuzione, al grafo vengono aggiunti degli archi che 
-collegano i task nello stesso ordine in cui compaiono nella lista. In questo 
-modo le informazioni sull'ordine scelto dallo scheduler vengono incluse nel 
-task graph finale sotto forma di precedenze aggiuntive.
+I conflitti descritti nel precedente paragrafo sono ricavati durante la fase di
+postprocessing dall'analisi del comportamento tenuto dallo scheduler.
+La lista (ordinata) dei task selezionati per lo scheduling viene analizzata; nel
+corso dell'analisi vengono tracciati nuovi archi seguendo l'ordine dei task nella
+lista. In questo modo le informazioni sull'ordine scelto dallo scheduler vengono
+incluse nel task graph finale, sotto forma di precedenze aggiuntive.
 
 \paragraph{Scrittura dei dati su file XML}
 Dopo aver analizzato il diagramma di Gantt e aver aggiunto gli archi seguendo 
