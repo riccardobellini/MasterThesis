@@ -584,7 +584,7 @@ l'ordine di scheduling, le informazioni rilevanti per il runtime manager
 vengono scritte nel file XML del progetto di \ac{FASTER}. I dati scritti sono:
 \begin{itemize}
  \item tutte le implementazioni usate dai task che compongono il task graph 
-finale, incluse implementazioni aggiuntive create ex novo per i task di 
+finale, incluse eventuali implementazioni aggiuntive create ex novo per i task di 
 comunicazione e di riconfigurazione;
  \item la lista dei mapping fornita dal mapper per i task di computazione, con 
 mapping aggiuntivi per i task di comunicazione e riconfigurazione, che 
@@ -610,14 +610,14 @@ passo la scelta di quale task è più conveniente considerare per l'assegnazione
 dei tempi, così da minimizzare la lunghezza totale dello schedule finale.
 
 \paragraph{Utilizzo di un algoritmo euristico}
-Come visto nel Capitolo \ref{chap:SOA}, è stato preferito l'utilizzo di un 
+Come visto nel capitolo \ref{chap:SOA}, è stato preferito l'utilizzo di un 
 algoritmo euristico basato su una lista con uno scheduling effettuato 
 iterativamente e in maniera incrementale, rispetto a una euristica 
 esplorativa/evolvibile, che richiede un tempo di esecuzione superiore prima di 
 giungere a risultati accettabili e rischia di generare molte soluzioni non 
 applicabili. Allo stesso tempo, il procedimento di scegliere un task ad ogni 
 passo sulla base di una determinata priorità, pur essendo molto veloce 
-rappresenta una scelta \emph{greedy}, che può non garantire il 
+rappresenta una scelta \emph{greedy}, che in generale non garantisce il 
 raggiungimento di obiettivi accettabili.
 
 Per questo è importante considerare diversi fattori e combinarli; sulla 
@@ -666,13 +666,14 @@ fino a quel momento. Dopo che tutti i task sono stati presi in esame, il task
 con la massima priorità in assoluto viene selezionato per l'assegnazione dei 
 tempi, e l'algoritmo termina.
 
+% TODO scrivere del caching delle priorità
 
 \subsection{Calcolo delle priorità}
 Il calcolo della priorità di un task dipende dal suo tipo; diverse regole e 
 modi per assegnare la priorità sono utilizzati a seconda che il task sia di 
 computazione, comunicazione o riconfigurazione. Anche l'implementazione 
 utilizzata per i task di computazione riveste un ruolo importante per definire 
-come calcolare la priorità.
+come calcolarne la priorità.
 
 \subsubsection{Task con implementazione software}
 I task con implementazione di tipo software non possono essere eseguiti su 
@@ -699,7 +700,7 @@ mappati su implementazioni di tipo hardware, vengono utilizzate tre metriche:
  \item informazioni sul percorso critico, come nel caso dei task con 
 implementazione di tipo software;
  \item l'istante di inizio al più presto, o \emph{\ac{EST}}: rappresenta 
-l'istante al più presto nel quale il task può iniziare l'esecuzione.
+l'istante al più presto nel quale il task può iniziare l'esecuzione;
  \item l'istante di fine al più presto, o \emph{\ac{EFT}}.
 \end{enumerate}
 La funzione di calcolo della priorità risulta quindi diversa rispetto alla 
@@ -725,7 +726,7 @@ priorità per questa cifra di merito se il suo scarto è sotto soglia. La
 definizione di una soglia permette all'algoritmo di essere meno rigido nel 
 controllo dello scarto di un task, che viene così considerato come critico anche 
 se il suo scarto è di poco superiore a $0$, invece che considerare critici 
-solamente task con scarto nullo.
+solamente task con scarto esattamente pari a $0$.
 
 Se, invece, lo scarto del task supera la soglia, si considera il logaritmo di 
 tale scarto. Il valore della cifra di merito è così calcolato:
@@ -817,7 +818,7 @@ dove $df$ rappresenta il fattore di degrado.
 
 \subsubsection{Priorità per task di comunicazione}
 La seconda tecnica utilizzata è una diversa assegnazione di priorità per alcuni 
-task di comunicazione. Come visto nella Sezione 
+task di comunicazione. Come visto nella sezione 
 \ref{sec:aggiuntaRiconfigurazioni}, eventuali task di riconfigurazione vengono 
 inseriti tra i task di comunicazione di tipo \emph{WRITE} e \emph{READ} che 
 leggono e scrivono dati su quell'area, rispettivamente. Poichè il tempo 
