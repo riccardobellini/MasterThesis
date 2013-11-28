@@ -1,7 +1,7 @@
 \chapter{Implementazione proposta}
 \label{chap:implementazione}
 \vspace{1cm}
-Il Capitolo \ref{chap:approccio} è stato interamente dedicato alla descrizione 
+Il capitolo \ref{chap:approccio} è stato interamente dedicato alla descrizione 
 dell'approccio adottato nel lavoro oggetto di questa tesi, al fine di 
 realizzare un baseline scheduler che tenga conto di possibili 
 \emph{riconfigurazioni} e \emph{comunicazioni}, capace di fornire una 
@@ -10,15 +10,15 @@ valutazione quantitativa della bontà di un dato mapping.
 Questo capitolo è dedicato alla descrizione dei dettagli implementativi 
 riguardanti la realizzazione dell'algoritmo di scheduling.
 
-Il capitolo è strutturato nel seguente modo: la Sezione 
+Il capitolo è strutturato nel seguente modo: la sezione 
 \ref{sec:osservazioniGenerali} fornisce alcune osservazioni preliminari 
-riguardo alle scelte implementative del progetto \ac{FASTER}; la Sezione 
+riguardo alle scelte implementative del progetto \ac{FASTER}; la sezione 
 \ref{sec:struttureDati} contiene la descrizione delle strutture dati relative 
-all'implementazione dello scheduler; la Sezione \ref{sec:classiGerarchie} 
+all'implementazione dello scheduler; la sezione \ref{sec:classiGerarchie} 
 descrive le classi e le gerarchie che compongono la parte della toolchain 
-relativa alla parte di mapping/scheduling (Sezione 
+relativa alla parte di mapping/scheduling (sezione 
 \ref{subsec:algoritmoEsplorazione}) e i componenti dell'algoritmo di scheduling 
-nel dettaglio (Sezione \ref{subsec:algoritmoScheduling}).
+nel dettaglio (sezione \ref{subsec:algoritmoScheduling}).
 
 \section{Osservazioni generali}
 \label{sec:osservazioniGenerali}
@@ -28,21 +28,23 @@ linguaggio di programmazione a oggetti sviluppato da Bjarne Stroustrup
 \cite{CKernighanRitchie}. La parte di interfaccia grafica, chiamata \emph{ASAP 
 GUI} è sviluppata in C\#, linguaggio di programmazione ad oggetti sviluppato da 
 Microsoft nell'ambito del \emph{framework .NET} \cite{ProCSharp}. ASAP GUI 
-lancia degli script scritti in Python \cite{ThinkPython}, che si occupano di 
-modificare l'XML del file di progetto come specificato dall'utente tramite 
-l'interfaccia grafica.
+si interfaccia con l'esecuzione e l'output dei tool lanciando degli script scritti
+in Python \cite{ThinkPython}, che si occupano di modificare l'XML del file di progetto
+come specificato dall'utente tramite l'interfaccia grafica.
 % FIXME scrivere dei backend in python?
 \paragraph{Convenzioni implementative della toolchain}
 Riguardo allo sviluppo in C++ della toolchain di \ac{FASTER}, si è deciso di 
 usare le strutture (\verb+struct+), per indicare tipi di dati dedicati alla 
 memorizzazione di informazioni o utilizzati come ``contenitori''; le classi 
 (\verb+class+) vengono utilizzate invece per rappresentare oggetti che hanno 
-degli algoritmi al loro interno, invocabili come metodi.
+degli algoritmi al loro interno, invocabili dall'esterno come metodi.
 
 \paragraph{Organizzazione dei namespace}
 Nel codice si è deciso di includere le strutture e le classi dentro a 
 \emph{namespace}, allo scopo di prevenire eventuali conflitti di nomi e di 
-organizzare logicamente per categorie le varie parti della toolchain.
+organizzare logicamente per categorie le varie parti della toolchain. Ogni componente
+della toolchain è incluso nel suo namespace dedicato, ad esempio il componente che
+gestisce lo scheduling è incluso nel namespace \verb+faster::applications::scheduler+.
 
 \begin{figure}
  \begin{center}
@@ -52,9 +54,9 @@ organizzare logicamente per categorie le varie parti della toolchain.
  \end{center}
 \end{figure}
 
-Una rappresentazione della struttura dei namespace è visibile in Figura 
+Una rappresentazione della struttura dei namespace è visibile in figura 
 \ref{fig:gerarchiaNamespace}. La maggior parte di questi namespace verrà 
-spiegata al momento di trattare classi o strutture che ne fanno parte 
+spiegata al momento in cui saranno descritte classi o strutture che ne fanno parte 
 e sono rilevanti per il lavoro oggetto della tesi.
 
 \paragraph{Convenzioni nell'assegnazione dei nomi}
@@ -82,12 +84,12 @@ pointer che punta all'oggetto è distrutto.
 
 L'utilizzo degli shared pointer permette di istanziare l'oggetto tramite 
 allocazione dinamica una sola volta, utilizzando poi i puntatori associati per 
-l'accesso ai suoi dati e metodi o per il passaggio come parametro.
+l'accesso ai suoi dati e metodi, o per il passaggio come parametro.
 
 Nel codice sorgente della toolchain sono presenti delle \verb+typedef+ globali 
 aventi il suffisso ``\verb+Ptr+'' che semplificano la definizione degli shared 
 pointer per alcune strutture/classi del progetto; ad esempio, alla classe 
-\verb+FasterTask+, che identifica un task (generico), corrisponde lo shared 
+\verb+FasterTask+, che identifica un task (generico) corrisponde lo shared 
 pointer \verb+FasterTaskPtr+.
 
 % TODO parlare di compilazione, CMake e librerie
@@ -95,9 +97,9 @@ pointer \verb+FasterTaskPtr+.
 \section{Strutture dati}
 \label{sec:struttureDati}
 In questa sezione vengono presentate alcune strutture dati della toolchain. La 
-sezione si divide in due sotto-sezioni: la Sezione 
+sezione si divide in due sotto-sezioni: la sezione 
 \ref{subsec:struttureDatiFaster} presenta le strutture dati generali della 
-toolchain, non relative allo scheduler; la Sezione 
+toolchain, non relative allo scheduler; la sezione 
 \ref{subsec:struttureDatiScheduler} presenta invece le strutture utilizzate 
 dall'algoritmo di scheduling.
 
@@ -149,25 +151,25 @@ effettivo. In particolare, si notano il puntatore alla struttura
 \verb+FasterProject+, che è necessaria per accedere alle informazioni 
 sull'architettura e sull'applicazione, come spiegato nella sezione precedente.
 Il dato membro \verb+m_taskGraph+ viene impostato in seguito alla fase di 
-preprocessing, e contiene in task graph arricchito delle comunicazioni e 
-riconfigurazioni da considerare nella fase di scheduling vera e propria. 
-\verb+m_explorerTrace+ contiene la lista di triple calcolata dal mapper per 
-l'iterazione corrente dell'esplorazione.
+preprocessing, e contiene il task graph arricchito delle comunicazioni e 
+riconfigurazioni da considerare nella fase di scheduling vera e propria.
+Il dato membro \verb+m_explorerTrace+ contiene la lista di triple calcolata dal
+mapper per l'iterazione corrente dell'esplorazione.
 
 Oltre a questi, vi sono anche dei puntatori al gestore della memoria e ai 
 componenti di riconfigurazione e di comunicazione (\acs{RAM} e BUS, se 
 presente), il numero di porte di lettura/scrittura disponibili sulla \acs{RAM} 
 e variabili aggiuntive che contengono le informazioni di percorso critico dei 
-task, dei task ordinati topologicamente e della lista delle riconfigurazioni.
+task, l'ordinamento topologico dei task e la lista delle riconfigurazioni.
 
 \subsubsection{Scheduler Data}
 I file \emph{schedulerData.hpp} e \emph{schedulerData.cpp} contengono il codice 
-sorgente della struttura \verb+SchedulerData+, che contiene dati continuamente 
+sorgente della struttura \verb+SchedulerData+, che memorizza dati continuamente 
 aggiornati durante l'esecuzione dell'algoritmo di scheduling. A differenza dei 
 dati contenuti in \verb+SchedulerInput+, questi dati sono racchiusi in una 
 struttura a sé stante perchè figurino come logicamente separati dai dati che 
-invece fanno parte dell'input dell'algoritmo e sono inclusi nel namespace 
-\verb+faster::applications::scheduler::data+
+invece fanno parte dell'input dell'algoritmo. La dichiarazione della struttura è
+inclusa nel namespace \verb+faster::applications::scheduler::data+.
 
 Viene ora presentato un frammento di codice rilevante per la dichiarazione 
 della struttura.
@@ -184,10 +186,10 @@ Come si può vedere, la struttura contiene l'insieme dei task non ancora
 selezionati per lo scheduling e i vettori dei task già schedulati e pronti per 
 essere schedulati. Si è deciso di incapsulare questi dati in una struttura 
 modificabile da tutti i componenti dell'algoritmo perchè alcuni componenti 
-potrebbero dover fare delle modifiche on-the-fly\footnote{Ad esempio, nel caso 
+potrebbero dover fare delle modifiche on-the-fly.\footnote{Ad esempio, nel caso 
 la policy di scheduling delle comunicazioni scelga di utilizzare il BUS come 
 mezzo di comunicazione, il task \emph{READ} corrispondente dev'essere 
-eliminato dalla lista dei task rimanenti.}.
+eliminato dalla lista dei task rimanenti.}
 
 \subsubsection{Scheduler Gantt}
 La struttura \verb+SchedulerGantt+ è definita nei file 
@@ -197,8 +199,8 @@ calcolata. All'inizio dell'elaborazione il diagramma è vuoto, viene
 progressivamente riempito con le informazioni di scheduling calcolate ad ogni 
 passo.
 
-Vengono inizialmente ridefiniti alcuni tipi di dato, per semplificare la 
-scrittura e la lettura del codice.
+Vengono inizialmente ridefiniti alcuni tipi di dato, per semplificare la lettura
+del codice.
 \newline
 \begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
 mathescape]{c}
@@ -267,8 +269,7 @@ mathescape]{c}
                              ScheduledTaskInfoMap_t;
 \end{minted}
 
-La seguente porzione di codice illustra invece la dichiarazione della struttura 
-\verb+SchedulerOutput+.
+Il seguente frammento illustra la dichiarazione della struttura \verb+SchedulerOutput+.
 \newline
 \begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
 mathescape]{c}
@@ -288,17 +289,16 @@ mathescape]{c}
 \end{minted}
 Come si può vedere dal codice, la struttura agisce come wrapper attorno ai 
 metodi della struttura \verb+SchedulerGantt+ vista in precedenza, ed espone dei 
-metodi che permettono di aggiungere all'output le informazioni di scheduling 
-appena calcolate. Il metodo \verb+computeMakespan()+ permette di calcolare la 
-metrica di valutazione dello scheduling. Nella struttura sono presenti dati 
-membro aggiuntivi che rendono meglio accessibili le informazioni di scheduling 
-già ricavabili dal diagramma di Gantt. Da queste variabili aggiuntive è 
-possibile ricavare in maniera banale le informazioni per ogni task tramite la 
-mappa \verb+m_scheduledTaskInfo+ e il mapping assegnato dallo scheduler tramite 
-la variabile \verb+m_schedulerMapping+\footnote{Mentre il mapping determinato 
-dal mapper è specificato solamente per processing task (relativi al task 
+metodi che permettono di aggiungere all'output le informazioni appena calcolate.
+Il metodo \verb+computeMakespan()+ permette di calcolare la metrica di valutazione
+dello scheduling. Nella struttura sono presenti dati membro aggiuntivi che rendono
+meglio accessibili le informazioni di scheduling già ricavabili dal diagramma di Gantt.
+Da queste variabili aggiuntive è possibile ricavare in maniera semplice le informazioni
+per ogni task tramite la mappa \verb+m_scheduledTaskInfo+ e il mapping assegnato dallo
+scheduler tramite la variabile \verb+m_schedulerMapping+.\footnote{Mentre il mapping
+determinato dal mapper è specificato solamente per processing task (relativi al task 
 graph originale), il mapping presente nell'output dello scheduler è relativo ai 
-task del task graph preprocessato.}.
+task del task graph preprocessato.}
 
 \subsubsection{Scheduler Utility}
 I file \emph{schedulerUtility.hpp} e \emph{schedulerUtility.cpp}, infine, 
@@ -384,14 +384,14 @@ output e stampate le statistiche dell'esplorazione.
 
 \subsubsection{Componente di esplorazione}
 Il componente di esplorazione viene istanziato dalla funzione \verb+main()+ e 
-si occupa di gestire l'esplorazione dal momento del lancio effettuato nel main, 
+si occupa di gestire l'esplorazione dal momento del lancio, effettuato nel main, 
 fino alla terminazione. Il codice di questo componente è contenuto nei file 
 \emph{explore.hpp} ed \emph{explore.cpp}, presenti nella sottocartella 
 \emph{explore}.
 
 Poichè il componente di esplorazione rappresenta un oggetto contenente un 
-algoritmo invocabile, secondo la convenzione implementativa indicata nella 
-Sezione \ref{sec:osservazioniGenerali}, è implementato come \verb+class+ e 
+algoritmo invocabile, secondo la convenzione definita nella sezione
+\ref{sec:osservazioniGenerali}, è implementato come \verb+class+ e 
 inserito nel namespace \verb+faster::applications::explorer+, come tutti i 
 componenti che vedremo di seguito relativi all'algoritmo di esplorazione.
 
@@ -407,7 +407,7 @@ Data l'ampia modularità decisa in fase di progettazione, il componente di
 iterazione è rappresentato da una classe astratta che espone 
 \verb+nextIteration()+, un metodo virtuale puro\footnote{Un metodo virtuale 
 puro deve essere implementato da tutte le sottoclassi della classe che lo 
-dichiara.} che si occupa di gestire una iterazione dell'esplorazione.
+dichiara.} che si occupa di gestire un'iterazione dell'esplorazione.
 
 L'interfaccia della classe astratta è definita in 
 \emph{explore/exploreComponents/iteration/exploreIterationAlgorithm.hpp}; è 
@@ -461,8 +461,8 @@ mathescape]{c}
 \label{subsec:algoritmoScheduling}
 L'obiettivo di questa sezione è presentare le porzioni più importanti del 
 codice dell'algoritmo di scheduling. Le interfacce di input/output e le 
-strutture dati utilizzate sono già state descritte nella Sezione 
-\ref{subsec:struttureDatiScheduler}, in questa sezione verranno esaminati i 
+strutture dati utilizzate sono già state descritte nella sezione 
+\ref{subsec:struttureDatiScheduler}, mentre in questa sezione verranno esaminati i 
 vari componenti dello scheduler che gestiscono l'elaborazione.
 
 Il codice sorgente dell'algoritmo di scheduling è contenuto nella cartella 
@@ -472,8 +472,8 @@ l'esame dei componenti dello scheduler. Tutte le classi che compongono
 sono incluse nel namespace \verb+faster::applications::scheduler+.
 
 \subsubsection{Componente di scheduling}
-La sottocartella \emph{schedule} contiene la dichiarazione e definizione della 
-classe astratta \verb+Schedule+, che espone un metodo virtuale puro per il 
+La sottocartella \emph{schedule} contiene la dichiarazione e definizione di
+\verb+Schedule+, una classe astratta che espone un metodo virtuale puro per il 
 calcolo dello scheduling. In questo modo è possibile utilizzare algoritmi 
 completamente differenti semplicemente creando una nuova sottoclasse di 
 \verb+Schedule+ che implementa il metodo \verb+computeSchedule()+.
@@ -492,7 +492,7 @@ mathescape]{c}
   };
 \end{minted}
 
-La sottoclasse che implementa lo scheduler, come descritto nel Capitolo 
+La sottoclasse che implementa lo scheduler come descritto nel capitolo 
 \ref{chap:approccio}, è chiamata \verb+ScheduleRB+ ed è contenuta nella 
 sottocartella \emph{schedule/scheduleComponents}. Nel seguente frammento 
 vengono riportate le parti rilevanti della dichiarazione della classe, con 
@@ -558,7 +558,7 @@ sottocartella \emph{schedule/scheduleComponents/preprocessing}; la classe
 metodo virtuale puro da reimplementare per poter personalizzare la fase di 
 preprocessing. La sottoclasse \verb+ScheduleRBAnalyzeTrace+ ne fornisce 
 un'implementazione, che è quella utilizzata nell'algoritmo di scheduling 
-trattato in questa tesi e descritta ad alto livello nella Sezione 
+trattato in questa tesi e descritta ad alto livello nella sezione 
 \ref{subsec:fasePreprocessing}.
 \newline
 \begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
@@ -603,9 +603,9 @@ mathescape]{c}
   };
 \end{minted}
 
-La sottoclasse che implementa il metodo come visto nella Sezione 
-\ref{sec:euristicaSceltaTask} è chiamata \verb+ScheduleRBPriorityHeuristic+, e 
-si trova nella sottocartella 
+La sottoclasse di \verb+SchedulerBestSchedulableTaskAlgorithm+
+che implementa il metodo come visto nella sezione \ref{sec:euristicaSceltaTask}
+è chiamata \verb+ScheduleRBPriorityHeuristic+, e si trova nella sottocartella 
 \emph{schedule/scheduleComponents/bestTaskAlgorithm/priorityHeuristic} ed è 
 dichiarata e definita nei file \emph{scheduleRBPriorityHeuristic.hpp} e 
 \emph{scheduleRBPriorityHeuristic.cpp}.
@@ -643,7 +643,7 @@ il calcolo della priorità di un task.
 All'interno della classe che implementa l'euristica si trovano invece i 
 parametri (pesi) assegnati alle varie metriche e il boost di priorità assegnato 
 ai task di comunicazione di tipo \emph{WRITE} che precedono una 
-riconfigurazione, nella \verb+enum PriorityFunctionParameters+. Il dato membro 
+riconfigurazione, nella enum \verb+PriorityFunctionParameters+. Il dato membro 
 \verb+m_decayFactor+ rappresenta il fattore di degrado che riduce la cifra di 
 merito corrispondente alle informazioni sul percorso critico.
 
