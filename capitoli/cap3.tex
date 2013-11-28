@@ -826,8 +826,8 @@ impiegato per la riconfigurazione di un'area in generale introduce un
 overhead considerevole nell'esecuzione dell'applicazione, è auspicabile che 
 il tempo di riconfigurazione venga ``nascosto'' il più possibile dal tempo 
 impiegato per l'esecuzione di altri task (le dipendenze del task da eseguire 
-successivamente sull'area riconfigurata), così da non introdurre ritardi che 
-peseranno sul makespan finale.
+successivamente sull'area riconfigurata), così da ridurre il più possibile eventuali
+ritardi che peseranno sul makespan finale.
 
 Per mascherare il più possibile l'esecuzione di una riconfigurazione è 
 necessario che questa parta il prima possibile, il che implica, per la 
@@ -853,11 +853,11 @@ In questa sezione viene presentata la struttura degli elementi di comunicazione
 supportata dall'algoritmo di scheduling proposto in questo lavoro.
 Allo scopo di semplificare la gestione delle comunicazioni, è stato scelto 
 l'utilizzo di due \emph{template} di comunicazione standard, descritti nella 
-Sezione \ref{sec:templateComunicazione}.
+sezione \ref{sec:templateComunicazione}.
 
 L'allocazione statica della memoria per i task di computazione, costituita da 
 un partizionamento della memoria \acs{RAM} effettuato per ogni task è invece 
-illustrata nella Sezione \ref{sec:gestioneMemoria}.
+illustrata nella sezione \ref{sec:gestioneMemoria}.
 
 
 \subsection{Template di comunicazione}
@@ -865,7 +865,7 @@ illustrata nella Sezione \ref{sec:gestioneMemoria}.
 
 \paragraph{Comunicazione tramite \acs{RAM}}
 Il primo template, più semplice, è rappresentato dallo scenario in cui tutti i 
-core (sia hard che soft, oltre a processori general purpose) presenti sulla 
+core (sia \emph{hard} che \emph{soft}, oltre a processori general purpose) presenti sulla 
 scheda possano comunicare tramite letture e scritture di dati su una memoria 
 \acs{RAM} condivisa. Ogni unità computazionale può pertanto comunicare con ogni 
 altra unità computazionale, utilizzando quindi due task di comunicazione:
@@ -881,8 +881,8 @@ nella sezione sulla fase di preprocessing.
 La stima del tempo di esecuzione di una comunicazione effettuata su \acs{RAM} è 
 calcolata partendo da una serie di parametri disponibili nell'XML del progetto 
 \ac{FASTER}: la lunghezza del burst di dati trasferiti, il tempo medio di upload 
-di un burst\footnote{Il tempo medio necessario perchè un burst di dati venga 
-effettivamente trasferito in memoria dal controller.}, oltre alla dimensione 
+di un burst,\footnote{Il tempo medio necessario perchè un burst di dati venga 
+effettivamente trasferito in memoria dal controller.} oltre alla dimensione 
 dei dati da trasferire in memoria (ovvero il \emph{produce rate} del task). Da 
 questi dati è possibile calcolare una stima del tempo di esecuzione del task di 
 comunicazione come
@@ -899,20 +899,21 @@ per la memoria, in modo da poter specificare quante letture/scritture è
 possibile effettuare contemporaneamente in memoria senza bisogno di 
 serializzare le comunicazioni.
 
-L'algoritmo tiene conto del numero di porte disponibili e posticipa 
-l'esecuzione di task di comunicazione tramite \acs{RAM} se il massimo numero di 
-letture/scritture in parallelo è raggiunto.
+L'algoritmo tiene conto del numero di porte disponibili in un determinato istante
+e posticipa l'esecuzione di task di comunicazione tramite \acs{RAM} se il
+massimo numero di letture/scritture in parallelo è raggiunto.
 
 
 \paragraph{Comunicazione tramite \acs{RAM} e BUS}
-Il secondo template, è un'estensione del primo: in questo scenario tutti i 
+Il secondo template è un'estensione del primo: in questo scenario tutti i 
 core possono comunicare tra loro anche mediante un BUS, che rende possibile 
 effettuare dei collegamenti punto-punto tra tutti i core. Nel caso venga deciso 
 in fase di scheduling di usare il BUS invece che la comunicazione tramite 
 memoria per un determinato scambio di dati, è necessario ristrutturare i task 
 aggiunti in fase di preprocessing per quella comunicazione, considerando 
 soltanto la presenza di un task di tipo \emph{WRITE}, il cui compito è inviare 
-tramite BUS i dati direttamente dal task sorgente al task destinazione.
+tramite BUS i dati direttamente dal task sorgente al task destinazione,
+senza usare una memoria come tramite.
 
 \subparagraph{Stima del tempo di esecuzione}
 Il calcolo della stima del tempo di esecuzione di una comunicazione effettuata 
@@ -930,35 +931,33 @@ Un'importante differenza tra le comunicazioni basate su \acs{RAM} e quelle
 tramite BUS consiste nel fatto che mentre la memoria può avere più di una porta 
 per la lettura/scrittura dei dati, il BUS non ammette l'esecuzione 
 di trasferimenti in parallelo. L'algoritmo quindi posticipa l'esecuzione di un 
-trasferimento su BUS se un altro trasferimento tiene occupata la risorsa.
+trasferimento su BUS se un altro trasferimento è in esecuzione sulla risorsa.
 
 
 % TODO introdurre la sezione all'inizio della sezione su comunicazioni e memoria
 \subsection{Policy di assegnazione delle comunicazioni}
 \label{subsec:policyComunicazioni}
-Al momento di effettuare lo scheduling di una comunicazione, si possono 
-presentare due situazioni:
+Al momento di effettuare lo scheduling di una comunicazione possono occorrere
+due situazioni, a seconda dei template a disposizione nell'architettura:
 \begin{enumerate}
  \item le comunicazioni possono essere effettuate soltanto tramite \acs{RAM};
  \item le comunicazioni possono essere effettuate sia tramite \acs{RAM} che su 
 BUS.
 \end{enumerate}
-Nel primo caso, la comunicazione viene banalmente assegnata all'esecuzione su 
+Nel primo caso, la comunicazione viene assegnata all'esecuzione su 
 memoria e vengono calcolate le informazioni relative ai tempi di esecuzione, 
 basandosi sulla disponibilità del componente e sull'eventuale numero di porte 
-specificato.
-
-Nel secondo caso, dev'essere controllato se la comunicazione è ``eleggibile'' 
+specificato; nel secondo, dev'essere controllato se la comunicazione è ``eleggibile'' 
 per il BUS. Questa condizione dipende dai seguenti fattori:
 \begin{itemize}
- \item se il task di comunicazione è del tipo \emph{WRITE}\footnote{Infatti, 
+ \item se il task di comunicazione è del tipo \emph{WRITE};\footnote{Infatti, 
 task di comunicazione di tipo \emph{READ} indicherebbero che si sta 
 considerando per lo scheduling la seconda parte di una comunicazione tramite 
-memoria.};
+memoria.}
  \item se i processing task sorgente e destinazione della comunicazione non 
-sono su aree oggetto di riconfigurazione\footnote{In caso di riconfigurazione 
+sono su aree oggetto di riconfigurazione.\footnote{In caso di riconfigurazione 
 di un'area è preferibile trasferire i dati in memoria prima di 
-effettuare la riconfigurazione, onde evitare perdite di dati.}.
+effettuare la riconfigurazione, onde evitare perdite di dati.}
 \end{itemize}
 Se queste condizioni si verificano, il task di comunicazione è eleggibile per 
 essere eseguito tramite BUS oltre che tramite memoria. In questo caso, è scelto 
@@ -978,8 +977,8 @@ assegnata una quantità di memoria sotto forma di una tupla
 $<\text{base\_address, size}>$.
 
 Quando un task di computazione è selezionato per lo scheduling, il gestore 
-della memoria si occupa di cercare una porzione di memoria libera 
-sufficientemente grande per contenere i dati prodotti dal task. Se non viene 
+della memoria cerca una porzione di memoria libera sufficientemente grande
+per contenere i dati prodotti dal task. Se non viene 
 trovata nessuna area riutilizzabile, viene assegnato un nuovo spazio di 
 indirizzi al task. Eventuali tecniche per evitare la frammentazione della 
 memoria non sono utilizzate, in quanto non di interesse per il lavoro dello 
@@ -992,12 +991,13 @@ task graph, allineata a $4$ byte. Internamente, il gestore della memoria marca
 quell'area come occupata dal task, e costruisce una lista di tutti i task 
 successori che hanno bisogno di recuperare dati da quell'area.
 % TODO figura esplicativa
-Ogni volta che una comunicazione che ha come sorgente il processing task per 
-cui è stata allocata memoria viene schedulata, il corrispondente successore 
+Ogni volta che viene schedulata una comunicazione che ha come sorgente il processing
+task per cui è stata allocata memoria, il corrispondente successore 
 viene eliminato dalla lista dei processing task in attesa dei dati. Quando 
 tutti i successori sono stati eliminati e la lista è vuota, l'area di memoria è 
-marcata come libera, e una successiva allocazione di un task la può occupare, a 
-patto che la dimensione sia compatibile con il numero di dati da memorizzare.
+marcata come libera e una successiva allocazione di un task la può occupare, a 
+patto che la dimensione dell'area di memoria sia compatibile con la dimensione dei
+dati da memorizzare.
 
 
 \section{Osservazioni conclusive}
@@ -1012,15 +1012,18 @@ le comunicazioni e le riconfigurazioni.
 l'algoritmo proposto, per consentire allo scheduler di avere conoscenza dei 
 dati contenuti nel file XML di \ac{FASTER}, di rielaborarli e modificarli 
 consentendo l'introduzione dei task di comunicazione e riconfigurazione, oltre 
-al calcolo di informazioni rilevanti per l'esecuzione dell'euristica;
- \item L'obiettivo è fornire un algoritmo di scheduling che sia veloce, per 
+al calcolo di informazioni rilevanti per l'esecuzione dell'euristica di scelta dei task;
+ \item l'obiettivo è fornire un algoritmo di scheduling che sia veloce, per 
 consentire alla fase di esplorazione delle soluzioni di terminare in un tempo 
-ragionevolmente breve. Questa necessità ha portato allo sviluppo di un algoritmo 
-che non è basato su euristiche esplorative o evolvibili, ma sulla base di una 
+ragionevolmente breve. Questa necessità ha portato allo sviluppo di un algoritmo euristico
+che non è basato su tecniche esplorative o evolvibili, ma sulla base di una 
 lista di priorità e una scelta ``greedy'';
- \item Sono state introdotte delle regole aggiuntive, oltre al semplice calcolo 
+ \item sono state introdotte delle regole aggiuntive, oltre al semplice calcolo 
 delle metriche per assegnare le priorità ai task, che tengono conto di 
 possibili colli di bottiglia che possono verificarsi durante l'esecuzione e 
-cercano di ridurre l'impatto di tali fenomeni sulla lunghezza dello schedule.
-% TODO qualche altra cosa che può venire in mente
+cercano di ridurre l'impatto di tali fenomeni sulla lunghezza dello schedule;
+ \item è stato implementato un gestore della memoria basilare, che assegna gli spazi di
+ indirizzi ai task di computazione dell'applicazione, nel caso il runtime manager abbia
+ bisogno di tali informazioni per memorizzare i dati di output dei task nel corso
+ dell'esecuzione.
 \end{itemize}
