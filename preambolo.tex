@@ -23,6 +23,31 @@
 \usepackage[boxruled]{algorithm2e}
 \usepackage{listings, booktabs}
 \usepackage[titletoc]{appendix}
+\usepackage{fancyhdr}
+
+\setlength{\headheight}{15.2pt}
+\setlength{\headsep}{3ex}
+
+\fancypagestyle{frontmatter}{%
+  \renewcommand{\headrulewidth}{0pt}% No header rule
+  \renewcommand{\footrulewidth}{0pt}% No footer rule
+  \fancyhf{}% Clear header/footer
+  \fancyfoot[C]{\thepage}%
+}
+
+\fancypagestyle{mainmatter}{%
+  \renewcommand{\headrulewidth}{.4pt}% Header rule
+  \renewcommand{\footrulewidth}{0pt}% Footer rule
+  \fancyhf{}% Clear header/footer
+  \fancyhead[L]{\textit{\leftmark}}% Chapter in header Left
+  \fancyhead[R]{\thepage}% Page number in header Right
+}
+
+% \fancyhead{}
+% \fancyfoot{}
+% \fancyhead[RO]{\slshape \footnotesize\leftmark}
+% \fancyhead[LE]{\slshape \footnotesize\rightmark}
+% \fancyfoot[LE,RO]{\thepage}
 
 \usepackage{hyperref}
 \hypersetup{

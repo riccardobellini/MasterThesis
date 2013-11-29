@@ -1,5 +1,5 @@
 %%%%%%%% WARNING compilazione in modalità draft %%%%%%%%
-\documentclass[a4paper,11pt,oneside, draft]{book}
+\documentclass[a4paper,11pt,oneside]{book}
 \input{preambolo}
 
 \begin{document}
@@ -7,6 +7,7 @@
 \selectlanguage{italian}
 
 \frontmatter
+\pagestyle{frontmatter}
 \includepdf{titolo/titolo}
 \includepdf{titolo/blank}
 \include{frontmatter/dedica}
@@ -15,14 +16,15 @@
 
 \tableofcontents
 \clearpage
-\thispagestyle{myheadings}\markboth{}{}
+% \thispagestyle{myheadings}\markboth{}{}
 \listoffigures
 \listoftables
 \clearpage
-\thispagestyle{myheadings}\markboth{}{}
+% \thispagestyle{myheadings}\markboth{}{}
 \include{frontmatter/abbreviazioni}
 
 \mainmatter
+\pagestyle{mainmatter}
 
 \include{capitoli/cap1}
 \include{capitoli/cap2}
