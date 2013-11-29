@@ -492,7 +492,7 @@ mathescape]{c}
   };
 \end{minted}
 
-La sottoclasse che implementa lo scheduler come descritto nel capitolo 
+La sottoclasse che implementa lo scheduler seguendo l'approccio descritto nel capitolo 
 \ref{chap:approccio}, è chiamata \verb+ScheduleRB+ ed è contenuta nella 
 sottocartella \emph{schedule/scheduleComponents}. Nel seguente frammento 
 vengono riportate le parti rilevanti della dichiarazione della classe, con 
@@ -605,7 +605,7 @@ mathescape]{c}
 
 La sottoclasse di \verb+SchedulerBestSchedulableTaskAlgorithm+
 che implementa il metodo come visto nella sezione \ref{sec:euristicaSceltaTask}
-è chiamata \verb+ScheduleRBPriorityHeuristic+, e si trova nella sottocartella 
+è chiamata \verb+ScheduleRBPriorityHeuristic+ e si trova nella sottocartella 
 \emph{schedule/scheduleComponents/bestTaskAlgorithm/priorityHeuristic} ed è 
 dichiarata e definita nei file \emph{scheduleRBPriorityHeuristic.hpp} e 
 \emph{scheduleRBPriorityHeuristic.cpp}.
@@ -703,7 +703,6 @@ mathescape]{c}
   }
 \end{minted}
 
-% TODO spiegare formule calcolo metriche
 
 \subsubsection{Componente di assegnazione dei tempi}
 Il componente dell'algoritmo di scheduling che gestisce l'assegnazione dei 
@@ -763,7 +762,7 @@ per i task di computazione chiamando i metodi del gestore della memoria.
 
 \paragraph{Policy di scheduling delle comunicazioni}
 La classe \verb+ScheduleRBCommunicationPolicy+ gestisce lo scheduling dei task 
-di comunicazione e implementa la policy spiegata nella Sezione 
+di comunicazione e implementa la policy spiegata nella sezione 
 \ref{subsec:policyComunicazioni}. La classe è dichiarata e definita nei file 
 \emph{scheduleRBCommunicationPolicy.hpp} e  \emph{scheduleRBCommunicationPolicy.cpp},
 contenuti nella sottocartella  \emph{schedule/scheduleComponents/timeAssignmentAlgorithm/asap/communicationPolicy}.
@@ -820,3 +819,8 @@ gestisce l'allocazione della memoria per i processing task che compongono l'appl
       unsigned long m_largestAvailableAddress;
   };
 \end{minted}
+
+La mappa \verb+m_memoryOccupationMap+ contiene le aree di memoria allocate per tutti i
+task e i metodi necessari per riservare uno spazio di indirizzi a un nuovo task, oltre
+al metodo per rimuovere un task di comunicazione (consumatore) dalla lista di task in
+attesa dei dati contenuti nella memoria.
