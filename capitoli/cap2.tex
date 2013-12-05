@@ -106,7 +106,7 @@ possibilità offerte dalla riconfigurazione parziale dinamica.
 \paragraph{Lavori precedenti}
 Tra i lavori di ricerca e progetti europei più relativi a \ac{FASTER} si 
 annoverano \emph{hArtes} \cite{HArtes}, \emph{Morpheus}, \emph{ACOTES} 
-\cite{AcotesUrl, ACOTES}, \emph{Andres} e \emph{Reflect} \cite{Reflect}. % 
+\cite{AcotesUrl, ACOTES}, \emph{Andres} e \emph{Reflect} \cite{Reflect}.
 % FIXME citazioni mancanti perchè i siti sono offline
 Questi lavori hanno obiettivi simili a quelli di \ac{FASTER}, tuttavia si 
 concentrano più sugli aspetti architetturali della riconfigurazione; in questi 
@@ -137,7 +137,6 @@ riconfigurabile, gestendo l'analisi, la sintesi e la verifica delle soluzioni
 ottenute.
 \end{enumerate}
 
-% TODO da scrivere meglio
 Gli obiettivi che il progetto \ac{FASTER} si prefigge di raggiungere sono un 
 significativo aumento della produttività nel design e nell'implementazione di 
 sistemi riconfigurabili, aumento delle performance delle applicazioni 
@@ -146,18 +145,28 @@ riduzione del costo totale di proprietà\footnote{In inglese \emph{\ac{TCO}},
 rappresenta l'insieme di tutti i costi da sostenere per l'intero ciclo di 
 vita di un sistema o un'apparecchiatura IT.} per sistemi come \ac{NIDS} e 
 \ac{RTM} \cite{RTMArticle} implementati su hardware riconfigurabile, grazie alla minore 
-manutenzione richiesta.
+manutenzione richiesta. Come scritto dagli autori nel factsheet di \ac{FASTER}
+\cite{FasterFactsheet}
+
+\selectlanguage{english}
+
+\begin{quotation}
+  \ac{FASTER} will facilitate the use of reconfigurable technology by providing a complete
+  methodology that enables designers to easily implement and verify applications on
+  platforms with general-purpose processors and acceleration modules implemented in the
+  latest reconfigurable technology.
+  We expect that the 
+  project will lead to a 20\% productivity improvement due to seamless 
+  implementation and verification of dynamically changing systems, a 50\% total 
+  ownership cost reduction for NIDS and Reverse Time Migration systems, with a 2x 
+  performance improvement under power constraints for Global Illumination and 
+  Image Analysis.
+\end{quotation}
+
+\selectlanguage{italian}
 
 Nella prossima sezione verranno illustrate le piattaforme hardware supportate 
-da \ac{FASTER} e la metodologia proposta per il framework.
-
-
-% We expect that the 
-% project will lead to a 20% productivity improvement due to seamless 
-% implementation and verification of dynamically changing systems, a 50% total 
-% ownership cost reduction for NIDS and Reverse Time Migration systems, with a 2x 
-% performance improvement under power constraints for Global Illumination and 
-% Image Analysis. 
+da \ac{FASTER} e la metodologia proposta per il framework. 
 
 
 \subsection{Metodologia utilizzata}
@@ -583,9 +592,6 @@ modello applicabile ad architetture piuttosto datate, dato il supporto limitato
 solamente a riconfigurazioni a una dimensione. Per questo, Redaelli et al.~in 
 \cite{Redaelli2DILP} propongono una formulazione \ac{ILP} adatta ad 
 architetture con riconfigurazione parziale dinamica a due dimensioni.
-
-% TODO spiegare vantaggi riconfigurazione bidimensionale, qui o 
-% nell'introduzione
 
 Il modello è ripreso dal loro lavoro precedente \cite{Redaelli1DILP}, ma 
 subisce alcune modifiche atte a supportare la bidimensionalità della 
