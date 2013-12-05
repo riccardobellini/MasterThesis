@@ -4,18 +4,18 @@
 In questo capitolo verrà fornito un esame dello stato dell'arte e verranno presentate 
 alcune soluzioni relative al lavoro oggetto di questa tesi.
 
-Nella sezione \ref{sec:progettoFASTER} è descritto il progetto europeo 
+Nella sezione~\ref{sec:progettoFASTER} è descritto il progetto europeo 
 \acs{FASTER} con una spiegazione sulla metodologia proposta per la toolchain e 
 l'algoritmo che effettua l'analisi esplorativa delle soluzioni, che interagisce 
 con lo scheduler.
 
-Nella sezione \ref{sec:algoritmiProposti} si esaminano i vari approcci proposti 
+Nella sezione~\ref{sec:algoritmiProposti} si esaminano i vari approcci proposti 
 dagli autori nell'ambito del problema dello scheduling dei task su dispositivi 
-riconfigurabili, divisi in algoritmi esatti, trattati nella sezione 
-\ref{sec:algoritmiEsatti}, ed euristici, trattati nella sezione 
-\ref{sec:algoritmiEuristici}.
+riconfigurabili, divisi in algoritmi esatti, trattati nella
+sezione~\ref{sec:algoritmiEsatti}, ed euristici, trattati nella
+sezione~\ref{sec:algoritmiEuristici}.
 
-La sezione \ref{sec:osservazioniConclusiveSoA} riepiloga quanto visto in questo capitolo
+La sezione~\ref{sec:osservazioniConclusiveSoA} riepiloga quanto visto in questo capitolo
 e fornisce le motivazioni alla base dello sviluppo dell'algoritmo di scheduling
 trattato in questa tesi.
 
@@ -23,10 +23,10 @@ trattato in questa tesi.
 \section[Il progetto \acs{FASTER}]{Il progetto \acs{FASTER}}
 \label{sec:progettoFASTER}
 In questa sezione vengono presentati il fondamento logico e le motivazioni alla 
-base del progetto \acs{FASTER}. La Sezione \ref{subsec:fasterIntro} fornisce 
+base del progetto \acs{FASTER}. La sezione~\ref{subsec:fasterIntro} fornisce 
 un'introduzione al progetto e spiega gli obiettivi e le motivazioni alla 
-base che hanno portato alla creazione del progetto; infine, la Sezione 
-\ref{sec:fasterMetodologia} illustra la metodologia tramite la quale si possono 
+base che hanno portato alla creazione del progetto; infine, la
+sezione~\ref{sec:fasterMetodologia} illustra la metodologia tramite la quale si possono 
 raggiungere gli obiettivi prefissati.
 
 
@@ -58,7 +58,7 @@ suggerisce, per facilitare la definizione e l'uso di sistemi implementati in
 hardware \cite{FasterPaper}.
 
 Sfruttando le potenzialità delle promettenti architetture hardware basate sulla 
-logica riconfigurabile, introdotte nel capitolo \ref{chap:intro}, si possono 
+logica riconfigurabile, introdotte nel capitolo~\ref{chap:intro}, si possono 
 infatti estendere le funzionalità (e quindi la durata utile della vita) di 
 un'applicazione senza dover riprogettare interamente l'hardware necessario per 
 eseguirla, consentendo allo stesso tempo di raggiungere performance equiparabili 
@@ -203,7 +203,7 @@ alto livello.
  \end{center}
 \end{figure}
 
-La figura \ref{fig:FASTERWorkflow} illustra la panoramica della metodologia 
+La figura~\ref{fig:FASTERWorkflow} illustra la panoramica della metodologia 
 adottata da \ac{FASTER} e il flusso di lavoro che, partendo dalla specifica 
 dell'applicazione annotata e dalla descrizione dell'architettura target, riesce 
 a derivare un bitfile utilizzabile per configurare l'architettura ed eseguire 
@@ -314,7 +314,7 @@ relativi pregi e difetti di ognuna.
 In questa sezione verranno esaminate diverse soluzioni al problema dello 
 scheduling, proposte in altri lavori.
 
-Come anticipato nel capitolo \ref{chap:intro}, il problema di trovare uno 
+Come anticipato nel capitolo~\ref{chap:intro}, il problema di trovare uno 
 schedule di lunghezza minima per un insieme di task in presenza di vincoli di 
 risorse appartiene alla classe dei problemi di ottimizzazione 
 $\mathcal{NP}$-difficili. Tutte le soluzioni proposte appartengono a una 
@@ -351,17 +351,17 @@ realizzata da Johann Dréo e tradotta in inglese da Caner Candan.}
 %%%%%%%%%%
 
 La classificazione dei diversi tipi di algoritmi meta-euristici è illustrata in 
-figura \ref{fig:metaheuristicsClassification}. Diversi lavori forniscono 
+figura~\ref{fig:metaheuristicsClassification}. Diversi lavori forniscono 
 un'analisi di questo tipo di algoritmi euristici, ad esempio lo studio condotto 
 da Bianchi et al. \cite{SurveyMetaheuristicSCOP} analizza l'impiego delle 
 meta-euristiche per la risoluzione di \acp{SCOP} o l'analisi effettuata da Blum 
 et al. \cite{MetaheuristicCombinatorialOptimization} per problemi di 
 ottimizzazione combinatoria.
 
-Il resto della sezione è organizzato come segue: nella sezione 
-\ref{sec:algoritmiEsatti} vengono descritte le soluzioni proposte per il 
-problema dello scheduling basate su algoritmi esatti; la sezione 
-\ref{sec:algoritmiEuristici} presenta invece le soluzioni basate su metodi 
+Il resto della sezione è organizzato come segue: nella
+sezione~\ref{sec:algoritmiEsatti} vengono descritte le soluzioni proposte per il 
+problema dello scheduling basate su algoritmi esatti; la
+sezione~\ref{sec:algoritmiEuristici} presenta invece le soluzioni basate su metodi 
 euristici.
 
 
@@ -443,7 +443,7 @@ ricerca di una soluzione per lo scheduling, il modello consente anche di
 determinare un mapping adeguato che minimizzi il tempo di esecuzione finale
 dell'applicazione.
 
-Come visto nella sezione \ref{subsec:faseSchedulingIntro}, infatti, la minimizzazione assoluta 
+Come visto nella sezione~\ref{subsec:faseSchedulingIntro}, infatti, la minimizzazione assoluta 
 del tempo di esecuzione può essere ottenuta solamente risolvendo unitamente le 
 fasi di mapping, scheduling e floorplanning (per verificare che la soluzione 
 sia fisicamente implementabile). In generale, la risoluzione separata delle fasi, in 
@@ -493,7 +493,7 @@ ma non implementabile.\footnotemark}
 Un esempio di piazzamento di una soluzione ricavata tramite un algoritmo esatto 
 per il partizionamento e lo scheduling di task nel caso di 
 architettura con riconfigurazione monodimensionale è rappresentato in 
-figura \ref{fig:infeasiblePlacement}. Si ipotizzi che i requisiti di area per i 
+figura~\ref{fig:infeasiblePlacement}. Si ipotizzi che i requisiti di area per i 
 task $T_1$, $T_2$ e $T_3$ siano $1$, $2$, e $1$ colonne, rispettivamente. Inoltre, si
 ipotizzi che sia dato il seguente mapping: $\langle T_1, C_1 \rangle$, $\langle
 T_2, \{C_2, C_3\} \rangle$ e $\langle T_3, C_4 \rangle$. Dovendo piazzare un nuovo task 
@@ -657,7 +657,7 @@ di piazzamento dei moduli con rappresentazione tridimensionale.\footnotemark}
 
 \paragraph{Modello matematico}
 I moduli sono rappresentati nel modello come box di forma tridimensionale, come 
-mostrato in figura \ref{fig:boxModules}. Nella rappresentazione utilizzata, gli 
+mostrato in figura~\ref{fig:boxModules}. Nella rappresentazione utilizzata, gli 
 assi $x$ e $y$ identificano le due dimensioni spaziali (per il piazzamento del 
 modulo sulla scheda), mentre l'asse $t$ identifica la dimensione temporale 
 (ovvero il tempo di esecuzione). È importante quindi che i moduli vengano 
@@ -710,7 +710,7 @@ task software. Ad esempio, Mei et al.~propongono in
 \cite{MeiPartitioningScheduling} un approccio basato sulla combinazione di un 
 algoritmo genetico standard\footnote{Gli algoritmi genetici appartengono alle 
 meta-euristiche di tipo evolutivo ispirate al funzionamento di sistemi presenti 
-in natura, come rappresentato in figura \ref{fig:metaheuristicsClassification}.}
+in natura, come rappresentato in figura~\ref{fig:metaheuristicsClassification}.}
 con un'euristica basata su lista di priorità. Il loro metodo è adatto ad
 architetture riconfigurabili dinamicamente e risolve, oltre allo scheduling,
 anche il partizionamento dei task che compongono l'applicazione.
@@ -766,7 +766,7 @@ ottime o sub-ottime (nel caso si usi l'euristica).
 
 \subsubsection{Euristica di Banerjee}
 Nel lavoro di Banerjee et al.~\cite{BanerjeePhysicalConstraints}, lo stesso in 
-cui è presentata la formulazione \ac{ILP} vista nella sezione \ref{par:BanerjeeILP}, è 
+cui è presentata la formulazione \ac{ILP} vista nella sezione~\ref{par:BanerjeeILP}, è 
 descritto anche un metodo euristico per la risoluzione dei problemi di 
 partitionamento, scheduling e piazzamento fisico dei task rispettando i vincoli 
 architetturali.
@@ -864,12 +864,12 @@ controller}.\footnotemark}
 La seconda tecnica, usata come metodo di ottimizzazione locale per ridurre la 
 frammentazione, permette di trarre vantaggio da eventuali periodi di inattività 
 tra il termine di una riconfigurazione e l'esecuzione del task relativo. Un 
-esempio di applicazione di tale tecnica è mostrato in figura 
-\ref{fig:slackRecController}. Nella figura \ref{fig:slackRecController1} si può 
+esempio di applicazione di tale tecnica è mostrato in figura~\ref{fig:slackRecController}.
+Nella figura~\ref{fig:slackRecController1} si può 
 vedere come vi sia un tempo morto tra la riconfigurazione del task $T3$ e la sua 
 esecuzione, che rallenta l'inizio della riconfigurazione del task $T4$. Il task 
 $T3$ può quindi essere piazzato in una diversa posizione, come raffigurato in 
-figura \ref{fig:slackRecController2}, consentendo alla riconfigurazione del task 
+figura~\ref{fig:slackRecController2}, consentendo alla riconfigurazione del task 
 $T4$ di partire anticipatamente, senza che l'istante di fine esecuzione di $T3$ 
 sia influenzato dallo spostamento.
 
