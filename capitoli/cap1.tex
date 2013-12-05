@@ -26,7 +26,7 @@ Ethernet ecc.) e altre periferiche, collegati tramite BUS.
 Questa integrazione tuttavia apre una serie di problemi, tra cui elevato costo di 
 progettazione dei sistemi, bassa affidabilità e, ultimo ma non meno importante,
 necessità di controllare il consumo di energia; i problemi sopra citati possono
-essere risolti grazie all'impiego del  \emph{reconfigurable computing}.
+essere risolti grazie all'impiego del \emph{reconfigurable computing}.
 
 Con il termine \emph{reconfigurable computing} si intendono delle architetture hardware che 
 offrono la possibilità di essere riconfigurate per implementare qualsiasi funzionalità 
@@ -117,8 +117,8 @@ delle \acp{DPU}.}.
 \end{table}
 
 Le differenze tra il paradigma del reconfigurable computing e gli altri paradigmi di
-computazione sono illustrati da Nick Tredennick nella Tabella
-\ref{tab:TredennickClassificationScheme} \cite{TredennickClassification}: si può
+computazione sono illustrati da Nick Tredennick nella
+tabella~\ref{tab:TredennickClassificationScheme} \cite{TredennickClassification}: si può
 osservare che le architetture riconfigurabili offrono la possibilità di configurare sia le
 risorse per la computazione (\emph{configware}) sia gli algoritmi da eseguire
 (\emph{flowware}). Tale soluzione porta a un minore costo di progettazione e
@@ -268,8 +268,8 @@ riconfigurabile.
 \subsubsection{Modello}
 
 La specifica dell'applicazione da accelerare è data sotto forma di un grafo che
-rappresenta il flusso dei dati dell'applicazione, un \ac{DFG}. In Figura
-\ref{fig:taskGraphExample} è possibile vedere un esempio di \ac{DFG}. Il grafo che
+rappresenta il flusso dei dati dell'applicazione, un \ac{DFG}. In
+figura~\ref{fig:taskGraphExample} è possibile vedere un esempio di \ac{DFG}. Il grafo che
 rappresenta l'applicazione è composto da \emph{task}, che rappresentano unità
 computazionali. Il \ac{DFG} che rappresenta l'applicazione è nella forma
 $\langle S, P \rangle$, dove $S$ è l'insieme dei task (nodi del grafo) e $P$
@@ -355,8 +355,8 @@ sezione.
 \subsection{La fase di scheduling}
 \label{subsec:faseSchedulingIntro}
 L'obiettivo dello scheduler è assegnare i tempi di inizio e di fine dell'esecuzione ai
-task che compongono l'applicazione. Dato un task graph come quello in Figura
-\ref{fig:taskGraphExample}, le precedenze esplicitano relazioni produttore-consumatore,
+task che compongono l'applicazione. Dato un task graph come quello in
+figura~\ref{fig:taskGraphExample}, le precedenze esplicitano relazioni produttore-consumatore,
 ovvero un arco orientato $(i,j)$ simboleggia un trasferimento dell'output della
 computazione del task $i$ in memoria (locale o condivisa), per essere utilizzato
 successivamente come input per il task $j$; gli archi introducono quindi delle
@@ -390,11 +390,11 @@ banali.
 
 Il problema di fissare uno schedule per i task di un'applicazione è un classico esempio 
 di \ac{RCSP}; tale problema appartiene alla classe di complessità computazionale dei 
-problemi NP-difficili (si veda l'Appendice \ref{chap:appA} per un riepilogo delle classi 
+problemi NP-difficili (si veda l'appendice~\ref{chap:appA} per un riepilogo delle classi 
 di complessità computazionale); per questo tipo di problemi non si è ancora trovato un 
 algoritmo \emph{esatto} che riesca a risolvere questo problema in tempo 
-polinomiale, e si pensa che non ne esistano\footnote{Vedi la Sezione 
-\ref{sec:complessitaProblemi} per una sintesi sulla congettura $\mathcal{P} = 
+polinomiale, e si pensa che non ne esistano\footnote{Si veda la
+sezione~\ref{sec:complessitaProblemi} per una sintesi sulla congettura $\mathcal{P} = 
 \mathcal{NP}$.}.
 
 Oltre a questo, un'altra difficoltà che si incontra è che il problema dello scheduling 
@@ -407,11 +407,11 @@ problema.
 \subsubsection{Algoritmi utilizzabili}
 Esistono diversi algoritmi per risolvere il problema dello scheduling, alcuni esatti 
 basati sulla \ac{PLI}, altri basati su euristiche più o meno complesse che ricercano 
-soluzioni sub-ottime, entrambi i tipi saranno discussi più nel dettaglio nel Capitolo 
-\ref{chap:SOA}, in particolare nella Sezione \ref{sec:algoritmiProposti}.
+soluzioni sub-ottime, entrambi i tipi saranno discussi più nel dettaglio 
+capitolo~\ref{chap:SOA}, in particolare nella sezione~\ref{sec:algoritmiProposti}.
 Lo svantaggio a livello pratico degli algoritmi esatti è l'eccessivo tempo 
 impiegato per lo scheduling di applicazioni non banali, limitazione che tende a far 
 preferire l'uso di metodi non esatti ma più veloci quali le euristiche, per ottenere 
 risultati buoni in tempi accettabili; in questo lavoro l'algoritmo proposto per la fase di 
 scheduling è di tipo euristico, le motivazioni per questa scelta verranno illustrate nel 
-Capitolo \ref{chap:approccio}.
+capitolo~\ref{chap:approccio}.
