@@ -174,8 +174,41 @@ I dati sulla configurazione vengono scritti dal bitstream a questi registri, suc
 vengono copiati dalla logica di configurazione nelle memorie statiche.
 
 
-% TODO qualcosa di più sulla riconfigurazione (aree, regioni di clock, etc.)
+\begin{figure}[t]
+ \begin{minipage}[b]{0.4\textwidth}
+  \begin{center}
+   $\vcenter{\includegraphics[width=0.7\linewidth]
+{capitoli/figure/cap1/Riconfigurazione1D.pdf}}$
+  \end{center}
+ \end{minipage}
+ \hfill
+ \begin{minipage}[b]{0.4\textwidth}
+ \begin{center}
+    $\vcenter{\includegraphics[width=0.45\linewidth]
+{capitoli/figure/cap1/Riconfigurazione2D.pdf}}$
+ \end{center}
+ \end{minipage}
+ \caption[Riconfigurazione 1D e 2D]{Riconfigurazione 1D e 2D.\footnotemark}
+ \label{fig:riconfigurazione1D2D}
+\end{figure}
 
+\footnotetext{Immagine tratta da \cite{Redaelli2DILP}.}
+
+\paragraph{Riconfigurazione a due dimensioni}
+Le schede \ac{FPGA} moderne riescono a sfruttare, oltre alla riconfigurazione parziale
+dinamica, la riconfigurazione bidimensionale, che permette di aumentare il grado di
+libertà del designer.
+
+La differenza tra la riconfigurazione a singola dimensione (per colonne) e la
+riconfigurazione a due dimensioni è mostrata in figura~\ref{fig:riconfigurazione1D2D}.
+Nella riconfigurazione a una dimensione, un modulo che occupa soltanto parte di una
+colonna richiede la riconfigurazione di tutta la colonna, il che proibisce il piazzamento
+di altri moduli con colonne sovrapposte al primo. La riconfigurazione a due dimensioni
+permette, invece, di piazzare i due moduli in un'area della scheda molto più compatta.
+
+L'aumento di versatilità derivante dall'uso della riconfigurazione a due dimensioni
+richiede però l'utilizzo di tool che riescano a sfruttare efficacemente questa
+potenzialità.
 
 
 \acrodef{DCT}{Discrete Cosine Transform}
