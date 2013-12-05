@@ -135,8 +135,7 @@ riconfigurabile e di gestire le comunicazioni provenienti da e dirette verso l'e
 Le informazioni per la (ri)configurazione che devono essere ``caricate'' sul dispositivo
 sono contenute in un file chiamato \emph{bitstream}.
 
-% TODO struttura bitstream?
-
+\paragraph{Tipi di riconfigurazione}
 Esempi molto diffusi di dispositivi riconfigurabili sono le schede \emph{\ac{FPGA}},
 introdotte attorno alla metà degli anni '80, che contengono sia logica che comunicazioni
 programmabili. La logica può essere configurata per rappresentare delle porte logiche
@@ -155,7 +154,29 @@ può essere riconfigurata tramite un bitstream parziale, senza interrompere i ta
 esecuzione su altre regioni del dispositivo.
 \end{enumerate}
 
+\paragraph{Bitstream}
+Il bitstream è un file binario che contiene i dati da copiare nelle celle di memoria RAM
+statica che contengono la configurazione. In un'architettura provvista di
+riconfigurazione parziale dinamica, il bitstream può essere di due tipi:
+\begin{itemize}
+ \item completo, utilizzato per l'inizializzazione della configurazione del dispositivo;
+ \item parziale, che configura soltanto alcune porzioni dell'area riconfigurabile.
+\end{itemize}
+
+La configurazione avviene per mezzo di interfacce, che variano a seconda dell'\ac{FPGA}
+che si utilizza: un'interfaccia può essere basata su microcontrollori, sul caricamento
+della configurazione da schede compact flash, su un \ac{ICAP}, etc.
+
+A prescindere dal tipo di interfaccia utilizzato, il dispositivo possiede una
+\emph{logica di configurazione}, che interpreta il bitstream per poter configurare
+il dispositivo. Lo stato di tale logica è salvato all'interno di un insieme di \emph{registri di configurazione}.
+I dati sulla configurazione vengono scritti dal bitstream a questi registri, successivamente
+vengono copiati dalla logica di configurazione nelle memorie statiche.
+
+
 % TODO qualcosa di più sulla riconfigurazione (aree, regioni di clock, etc.)
+
+
 
 \acrodef{DCT}{Discrete Cosine Transform}
 
