@@ -221,18 +221,21 @@ mathescape]{c}
       public:
           // code...
           void addBusyInfo(const ScheduledTaskInfo & timeInfo);
-          bool isOverlapping(const FasterComponentPtr & elem,
-                             const ScheduledTaskInfo & timeInfo) const;
-          bool isComponentBusy(const FasterComponentPtr & elem,
-                               long int timestamp) const;
+          bool isOverlapping(
+               const FasterComponentPtr & elem,
+               const ScheduledTaskInfo & timeInfo
+          ) const;
+          bool isComponentBusy(
+               const FasterComponentPtr & elem,
+               long int timestamp) const;
           std::unordered_map<std::string, BusyInfoSeries_t> 
               getBusyComponentsGivenTime(long int timestamp) const;
           BusyInfoSeries_t getBusyInfoGivenComponentAndTime(
-            const FasterComponentPtr & elem,
-            long int timestamp) const;
+                           const FasterComponentPtr & elem,
+                           long int timestamp) const;
           long int getFirstAvailableTime(
-            const FasterComponentPtr & elem, 
-            long int timestamp, long int execTime) const;
+                   const FasterComponentPtr & elem, 
+                   long int timestamp, long int execTime) const;
           // code...
   };
 \end{minted}
@@ -282,8 +285,9 @@ mathescape]{c}
       public:
           // code...
           void addSchedulingTimeInfo(const ScheduledTaskInfo & timeInfo);
-          void addScheduledTaskInfo(const FasterTaskPtr & task,
-                  const ScheduledTaskInfo & info);
+          void addScheduledTaskInfo(
+               const FasterTaskPtr & task,
+               const ScheduledTaskInfo & info);
           long int computeMakespan() const;
   };
 \end{minted}
@@ -525,17 +529,17 @@ mathescape]{c}
   do {
     m_resolveDependencies();
     FasterTaskPtr bestTask;
-    bestTask = m_bestSchedulableAlgorithm->bestSchedulableTask 
-                            (m_schedulerData.readyTasksList);
+    bestTask = m_bestSchedulableAlgorithm->bestSchedulableTask(
+               m_schedulerData.readyTasksList);
     // code...
     ScheduledTaskInfo taskInfo;
     taskInfo = m_timeAssignmentAlgorithm->calculateSchedulingInfo(bestTask);
     m_schedulerData.scheduledTasksList.push_back(bestTask);
     m_lastScheduledTask = bestTask;
     m_schedulerOutput.addScheduledTaskInfo(bestTask, taskInfo);
-    m_schedulerData.readyTasksList.erase 
-                (std::find(m_schedulerData.readyTasksList.begin(), 
-                 m_schedulerData.readyTasksList.end(), bestTask));
+    m_schedulerData.readyTasksList.erase(
+                        std::find(m_schedulerData.readyTasksList.begin(), 
+                        m_schedulerData.readyTasksList.end(), bestTask));
     m_schedulerData.unscheduledTasksSet.erase(bestTask);
   } while (!m_schedulerData.unscheduledTasksSet.empty());
 \end{minted}
@@ -598,8 +602,8 @@ mathescape]{c}
       const SchedulerInput & m_schedulerInput;
     public:
       // constructor and destructor
-      virtual FasterTaskPtr bestSchedulableTask(const 
-        std::vector<FasterTaskPtr> & readyList) const = 0;
+      virtual FasterTaskPtr bestSchedulableTask(
+              const std::vector<FasterTaskPtr> & readyList) const = 0;
   };
 \end{minted}
 
@@ -668,8 +672,8 @@ mathescape]{c}
     return metrics;
   }
   // ...
-  float ScheduleRBPriorityHeuristic::m_computeLongestPath(const FasterTaskPtr & 
-                      task) const
+  float ScheduleRBPriorityHeuristic::m_computeLongestPath(
+        const FasterTaskPtr & task) const
   {
     const CriticalPathInfoMap_t & criticalPathInfo = 
             m_schedulerInput.getCriticalPathInfo();
@@ -682,8 +686,8 @@ mathescape]{c}
     return 1 / logSlack;
   }
   // ...
-  float ScheduleRBPriorityHeuristic::m_computeEST(const FasterTaskPtr & task) 
-                      const
+  float ScheduleRBPriorityHeuristic::m_computeEST(
+        const FasterTaskPtr & task) const
   {
     const CriticalPathInfoMap_t & criticalPathInfo = 
             m_schedulerInput.getCriticalPathInfo();
@@ -691,11 +695,11 @@ mathescape]{c}
     return info.asap == 0 ? info.asap : ::log2(info.asap);
   }
   // ...
-  float ScheduleRBPriorityHeuristic::m_computeEFT(const FasterTaskPtr & task) 
-                      const
+  float ScheduleRBPriorityHeuristic::m_computeEFT(
+        const FasterTaskPtr & task) const
   {
     const CriticalPathInfoMap_t & criticalPathInfo = 
-            m_schedulerInput.getCriticalPathInfo();
+          m_schedulerInput.getCriticalPathInfo();
     CriticalPathInfo info = criticalPathInfo.find(task)->second;
     long int asap = info.asap;
     long int execTime = m_helperAlgorithms.computeExecTime(task);
@@ -719,8 +723,8 @@ mathescape]{c}
       const SchedulerInput & m_schedulerInput;
     public:
       // constructor and destructor
-      virtual ScheduledTaskInfo calculateSchedulingInfo(const 
-          FasterTaskPtr & task) const = 0;
+      virtual ScheduledTaskInfo calculateSchedulingInfo(
+              const FasterTaskPtr & task) const = 0;
   };
 \end{minted}
 
@@ -733,22 +737,22 @@ mathescape]{c}
   class ScheduleRBASAPAlgorithm : public SchedulerTimeAssignmentAlgorithm {
     private:
       // code...
-      ScheduledTaskInfo m_calculateSchedulingInfoProcessingTask(const 
-          FasterTaskPtr & procTask) const;
-      ScheduledTaskInfo m_calculateSchedulingInfoCommunicationTask(const 
-          FasterTaskPtr & commTask) const;
-      ScheduledTaskInfo m_calculateSchedulingInfoReconfigurationTask(const 
-          FasterTaskPtr & reconfTask) const;
-      ScheduledTaskInfo m_calculateSchedulingInfoCommWriteTask(const 
-          FasterCommunicationWriteTaskPtr & commWriteTask) const;
-      ScheduledTaskInfo m_calculateSchedulingInfoCommReadTask(const 
-          FasterCommunicationReadTaskPtr & commReadTask) const;
+      ScheduledTaskInfo m_calculateSchedulingInfoProcessingTask(
+                        const FasterTaskPtr & procTask) const;
+      ScheduledTaskInfo m_calculateSchedulingInfoCommunicationTask(
+                        const FasterTaskPtr & commTask) const;
+      ScheduledTaskInfo m_calculateSchedulingInfoReconfigurationTask(
+                        const FasterTaskPtr & reconfTask) const;
+      ScheduledTaskInfo m_calculateSchedulingInfoCommWriteTask(
+                        const FasterCommunicationWriteTaskPtr & commWriteTask) const;
+      ScheduledTaskInfo m_calculateSchedulingInfoCommReadTask(
+                        const FasterCommunicationReadTaskPtr & commReadTask) const;
       void m_allocateMemoryForTask(const FasterTaskPtr & task) const;
       // code...
     public:
       // constructor and destructor
-      virtual ScheduledTaskInfo calculateSchedulingInfo(const 
-          FasterTaskPtr & task);
+      virtual ScheduledTaskInfo calculateSchedulingInfo(
+              const FasterTaskPtr & task);
   };
 \end{minted}
 Dal codice precedente è possibile vedere le dichiarazioni dei metodi che 
@@ -772,11 +776,11 @@ mathescape]{c}
   class ScheduleRBCommunicationPolicy {
     public:
       // code...
-      ScheduledTaskInfo scheduleCommunicationTask(const
-          FasterCommunicationTaskPtr & commTask, long int precTime);
+      ScheduledTaskInfo scheduleCommunicationTask(
+                        const FasterCommunicationTaskPtr & commTask, long int precTime);
     private:
-      void m_removeConsumers(const
-          FasterCommunicationTaskPtr & commTask, bool scheduledOnBus);
+      void m_removeConsumers(
+           const FasterCommunicationTaskPtr & commTask, bool scheduledOnBus);
       // other private members
   };
 \end{minted}
@@ -795,22 +799,25 @@ gestisce l'allocazione della memoria per i processing task che compongono l'appl
 \newline
 \begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
   typedef std::unordered_map<FasterTaskPtr, MemoryOccupationInfo,
-        utilities::HashUtility<FasterTaskPtr> > MemoryOccupationMap_t;
+          utilities::HashUtility<FasterTaskPtr> > MemoryOccupationMap_t;
   class SchedulerMemoryManager {
     public:
       // constructor and destructor
-      void addMemoryInfo(const FasterTaskPtr & task,
-                         const MemoryOccupationInfo & info);
-      void addMemoryInfo(const FasterTaskPtr & task,
-                         unsigned long base_addr,
-                         unsigned long data_size,
-                         TaskSet_t consumersSet);
-      void allocateMemoryForTask(const FasterTaskPtr & task,
-                                 unsigned long data_size,
-                                 const TaskSet_t & consumersSet);
+      void addMemoryInfo(
+           const FasterTaskPtr & task,
+           const MemoryOccupationInfo & info);
+      void addMemoryInfo(
+           const FasterTaskPtr & task,
+           unsigned long base_addr,
+           unsigned long data_size,
+           TaskSet_t consumersSet);
+      void allocateMemoryForTask(
+           const FasterTaskPtr & task,
+           unsigned long data_size,
+           const TaskSet_t & consumersSet);
       void removeConsumer(const FasterTaskPtr & consumer);
       MemoryOccupationInfo getMemoryOccupationInfo(
-              const FasterTaskPtr & task) const;
+                           const FasterTaskPtr & task) const;
       MemoryOccupationMap_t getMemoryOccupationMap() const;
       void setMemoryOccupationMap(const MemoryOccupationMap_t & map);
     private:
