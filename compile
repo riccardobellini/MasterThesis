@@ -1,0 +1,3 @@
+#!/bin/bash
+# use latexmk to compile the document and generate the pdf
+latexmk -pdf -latexoption=--shell-escape tesi.tex
