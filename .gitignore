@@ -12,6 +12,8 @@
 *.toc
 *.backup
 *~
+*.fls
+*.fdb_latexmk
 !SlackRecController1.pdf
 !SlackRecController2.pdf
 !FASTERNamespaces.pdf
