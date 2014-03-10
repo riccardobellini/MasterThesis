@@ -19,6 +19,7 @@ La sezione~\ref{sec:osservazioniConclusiveSoA} riepiloga quanto visto in questo 
 e fornisce le motivazioni alla base dello sviluppo dell'algoritmo di scheduling
 trattato in questa tesi.
 
+\newpage
 
 \section[Il progetto \acs{FASTER}]{Il progetto \acs{FASTER}}
 \label{sec:progettoFASTER}
@@ -41,7 +42,7 @@ raggiungere gli obiettivi prefissati.
 
 \subsection{Introduzione}
 \label{subsec:fasterIntro}
-\acs{FASTER} è l'acronimo di \emph{\acl{FASTER}}, un progetto\footnote{Sito del 
+\acs{FASTER} è l'acronimo di \emph{\ac{FASTER}}, un progetto\footnote{Sito del 
 progetto: \url{http://www.fp7-faster.eu/}.} organizzato dalla comunità europea 
 che coinvolge diverse aziende e atenei,\footnote{I collaboratori del progetto 
 sono: l'\ac{ICS} di \ac{FORTH} in Grecia, Chalmers University of Technology in 
@@ -55,7 +56,7 @@ comunità europea.
 L'ambito di applicazione del progetto \ac{FASTER} sono le architetture 
 riconfigurabili; in particolare \ac{FASTER} è pensato, come il nome 
 suggerisce, per facilitare la definizione e l'uso di sistemi implementati in 
-hardware \cite{FasterPaper}.
+hardware riconfigurabile \cite{FasterPaper}.
 
 Sfruttando le potenzialità delle promettenti architetture hardware basate sulla 
 logica riconfigurabile, introdotte nel capitolo~\ref{chap:intro}, si possono 
@@ -68,8 +69,8 @@ a quelle di un'esecuzione su hardware dedicato.
 Si pensi, a titolo esemplificativo, a un \ac{NIDS}, il cui scopo è eseguire la 
 scansione di tutti i pacchetti in ingresso per rilevare possibili minacce, e 
 tale scansione deve essere sufficientemente veloce da non costituire un collo 
-di bottiglia e rallentare così le comunicazioni. Inoltre, nuove regole devono 
-essere aggiunte costantemente, con il crescere della lista delle minacce. In 
+di bottiglia e rallentare così le comunicazioni; inoltre, nuove regole devono 
+essere aggiunte costantemente con il crescere della lista delle minacce. In 
 risposta a questi requisiti di velocità e dinamicità dell'applicazione, la 
 logica riconfigurabile rappresenta una soluzione per il soddisfacimento di 
 entrambi i requisiti.
@@ -82,7 +83,7 @@ un'applicazione software, per le seguenti ragioni:
 \begin{itemize}
  \item il supporto di tool esterni per il design del sistema è ancora 
 ``elementare'';
- \item le riconfigurazioni hanno un grande impatto in termini di overhead sul 
+ \item le riconfigurazioni hanno un considerevole impatto in termini di overhead sul 
 tempo di esecuzione dell'applicazione, pertanto devono essere utilizzate con 
 attenzione;
  \item la gestione delle risorse disponibili sulla scheda (anche a run-time) è 
@@ -122,17 +123,19 @@ fissati, è sufficiente lanciare una riconfigurazione con un bitstream di
 dimensioni molto ridotte, che vada a modificare solamente i buchi lasciati in 
 precedenza.}.
 
+%TODO aggiungere tabella presente nel paper su dprds
+
 \paragraph{Contributi di \ac{FASTER}}
 \ac{FASTER} si distingue rispetto ai lavori precedentemente sviluppati in 
 quanto ha come obiettivo l'introduzione della riconfigurazione parziale 
 dinamica come un concetto di design esplicito, fornendo anche i metodi per 
 supportare la riconfigurazione a run-time nell'intera metodologia di design.
-Il progetto \ac{FASTER} quindi, deve possedere le seguenti caratteristiche:
+Il progetto \ac{FASTER} quindi, possiede le seguenti caratteristiche:
 \begin{enumerate}
- \item deve fornire supporto per la riconfigurazione parziale 
+ \item fornisce supporto per la riconfigurazione parziale 
 dinamica, sia region-based che micro-riconfigurazione, in maniera trasparente 
 all'utente;
- \item deve fornire un framework per il design di un sistema su logica 
+ \item fornisce un framework per il design di un sistema su logica 
 riconfigurabile, gestendo l'analisi, la sintesi e la verifica delle soluzioni 
 ottenute.
 \end{enumerate}
@@ -218,19 +221,19 @@ dell'applicazione annotata e dalla descrizione dell'architettura target, riesce
 a derivare un bitfile utilizzabile per configurare l'architettura ed eseguire 
 l'applicazione tramite un runtime manager.
 
-L'approccio adottato da \ac{FASTER} prevede che i vari componenti del framework 
-si interfaccino tra loro mediante l'uso di file XML. L'input di un progetto 
-\ac{FASTER} è costituito dall'applicazione da sintetizzare, che può 
-essere scritta in un linguaggio ad alto livello (ad esempio, il linguaggio C) e 
-provvista di annotazioni, ad esempio in formato OpenMP,\footnote{OpenMP è un 
-formato standard per la specifica di applicazioni parallele, che permette di 
-specificare quali funzioni di un'applicazione sono parallelizzabili e di 
-suddividere l'applicazione nei vari task.} che ne consentono la suddivisione 
-iniziale in task e dalla descrizione delle funzionalità di riconfigurazione a 
-disposizione dell'architettura. Oltre all'applicazione possono essere presenti 
-degli attributi specificati dal designer che impongono vincoli particolari 
-all'applicazione, quali ad esempio scadenze nell'esecuzione oppure una 
-richiesta in termini di throughput.
+L'approccio adottato da \ac{FASTER} prevede che i vari componenti del framework
+si interfaccino tra loro mediante l'uso di file XML. L'input di un progetto
+\ac{FASTER} è costituito dall'applicazione da sintetizzare, che può essere
+scritta in un linguaggio ad alto livello (ad esempio il linguaggio C) e
+provvista di annotazioni, ad esempio in formato OpenMP,\footnote{OpenMP è un
+  formato standard per la specifica di applicazioni parallele, che permette di
+  specificare quali funzioni di un'applicazione sono parallelizzabili e di
+suddividere l'applicazione nei vari task.} che ne consentono la suddivisione
+iniziale in task; altro dato in input \`e la descrizione delle funzionalità di
+riconfigurazione a disposizione dell'architettura. Oltre all'applicazione
+possono essere presenti degli attributi specificati dal designer che impongono
+vincoli particolari all'applicazione, quali ad esempio scadenze nell'esecuzione
+oppure una richiesta in termini di throughput.
 
 \paragraph{High-level analysis}
 La prima fase del flusso di lavoro prevede l'analisi ad alto livello 
@@ -253,8 +256,8 @@ riutilizzare uno o più moduli senza fare uso di riconfigurazione e guadagnando
 quindi in termini di tempo di esecuzione.
 I core possono essere di due tipi:
 \begin{enumerate}
- \item \emph{statici}, moduli configurati staticamente e non riconfigurabili 
-durante l'esecuzione;
+ \item \emph{statici}, moduli configurati staticamente e non soggetti a
+   riconfigurazioni durante l'esecuzione (ad esempio core IP);
  \item \emph{riconfigurabili}, i quali a loro volta si dividono in:
   \begin{itemize}
    \item \emph{region-based}, in cui l'intero modulo viene riconfigurato;
@@ -285,7 +288,7 @@ caratterizzati dalla stessa implementazione non necessitano di riconfigurazione
 dell'area.
 \end{itemize}
 Obiettivo di questa fase è ottenere uno scheduling \emph{feasible} che abbia il 
-minore makespan possibile, non necessariamente il minimo assoluto.
+minore makespan possibile.
 
 Il floorplanner viene eseguito in questa fase e si occupa del piazzamento dei 
 moduli sull'area della scheda \ac{FPGA}; vengono definiti i vincoli spaziali e 
@@ -315,7 +318,7 @@ si divide sono state descritte brevemente.
 Nella prossima sezione ci si concentrerà sul lavoro oggetto di questa tesi, 
 ovvero la fase di baseline scheduling del progetto; verranno presentate alcune 
 soluzioni presenti nello stato dell'arte riguardanti questo problema, con 
-relativi pregi e difetti di ognuna.
+relativi pregi e difetti.
 
 
 \section{Algoritmi proposti}
@@ -330,10 +333,10 @@ $\mathcal{NP}$-difficili. Tutte le soluzioni proposte appartengono a una
 tra queste categorie di algoritmi:
 \begin{enumerate}
  \item \emph{algoritmi esatti} o \emph{ottimi}, che permettono di ricavare la 
-soluzione ottima, tramite l'impiego di opportune strutture matematiche o di 
+miglior soluzione esistente, tramite l'impiego di opportune strutture matematiche o di 
 formulazioni particolari del problema;
  \item \emph{algoritmi euristici}, che in generale portano ad ottenere 
-soluzioni subottime. Gli algoritmi euristici si possono suddividere a loro 
+soluzioni sub-ottime. Gli algoritmi euristici si possono suddividere a loro 
 volta in sottocategorie in base al loro funzionamento, tra le più importanti 
 ricordiamo:
  \begin{itemize}
@@ -344,7 +347,7 @@ comportamento di sistemi presenti in natura.
  \end{itemize}
 \end{enumerate}
 
-\begin{figure}[b!]
+\begin{figure}[t!]
  \begin{center}
   \includegraphics[width=0.7\textwidth]
   {capitoli/figure/cap2/MetaheuristicsClassification.pdf}
@@ -363,7 +366,8 @@ La classificazione dei diversi tipi di algoritmi meta-euristici è illustrata in
 figura~\ref{fig:metaheuristicsClassification}. Diversi lavori forniscono 
 un'analisi di questo tipo di algoritmi euristici, ad esempio lo studio condotto 
 da Bianchi et al. \cite{SurveyMetaheuristicSCOP} analizza l'impiego delle 
-meta-euristiche per la risoluzione di \acp{SCOP} o l'analisi effettuata da Blum 
+meta-euristiche per la risoluzione di problemi di ottimizzazione combinatoria stocastica
+(in inglese \aclp{SCOP}) o l'analisi effettuata da Blum 
 et al. \cite{MetaheuristicCombinatorialOptimization} per problemi di 
 ottimizzazione combinatoria.
 
@@ -378,7 +382,8 @@ euristici.
 \label{sec:algoritmiEsatti}
 Come esposto nell'introduzione a questa sezione, gli algoritmi esatti 
 permettono di ottenere la soluzione ottima in assoluto. Un algoritmo esatto, 
-applicato a un problema di ottimizzazione combinatoria qual è un \ac{RCSP}, 
+applicato a un'istanza di un problema di ottimizzazione combinatoria qual è un
+problema di scheduling di task su un numero vincolato di unit\`a computazionali, 
 permette di ottenere lo schedule caratterizzato dal minimo makespan possibile. 
 
 A prescindere dal particolare algoritmo utilizzato per risolvere il problema, 
@@ -437,7 +442,7 @@ e $\mathbf{b}$ e della matrice $\mathbf{A}$ sono numeri interi.
 I vincoli di interezza possono anche riguardare soltanto alcune delle variabili o 
 dei coefficienti, in tal caso si parla di problemi \ac{MILP}.
 
-Nel caso dello scheduling di un grafo di task, le formulazioni proposte nello 
+Nel caso dello scheduling di un task graph, le formulazioni proposte nello 
 stato dell'arte presentano modelli con vincoli di interezza per tutte le 
 variabili e i coefficienti, sono quindi problemi di programmazione lineare 
 intera; i lavori di questo tipo sono descritti nella sezione seguente.
@@ -461,7 +466,7 @@ minimizzazione assoluta del tempo di esecuzione. La scelta tra queste due
 possibilità implica il dover fare un compromesso tra l'accuratezza della 
 soluzione, che può non essere la migliore se i problemi sono risolti 
 separatamente, e la dimensione dello spazio delle soluzioni possibili, che 
-cresce nel caso in cui i problemi si risolvano congiuntamente.
+cresce in maniera esponenziale nel caso in cui i problemi si risolvano congiuntamente.
 
 \paragraph{Modello \acs{ILP} di Banerjee}
 \label{par:BanerjeeILP}
@@ -470,10 +475,10 @@ articolo \cite{BanerjeePhysicalConstraints}, un modello \ac{ILP} che prende in
 considerazione una tecnica utilizzata anche in un altro loro lavoro 
 \cite{BanerjeeReconfigurationOverhead} nell'ambito delle architetture 
 riconfigurabili per ridurre il tempo di esecuzione, dato il considerevole 
-overhead introdotto dalle riconfigurazioni che devono essere eseguite: il 
+over\-head introdotto dalle riconfigurazioni che devono essere eseguite: il 
 \emph{configuration prefetching}. Per ridurre il significativo overhead delle 
-riconfigurazioni, il configuration prefetching scompone un task nelle componenti 
-di riconfigurazione e di esecuzione. In questo modo si permette al componente 
+riconfigurazioni, il configuration prefetching scompone un task in due componenti
+separate, di riconfigurazione e di esecuzione. In questo modo si permette al componente 
 relativo alla riconfigurazione di essere eseguito separatamente dal task di 
 computazione che segue, eliminando le dipendenze dai dati rappresentate dagli 
 archi entranti nel task orginale.
@@ -508,14 +513,14 @@ ipotizzi che sia dato il seguente mapping: $\langle T_1, C_1 \rangle$, $\langle
 T_2, \{C_2, C_3\} \rangle$ e $\langle T_3, C_4 \rangle$. Dovendo piazzare un nuovo task 
 $T_4$, il cui requisito di area è pari a due colonne, un algoritmo che non 
 considera le posizioni in cui vengono piazzati i vari task, vedrebbe che al 
-tempo $t_2$ vi sono due colonne libere; tuttavia, non essendo colonne 
+tempo $t_2$ vi sono due colonne libere; tuttavia, non essendo $C_1$ e $C_4$ colonne 
 adiacenti, il piazzamento non è possibile. Da questa situazione si evince che 
 la fattibilità del piazzamento lineare non è garantita dall'utilizzo di un 
 algoritmo esatto.
 
 \subparagraph{Modello e vincoli}
 Il modello \ac{ILP} proposto nel loro lavoro prevede quindi la presenza di $n$ 
-task che possono avere più implementazioni possibili, sia di tipo SW che HW. 
+task che possono avere più implementazioni differenti, sia di tipo SW che HW. 
 Nel caso delle implementazioni di tipo HW, ciascuna di esse ha un proprio 
 requisito in termini di numero di colonne richieste.\footnote{Ricordiamo che 
 poichè l'architettura supporta la riconfigurazione solamente a una dimensione, 
@@ -545,7 +550,7 @@ La principale limitazione del lavoro proposto in
 adatto solo ad architetture che supportano la riconfigurazione parziale a una 
 dimensione con un singolo controllore di riconfigurazione, un tipo di 
 architettura molto semplice rispetto ai dispositivi utilizzabili oggigiorno,
-nei quali è possibile sfruttare l'utilizzo della riconfigurazione 2D. 
+nei quali è possibile sfruttare l'impiego della riconfigurazione 2D. 
 Inoltre, non sono considerate alcune caratteristiche sfruttabili grazie ai 
 dispositivi aventi riconfigurazione parziale dinamica, ovvero il \emph{riutilizzo 
 dei moduli} ed eventuali tecniche per evitare un'eccessiva \emph{frammentazione} 
@@ -612,7 +617,7 @@ Alcune variabili del modello \ac{ILP} proposte in \cite{Redaelli1DILP} sono
 adattate per supportare la bidimensionalità dell'architettura; gli indici che 
 identificano la posizione di un task (o l'occupazione temporale di una certa 
 area della scheda) sono quindi due, uno per la colonna più a sinistra e uno per 
-la riga più in basso dell'area decisa per il piazzamento del task.
+la riga più in basso dell'area stabilita per il piazzamento del task.
 
 
 \paragraph{Limitazioni formulazioni \acs{ILP}}
@@ -624,7 +629,7 @@ crescere della complessità del modello, il costo in termini di tempo d'esecuzio
 del \emph{solver \ac{ILP}} aumenta esponenzialmente.
 
 A titolo esemplificativo della complessità instrinseca dei problemi di programmazione
-intera, come riportato in \cite{Redaelli2DILP}, il tempo impiegato per risolvere in 
+lineare intera, come riportato in \cite{Redaelli2DILP}, il tempo impiegato per risolvere in 
 maniera ottima un'istanza del problema con $10$ task da mappare su una 
 \ac{FPGA} con $5$ righe, $5$ colonne e $2$ controllori di riconfigurazione è di 
 $39$ giorni, troppo per essere applicabile ad esempi concreti.
