@@ -2,17 +2,18 @@
 \label{chap:intro}
 \vspace{1cm}
 L'obiettivo di questo capitolo è fornire al lettore un'introduzione agli argomenti 
-trattati nel corso della tesi, oltre alle motivazioni e a una panoramica del contesto in 
+trattati nel corso della tesi, alle motivazioni e a una panoramica del contesto in 
 cui si inquadra questo lavoro.
 
-La Sezione \ref{sec:reconfComp} contiene una descrizione dell'area generale in cui si 
+La sezione \ref{sec:reconfComp} contiene una descrizione dell'area generale in cui si 
 svolge il lavoro, presentando i concetti fondamentali alla base del \emph{reconfigurable 
 computing}.
 
-La Sezione \ref{sec:definizioneProblema} descrive quindi la problematica dello 
+La sezione \ref{sec:definizioneProblema} descrive quindi la problematica dello 
 \emph{scheduling}, oggetto del lavoro, alla luce di quanto descritto nella sezione 
 precedente.
 
+\newpage
 
 \section{Reconfigurable computing}
 \label{sec:reconfComp}
@@ -50,7 +51,7 @@ di tenere le istruzioni dei programmi e i relativi dati nella memoria RAM. Un ca
 questo tipo contiene una \ac{ISA}\footnote{Il termine \acl{ISA} viene usato per descrivere
 una serie di caratteristiche dell'architettura di un computer, ad esempio le istruzioni
 a disposizione, i registri, l'architettura della memoria, le modalità di indirizzamento, etc.}
-e può memorizzare un programma composto da un insieme di queste istruzioni che guideranno
+e può memorizzare un programma composto da un insieme di istruzioni che guideranno
 la computazione. Contrariamente alle architetture precedenti, che potevano eseguire
 solamente un programma preimpostato, il vantaggio dell'architettura general-purpose consiste
 nella possibilità di eseguire codice arbitrario.
@@ -61,7 +62,7 @@ flessibilità a discapito però delle prestazioni che può fornire, il modello
 application-specific si posiziona all'estremo opposto rispetto al primo: è infatti
 caratterizzato da elevate prestazioni e da un basso consumo di potenza. Questo modello
 computazionale viene realizzato mediante l'impiego di componenti chiamati \acp{ASIC},
-dei circuiti integrati -progettati per svolgere un'unica funzionalità. Questo guadagno
+dei circuiti integrati progettati per svolgere un'unica funzionalità. Questo guadagno
 in prestazioni comporta tuttavia uno svantaggio in termini di costi di produzione e,
 naturalmente, una minore flessibilità.
 
@@ -140,14 +141,15 @@ programmabili. La logica può essere configurata per rappresentare delle porte l
 oppure per sintetizzare dei core \ac{IP}.
 
 Inizialmente, il reconfigurable computing veniva utilizzato per realizzare prototipi
-economici di soluzioni hardware. Continui progressi tecnologici hanno portato
-a un'evoluzione della fase di riconfigurazione, qui descritta:
+economici di soluzioni hardware, mentre oggigiorno non \`e raro trovare in commercio
+controllori basati su FPGA. Continui progressi tecnologici hanno portato infatti
+a un'evoluzione della fase di riconfigurazione, in seguito descritta:
 \begin{enumerate}
  \item \emph{riconfigurazione a Compile Time}: il dispositivo è configurato soltanto
 dopo la fase di design, prima dell'esecuzione dell'applicazione;
  \item \emph{riconfigurazione a Run Time}: il dispositivo può essere riconfigurato
 interrompendo temporaneamente l'esecuzione dell'applicazione;
- \item \emph{riconfigurazione Parziale Dinamica}, in inglese \ac{PDR}: parte della logica
+ \item \emph{riconfigurazione Parziale Dinamica}, in inglese \ac{DPR}: parte della logica
 può essere riconfigurata tramite un bitstream parziale, senza interrompere i task in
 esecuzione su altre regioni del dispositivo.
 \end{enumerate}
@@ -168,7 +170,7 @@ della configurazione da schede compact flash, su un \ac{ICAP}, etc.
 A prescindere dal tipo di interfaccia utilizzato, il dispositivo possiede una
 \emph{logica di configurazione}, che interpreta il bitstream per poter configurare
 il dispositivo. Lo stato di tale logica è salvato all'interno di un insieme di \emph{registri di configurazione}.
-I dati sulla configurazione vengono scritti dal bitstream a questi registri, successivamente
+I dati sulla configurazione vengono scritti dal bitstream a questi registri e successivamente
 vengono copiati dalla logica di configurazione nelle memorie statiche.
 
 
@@ -190,7 +192,6 @@ vengono copiati dalla logica di configurazione nelle memorie statiche.
  \label{fig:riconfigurazione1D2D}
 \end{figure}
 
-\footnotetext{Immagine tratta da \cite{Redaelli2DILP}.}
 
 \paragraph{Riconfigurazione a due dimensioni}
 Le schede \ac{FPGA} moderne riescono a sfruttare, oltre alla riconfigurazione parziale
@@ -201,9 +202,12 @@ La differenza tra la riconfigurazione a singola dimensione (per colonne) e la
 riconfigurazione a due dimensioni è mostrata in figura~\ref{fig:riconfigurazione1D2D}.
 Nella riconfigurazione a una dimensione, un modulo che occupa soltanto parte di una
 colonna richiede la riconfigurazione di tutta la colonna, il che proibisce il piazzamento
-di altri moduli con colonne sovrapposte al primo. La riconfigurazione a due dimensioni
-permette, invece, di piazzare i due moduli in un'area della scheda molto più compatta.
+di altri moduli in colonne sovrapposte al primo. La riconfigurazione a due dimensioni
+permette, invece, di piazzare i due moduli in un'area della scheda molto più compatta e di
+incrementare potenzialmente il numero di moduli che possono essere accelerati se eseguiti
+su logica riconfigurabile.
 
+\footnotetext{Immagine tratta da \cite{Redaelli2DILP}.}
 L'aumento di versatilità derivante dall'uso della riconfigurazione a due dimensioni
 richiede però l'utilizzo di tool che riescano a sfruttare efficacemente questa
 potenzialità.
@@ -212,12 +216,17 @@ potenzialità.
 \acrodef{DCT}{Discrete Cosine Transform}
 
 \subsubsection{Applicazioni del reconfigurable computing}
+Dati i grandi vantaggi illustrati nei precedenti paragrafi derivanti dall'impiego delle
+architetture riconfigurabili, vengono ora presentati alcuni ambiti in cui questo tipo
+di architetture viene utilizzato per ottenere un incremento di prestazioni.
+
 \paragraph{Applicazioni multimediali}
 La caratteristica principale delle applicazioni multimediali è la grande quantità di dati che
 vengono processati, unitamente a dei requisiti di soft real-time. L'utilizzo del reconfigurable
-computing permette di velocizzare l'esecuzione di queste applicazioni. Oltre al miglioramento
+computing permette di velocizzare l'esecuzione di queste applicazioni e a fornire maggiori garanzie
+sul mantenimento dei vincoli di soft real-time. Oltre al miglioramento
 in termini di velocità di esecuzione, grazie all'impiego del reconfigurable computing si possono
-riutilizzare diversi moduli \ac{IP} comuni a diverse applicazioni, ad esempio codifica di
+riutilizzare alcuni moduli \ac{IP} comuni a diverse applicazioni, ad esempio codifica di
 Huffman, quantizzazione e \ac{DCT}.
 
 \paragraph{Calcolo e simulazioni scientifiche}
@@ -249,8 +258,9 @@ lavoro.
 
 \section{Definizione del problema}
 \label{sec:definizioneProblema}
-Le prossime sezioni illustreranno uno dei campi di applicazione delle architetture
-riconfigurabili, con le relative problematiche che emergono.
+In questa sezione vengono descritte le problematiche che emergono nella fase di de\-sign
+di un sistema basato su logica riconfigurabile, con particolare enfasi sul problema dello
+scheduling dei task.
 
 \subsection{Hardware/Software Co-design}
 Come visto nella precedente sezione, il reconfigurable computing offre elevate
@@ -264,12 +274,14 @@ differenziano da questi perchè parte dell'applicazione può essere eseguita da
 acceleratori hardware (ad esempio una porzione di scheda riconfigurabile FPGA), da
 hardware general-purpose oppure da \ac{DSP}.} stanno guadagnando popolarità.
 
-Il nuovo paradigma introdotto dalle architetture riconfigurabili procura vantaggi
-soprattutto nel design \ac{ESL}, in particolare l'\mbox{hardware/software} co-design.
-Inizialmente, le due parti (hardware e software) erano sviluppate separatamente e integrate
-successivamente, verso la fine del processo di design; tuttavia, in caso di problemi nella fase di
-integrazione, modificare opportunamente l'hardware o il software comportava delle difficoltà
-aggiuntive, complicando la manutenibilità del progetto.
+Il nuovo paradigma introdotto dalle architetture riconfigurabili procura
+vantaggi soprattutto nel design \ac{ESL}, in particolare
+l'\mbox{hardware/software} co-design. Inizialmente, l'applicazione era
+partizionata e le due componenti (hardware e software) venivano sviluppate
+separatamente e integrate successivamente, verso la fine del processo di
+design; tuttavia, in caso di problemi nella fase di integrazione, modificare
+opportunamente l'hardware o il software comportava delle difficoltà aggiuntive,
+complicando la manutenibilità del progetto e aumentandone i costi.
 
 L'HW-SW co-design è stato proposto per colmare le limitazioni della metodologia classica di
 sviluppo. Il concetto chiave dell'HW-SW co-design è la continua integrazione tra hardware e software
@@ -277,12 +289,12 @@ durante il flusso di sviluppo. In questo modo si facilita la verifica del softwa
 errori nella parte hardware.
 
 \paragraph{Reconfigurable computing in HW-SW co-design}
-Nonostante la maggiore integrazione, caratteristica dell'HW-SW co-design, il design dell'hardware
+Nonostante la maggiore integrazione caratteristica dell'HW-SW co-design, il design dell'hardware
 è un processo costoso in termini di tempo; lo sviluppo della parte hardware infatti include il
 design del sistema, il debug, la produzione dell'hardware e infine il test. L'uso di linguaggi
 di modellazione dell'hardware come SystemC \cite{SystemCBook} per simulare il comportamento del
 sistema non rappresentano una soluzione definitiva, principalmente perchè la velocità della
-simulazione rappresenta un problema.
+simulazione pu\`o impattare sull'analisi delle prestazioni.
 
 L'impiego di architetture riconfigurabili come prototipizzazione dell'hardware finale permette
 di abbattere i costi dovuti allo sviluppo e al debug di una piattaforma hardware e di ottenere
@@ -291,7 +303,7 @@ computing velocizza quindi il processo di HW-SW co-design, riducendo il time-to-
 
 \subsection{Design di hardware riconfigurabile}
 In questa sezione viene descritto come sia possibile progettare un sistema che esegue
-un'applicazione parzialmente accelerata sfruttando le potenzialità fornite dall'hardware
+un'applicazione parzialmente accelerata, sfruttando le potenzialità fornite dall'hardware
 riconfigurabile.
 
 \begin{figure}[ht]
@@ -320,12 +332,13 @@ riconfigurabile.
 \subsubsection{Modello}
 
 La specifica dell'applicazione da accelerare è data sotto forma di un grafo che
-rappresenta il flusso dei dati dell'applicazione, un \ac{DFG}. In
-figura~\ref{fig:taskGraphExample} è possibile vedere un esempio di \ac{DFG}. Il grafo che
-rappresenta l'applicazione è composto da \emph{task}, che rappresentano unità
-computazionali. Il \ac{DFG} che rappresenta l'applicazione è nella forma
+rappresenta il flusso di esecuzione dell'applicazione, chiamato \emph{task
+graph}: questo è composto da \emph{task},
+che rappresentano unità computazionali, ed \`e descritto nella forma
 $\langle S, P \rangle$, dove $S$ è l'insieme dei task (nodi del grafo) e $P$
-rappresenta le precedenze tra i task (archi del grafo).
+\`e l'insieme delle precedenze tra i task (archi del grafo).
+In figura~\ref{fig:taskGraphExample} è possibile vedere un esempio di
+task graph.
 
 A ogni task corrispondono una o più \emph{implementazioni}, ovvero diversi modi di
 realizzarne la funzionalità; le implementazioni possono essere di due tipi: software
@@ -334,8 +347,8 @@ esistere più versioni per ogni task date da differenti ottimizzazioni abilitate
 compilatore.
 
 Le implementazioni hardware non sono sempre assegnabili ai task; può capitare infatti
-che un particolare task non sia sintetizzabile a causa di particolari costrutti che
-contiene. Solitamente, possono esistere più implementazioni hardware per un singolo task,
+che un particolare task non sia sintetizzabile a causa di particolari costrutti al suo interno.
+Solitamente, possono esistere più implementazioni hardware per un singolo task,
 che differiscono per il tempo di esecuzione e l'area che occupano su scheda.
 
 Il dispositivo riconfigurabile viene abitualmente rappresentato come una griglia di \ac{RU}, 
@@ -388,8 +401,8 @@ design di sistemi riconfigurabili:
  rispettando le precedenze;
  \item \emph{floorplacement} o \emph{floorplanning}: in questa fase si identificano i 
 task che idealmente dovrebbero essere posti fisicamente ``vicini'' sulla scheda, ad 
-esempio per minimizzare la latenza della comunicazione, rispettando i vincoli di area 
-riconfigurabile a disposizione.
+esempio per minimizzare la latenza della comunicazione, e ne si determina il piazzamento
+fisico finale su scheda, rispettando i vincoli di area riconfigurabile a disposizione.
 \end{enumerate}
 Il lavoro descritto in questa tesi si concentra su una possibile soluzione per il 
 problema di scheduling dei task, che verrà spiegato più in dettaglio nella prossima 
@@ -414,20 +427,20 @@ scheda con due implementazioni diverse, è necessario riconfigurare quella porzi
 scheda nell'intervallo di tempo che intercorre tra l'esecuzione di $i$ e quella di $j$.
 
 \subsubsection{Obiettivi dello scheduling}
-Un \ac{DFG} rappresentante i task ammette diversi possibili schedule che ne rispettino le 
+Un generico task graph ammette diversi possibili schedule che ne rispettino le 
 precedenze. Sfortunatamente, non tutti gli schedule che soddisfano i vincoli di precedenza
 hanno uguale ``desiderabilità'' dal punto di vista della soluzione finale. Quindi, un buon
 algoritmo di scheduling deve scegliere quelli ottimi o sub-ottimi dal punto di vista di
 varie metriche, tra le più importanti si ricordano:
 \begin{itemize}
  \item \emph{makespan}: minimizzare la durata totale dell'esecuzione dello schedule;
- \item \emph{power consumption}; limitare il consumo di energia richiesto 
+ \item \emph{power consumption}: limitare il consumo di energia richiesto 
 dall'esecuzione dei task.
 \end{itemize}
 
 
 \subsubsection{Complessità}
-Come evidenziato da \eqref{formula:mappingScheduling}, lo spazio di ricerca è 
+Come evidenziato dalla formula \eqref{formula:mappingScheduling}, lo spazio di ricerca è 
 estremamente ampio, e la complessità delle fasi di mapping e scheduling se effettuate 
 contemporaneamente rende quasi impossibile risolvere (in maniera ottima) problemi non 
 banali.
