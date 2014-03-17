@@ -164,20 +164,20 @@ delle \acp{DPU}.}.
 \begin{center}
  \begin{tabular}{l | l}
  \hline
- \textbf{Historic computers} & \textbf{Programming source}\\
+ \textbf{Computer storici} & \textbf{Origine del programma}\\
  \hline
- resources fixed & none\\
- algorithms fixed & none\\
+ risorse fissate & -\\
+ algoritmi fissati & -\\
  \hline
- \textbf{von Neumann computers} & \textbf{Programming source}\\
+ \textbf{Macchina di von Neumann} & \textbf{Origine del programma}\\
  \hline
- resources fixed & none\\
- algorithms variable & software (instruction streams)\\
+ risorse fissate & -\\
+ algoritmi variabili & software (flusso di istruzioni)\\
  \hline
- \textbf{Reconfigurable computing} & \textbf{Programming source}\\
+ \textbf{Architetture riconfigurabili} & \textbf{Origine del programma}\\
  \hline
- resources variable & configware\\
- algorithms variable (anti machine) & flowware (data streams)
+ risorse variabili & configware\\
+ algoritmi variabili (anti macchina) & flowware (flusso di dati)
  \end{tabular}
  \caption{Classificazione dei paradigmi secondo Nick Tredennick.}
  \label{tab:TredennickClassificationScheme}
@@ -193,93 +193,95 @@ risorse per la computazione (\emph{configware}) sia gli algoritmi da eseguire
 maggiore flessibilità rispetto a circuiti dedicati; si osservano inoltre prestazioni
 superiori rispetto a soluzioni general-purpose.
 
-Viene ora illustrata la struttura generica di un'architettura riconfigurabile.
+%Viene ora illustrata la struttura generica di un'architettura riconfigurabile.
 
-\subsubsection{I dispositivi riconfigurabili}
-Le architetture riconfigurabili sono composte da un processore general-purpose e da una
-porzione di logica riconfigurabile; lo scopo del processore è controllare le
-attività (d'ora in avanti definite \emph{task}) in esecuzione sulla logica
-riconfigurabile e di gestire le comunicazioni provenienti da e dirette verso l'esterno.
-Le informazioni per la (ri)configurazione che devono essere ``caricate'' sul dispositivo
-sono contenute in un file chiamato \emph{bitstream}.
+\acrodef{ALU}{Arithmetic Logic Unit}
 
-\paragraph{Tipi di riconfigurazione}
-Esempi molto diffusi di dispositivi riconfigurabili sono le schede \emph{\ac{FPGA}},
-introdotte attorno alla metà degli anni '80, che contengono sia logica che comunicazioni
-programmabili. La logica può essere configurata per rappresentare delle porte logiche
-oppure per sintetizzare dei core \ac{IP}.
+\subsection{I dispositivi riconfigurabili}
+I dispositivi riconfigurabili, a differenza dei tradizionali microprocessori, permettono di modificare
+anche il \emph{data path}\footnote{Insieme di unit\`a funzionali che operano sui dati, ad esempio il
+registro delle istruzioni, il \emph{program counter} e unit\`a di elaborazione (\acs{ALU}).};
+a differenza di sistemi dedicati \ac{ASIC}, la funzionalit\`a che implementano pu\`o essere
+modicata caricandone opportunamente una nuova.
 
-Inizialmente, il reconfigurable computing veniva utilizzato per realizzare prototipi
-economici di soluzioni hardware, mentre oggigiorno non \`e raro trovare in commercio
-controllori basati su FPGA. Continui progressi tecnologici hanno portato infatti
-a un'evoluzione della fase di riconfigurazione, in seguito descritta:
-\begin{enumerate}
- \item \emph{riconfigurazione a Compile Time}: il dispositivo è configurato soltanto
-dopo la fase di design, prima dell'esecuzione dell'applicazione;
- \item \emph{riconfigurazione a Run Time}: il dispositivo può essere riconfigurato
-interrompendo temporaneamente l'esecuzione dell'applicazione;
- \item \emph{riconfigurazione Parziale Dinamica}, in inglese \ac{DPR}: parte della logica
-può essere riconfigurata tramite un bitstream parziale, senza interrompere i task in
-esecuzione su altre regioni del dispositivo.
-\end{enumerate}
+Uno degli esempi pi\`u conosciuti di logica riconfigurabile sono i chip \ac{FPGA},i cui dati di
+configurazione sono contenuti in un file chiamato \emph{bitstream}.
 
-\paragraph{Bitstream}
-Il bitstream è un file binario che contiene i dati da copiare nelle celle di memoria RAM
-statica che contengono la configurazione. In un'architettura provvista di
-riconfigurazione parziale dinamica, il bitstream può essere di due tipi:
-\begin{itemize}
- \item completo, utilizzato per l'inizializzazione della configurazione del dispositivo;
- \item parziale, che configura soltanto alcune porzioni dell'area riconfigurabile.
-\end{itemize}
+% TODO spostare in capitolo a parte su rec computing e flussi
+%\subsubsection{Tipi di riconfigurazione}
+%Inizialmente, il reconfigurable computing veniva utilizzato per realizzare prototipi
+%economici di soluzioni hardware, mentre oggigiorno non \`e raro trovare in commercio
+%controllori basati su FPGA. Continui progressi tecnologici hanno portato infatti
+%a un'evoluzione della fase di riconfigurazione, in seguito descritta:
+%\begin{enumerate}
+ %\item \emph{riconfigurazione totale}: il dispositivo è configurato soltanto
+%dopo la fase di design, prima dell'esecuzione dell'applicazione;
+ %\item \emph{riconfigurazione parziale statica}: il dispositivo può essere riconfigurato
+%interrompendo temporaneamente l'esecuzione dell'applicazione;
+ %\item \emph{riconfigurazione parziale dinamica}, in inglese \ac{DPR}: parte della logica
+%può essere riconfigurata tramite un bitstream parziale, senza interrompere i task in
+%esecuzione su altre regioni del dispositivo.
+%\end{enumerate}
 
-La configurazione avviene per mezzo di interfacce, che variano a seconda dell'\ac{FPGA}
-che si utilizza: un'interfaccia può essere basata su microcontrollori, sul caricamento
-della configurazione da schede compact flash, su un \ac{ICAP}, etc.
+% TODO spostare in capitolo a parte su rec computing e flussi
+%\paragraph{Bitstream}
+%Il bitstream è un file binario che contiene i dati da copiare nelle celle di memoria RAM
+%statica che contengono la configurazione. In un'architettura provvista di
+%riconfigurazione parziale dinamica, il bitstream può essere di due tipi:
+%\begin{itemize}
+ %\item completo, utilizzato per l'inizializzazione della configurazione del dispositivo;
+ %\item parziale, che configura soltanto alcune porzioni dell'area riconfigurabile.
+%\end{itemize}
 
-A prescindere dal tipo di interfaccia utilizzato, il dispositivo possiede una
-\emph{logica di configurazione}, che interpreta il bitstream per poter configurare
-il dispositivo. Lo stato di tale logica è salvato all'interno di un insieme di \emph{registri di configurazione}.
-I dati sulla configurazione vengono scritti dal bitstream a questi registri e successivamente
-vengono copiati dalla logica di configurazione nelle memorie statiche.
+%La configurazione avviene per mezzo di interfacce, che variano a seconda dell'\ac{FPGA}
+%che si utilizza: un'interfaccia può essere basata su microcontrollori, sul caricamento
+%della configurazione da schede compact flash, su un \ac{ICAP}, etc.
 
-
-\begin{figure}[t]
- \begin{minipage}[b]{0.4\textwidth}
-  \begin{center}
-   $\vcenter{\includegraphics[width=0.7\linewidth]
-{capitoli/figure/cap1/Riconfigurazione1D.pdf}}$
-  \end{center}
- \end{minipage}
- \hfill
- \begin{minipage}[b]{0.4\textwidth}
- \begin{center}
-    $\vcenter{\includegraphics[width=0.45\linewidth]
-{capitoli/figure/cap1/Riconfigurazione2D.pdf}}$
- \end{center}
- \end{minipage}
- \caption[Riconfigurazione 1D e 2D]{Riconfigurazione 1D e 2D.\footnotemark}
- \label{fig:riconfigurazione1D2D}
-\end{figure}
+%A prescindere dal tipo di interfaccia utilizzato, il dispositivo possiede una
+%\emph{logica di configurazione}, che interpreta il bitstream per poter configurare
+%il dispositivo. Lo stato di tale logica è salvato all'interno di un insieme di \emph{registri di configurazione}.
+%I dati sulla configurazione vengono scritti dal bitstream a questi registri e successivamente
+%vengono copiati dalla logica di configurazione nelle memorie statiche.
 
 
-\paragraph{Riconfigurazione a due dimensioni}
-Le schede \ac{FPGA} moderne riescono a sfruttare, oltre alla riconfigurazione parziale
-dinamica, la riconfigurazione bidimensionale, che permette di aumentare il grado di
-libertà del designer.
+%\begin{figure}[t]
+ %\begin{minipage}[b]{0.4\textwidth}
+  %\begin{center}
+   %$\vcenter{\includegraphics[width=0.7\linewidth]
+%{capitoli/figure/cap1/Riconfigurazione1D.pdf}}$
+  %\end{center}
+ %\end{minipage}
+ %\hfill
+ %\begin{minipage}[b]{0.4\textwidth}
+ %\begin{center}
+    %$\vcenter{\includegraphics[width=0.45\linewidth]
+%{capitoli/figure/cap1/Riconfigurazione2D.pdf}}$
+ %\end{center}
+ %\end{minipage}
+ %\caption[Riconfigurazione 1D e 2D]{Riconfigurazione 1D e 2D.\footnotemark}
+ %\label{fig:riconfigurazione1D2D}
+%\end{figure}
 
-La differenza tra la riconfigurazione a singola dimensione (per colonne) e la
-riconfigurazione a due dimensioni è mostrata in figura~\ref{fig:riconfigurazione1D2D}.
-Nella riconfigurazione a una dimensione, un modulo che occupa soltanto parte di una
-colonna richiede la riconfigurazione di tutta la colonna, il che proibisce il piazzamento
-di altri moduli in colonne sovrapposte al primo. La riconfigurazione a due dimensioni
-permette, invece, di piazzare i due moduli in un'area della scheda molto più compatta e di
-incrementare potenzialmente il numero di moduli che possono essere accelerati se eseguiti
-su logica riconfigurabile.
 
-\footnotetext{Immagine tratta da \cite{Redaelli2DILP}.}
-L'aumento di versatilità derivante dall'uso della riconfigurazione a due dimensioni
-richiede però l'utilizzo di tool che riescano a sfruttare efficacemente questa
-potenzialità.
+% TODO spostare in capitolo a parte su rec computing e flussi
+%\paragraph{Riconfigurazione a due dimensioni}
+%Le schede \ac{FPGA} moderne riescono a sfruttare, oltre alla riconfigurazione parziale
+%dinamica, la riconfigurazione bidimensionale, che permette di aumentare il grado di
+%libertà del designer.
+
+%La differenza tra la riconfigurazione a singola dimensione (per colonne) e la
+%riconfigurazione a due dimensioni è mostrata in figura~\ref{fig:riconfigurazione1D2D}.
+%Nella riconfigurazione a una dimensione, un modulo che occupa soltanto parte di una
+%colonna richiede la riconfigurazione di tutta la colonna, il che proibisce il piazzamento
+%di altri moduli in colonne sovrapposte al primo. La riconfigurazione a due dimensioni
+%permette, invece, di piazzare i due moduli in un'area della scheda molto più compatta e di
+%incrementare potenzialmente il numero di moduli che possono essere accelerati se eseguiti
+%su logica riconfigurabile.
+
+%\footnotetext{Immagine tratta da \cite{Redaelli2DILP}.}
+%L'aumento di versatilità derivante dall'uso della riconfigurazione a due dimensioni
+%richiede però l'utilizzo di tool che riescano a sfruttare efficacemente questa
+%potenzialità.
 
 
 \acrodef{DCT}{Discrete Cosine Transform}
