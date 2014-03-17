@@ -92,22 +92,16 @@ tra loro tramite BUS. Le architetture \ac{MPSoC} si dividono in due categorie:
 
 \section{Reconfigurable computing}
 \label{sec:reconfComp}
-Oggigiorno, grazie al progresso tecnologico e alla costante riduzione della dimensione 
-dei transistor, è possibile integrare diversi componenti elettronici su un singolo chip; 
-questi sistemi, chiamati \ac{SoC} \cite{SoCBook} o \ac{MPSoC} \cite{MPSoCBook} a seconda
-che il microprocessore abbia  uno o più core, comprendono oltre al processore anche vari
-moduli funzionali quali blocchi di memoria, connettori per interfacce (USB, FireWire,
-Ethernet ecc.) e altre periferiche, collegati tramite BUS.
-
-Questa integrazione tuttavia apre una serie di problemi, tra cui elevato costo di 
-progettazione dei sistemi, bassa affidabilità e, ultimo ma non meno importante,
-necessità di controllare il consumo di energia; i problemi sopra citati possono
+L'integrazione introdotta nella precedente sezione tuttavia apre una serie di problemi nella progettazione
+di un \ac{MPSoC}, tra cui elevato costo di progettazione dei sistemi, bassa affidabilità e, ultimo
+ma non meno importante, necessità di controllare il consumo di energia; i problemi sopra citati possono
 essere risolti grazie all'impiego del \emph{reconfigurable computing}.
 
 Con il termine \emph{reconfigurable computing} si intendono delle architetture hardware che 
 offrono la possibilità di essere riconfigurate per implementare qualsiasi funzionalità 
-l'utente desideri. Le caratteristiche e il fondamento logico alla base di questo tipo di 
-architetture sono descritte nelle prossime sezioni.
+l'utente desideri. Elementi computazionali composti da logica riconfigurabile possono essere integrati in un
+\ac{MPSoC}. Le caratteristiche e il fondamento logico alla base delle architetture riconfigurabili,
+oltre ai vantaggi che conseguono dal loro utilizzo sono descritte nelle prossime sezioni.
 
 \subsection{Da von Neumann alle architetture riconfigurabili}
 \label{subsec:cambioParadigma}
