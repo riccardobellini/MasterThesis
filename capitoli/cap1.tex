@@ -22,7 +22,7 @@ e tuttora oggetto di ricerca non solamente in ambito informatico.
 
 \newpage
 
-\section{Introduzione a \acs{SoC} e \ac{MPSoC}}
+\section[Introduzione a \acs{SoC} e \ac{MPSoC}]{Introduzione a \acs{SoC} e \ac{MPSoC}}
 \label{sec:introSoC}
 Il continuo aumento delle performance richieste ai sistemi informatici ha portato alla necessit\`a
 di trovare nuove soluzioni per aumentare le prestazioni dei processori. Negli ultimi anni si \`e
@@ -41,23 +41,52 @@ all'interno di un processore effettivamente continua a raddoppiare circa ogni du
 nel loro processo di fabbrica. Ad esempio, nel decennio 2000-2009, il numero di transistor all'interno di
 un processore \`e passato da 37,5 milioni a 904 milioni, e Haswell, l'ultima microarchitettura Intel
 rilasciata nel 2013, \`e ottenuta mediante processo produttivo a 22 nm.
+A titolo esemplificativo, la tabella \ref{tab:processoProduttivo} illustra il processo produttivo utilizzato per
+alcune architetture rilasciate negli ultimi anni.
+
 
 Stanti queste premesse, la continua miniaturizzazione dei componenti ha permesso di condensare
 un numero sempre maggiore di elementi su un singolo chip, ed \`e stata resa possibile la produzione di
 architetture con un numero di core in continuo aumento. Intel ha prototipizzato \emph{Polaris} \cite{IntelPolaris},
 un processore contenente 80 core, AMD con la serie Opteron\texttrademark{} 6200 ha commercializzato
 un'architettura a 16 core.
-Particolare importanza alla luce di questi progressi tecnologici assumono i \ac{MPSoC}, ovvero sistemi
-caratterizzati non soltanto da un microprocessore (multi-core), ma anche da vari blocchi funzionali quali
+Particolare importanza alla luce di questi progressi tecnologici assumono i \ac{MPSoC} \cite{MPSoCBook}, ovvero sistemi
+caratterizzati non soltanto da un microprocessore (multi-core, contrariamente ai \ac{SoC} \cite{SoCBook}, caratterizzati
+da un processore single-core), ma anche da varie unit\`a funzionali quali
 blocchi di memoria, connettori per interfacce USB, FireWire, Ethernet e altre periferiche, collegati
 tra loro tramite BUS. Le architetture \ac{MPSoC} si dividono in due categorie:
 \begin{itemize}
   \item omogenee, quando gli elementi processanti sono tutti di un unico tipo, ad esempio un processore
     multi-core;
   \item eterogenee, quando gli elementi processanti si differenziano per il loro tipo, ad esempio processori,
-    logica riconfigurabile, processori dedicati quali \ac{DSP}.
+    logica riconfigurabile oppure processori dedicati come i \acs{DSP}.
 \end{itemize}
  
+
+\begin{table}[t]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|}
+      \hline
+      \textbf{Architettura} & \textbf{Produttore} & \textbf{Anno di rilascio} & \textbf{Processo produttivo}\\
+      \hline
+      Nehalem & Intel & 2008 & 45 nm\\
+      \hline
+      Bobcat & AMD & 2011 & 40 nm\\
+      \hline
+      Bulldozer & AMD & 2011 & 32 nm\\
+      \hline
+      Sandy Bridge & Intel & 2011 & 32 nm\\
+      \hline
+      Jaguar & AMD & 2013 & 28 nm\\
+      \hline
+      Haswell & Intel & 2013 & 22 nm\\
+      \hline
+    \end{tabular}
+    \caption{Processo produttivo di alcune microarchitetture Intel
+      \cite{IntelTransistor, IntelsVision} e AMD.}
+    \label{tab:processoProduttivo}
+  \end{center}
+\end{table}
 
 
 
