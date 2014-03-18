@@ -1,833 +1,1029 @@
-\chapter{Implementazione proposta}
-\label{chap:implementazione}
+\chapter{Approccio proposto}
+\label{chap:approccio}
 \vspace{1cm}
-Il capitolo \ref{chap:approccio} è stato interamente dedicato alla descrizione 
-dell'approccio adottato nel lavoro oggetto di questa tesi, al fine di 
-realizzare un baseline scheduler che tenga conto di possibili 
-\emph{riconfigurazioni} e \emph{comunicazioni}, capace di fornire una 
-valutazione quantitativa della bontà di un dato mapping.
+Nel capitolo \ref{chap:SOA} sono state descritte alcune soluzioni proposte 
+relative al lavoro oggetto di questa tesi, in particolare algoritmi esatti ed
+euristici di ottimizzazione atti a risolvere il problema di mapping e 
+scheduling, congiuntamente o separatamente. Alla luce delle limitazioni dei 
+lavori presentati è stato spiegato il motivo per cui si rende necessario questo 
+lavoro di sviluppo di un baseline scheduler nell'ambito del progetto 
+\ac{FASTER}.
 
-Questo capitolo è dedicato alla descrizione dei dettagli implementativi 
-riguardanti la realizzazione dell'algoritmo di scheduling.
+In questo capitolo verrà descritto l'approccio utilizzato per risolvere il 
+problema di scheduling dei task tenendo in considerazione le comunicazioni ed
+eventualmente le riconfigurazioni introdotte.
 
-Il capitolo è strutturato nel seguente modo: la sezione 
-\ref{sec:osservazioniGenerali} fornisce alcune osservazioni preliminari 
-riguardo alle scelte implementative del progetto \ac{FASTER}; la sezione 
-\ref{sec:struttureDati} contiene la descrizione delle strutture dati relative 
-all'implementazione dello scheduler; la sezione \ref{sec:classiGerarchie} 
-descrive le classi e le gerarchie che compongono la parte della toolchain 
-relativa alla parte di mapping/scheduling (sezione 
-\ref{subsec:algoritmoEsplorazione}) e i componenti dell'algoritmo di scheduling 
-nel dettaglio (sezione \ref{subsec:algoritmoScheduling}).
+Il capitolo è organizzato secondo la seguente struttura: nella sezione 
+\ref{sec:integrazioneToolchainFASTER} viene descritta l'integrazione 
+dell'algoritmo di scheduling con il componente che gestisce il mapping dei task, 
+con accenni alle interfacce esterne che collegano il componente 
+con gli altri strumenti utilizzati nella toolchain di \acs{FASTER}; la sezione 
+\ref{sec:panoramicaMetodologia} descrive ad alto livello il funzionamento 
+dell'algoritmo di scheduling, fornendo una panoramica delle fasi in cui questo 
+si divide; la sezione \ref{sec:euristicaSceltaTask} contiene una descrizione 
+dettagliata della fase più delicata del procedimento di scheduling, la scelta 
+del task migliore da considerare ad ogni passo di decisione; nella sezione 
+\ref{sec:elementiComunicazioneGestioneMemoria} vengono introdotti i modelli di 
+comunicazione supportati dall'algoritmo proposto e una possibile allocazione 
+statica della memoria per i task di computazione, svolta contemporaneamente allo 
+scheduling; infine, la sezione \ref{sec:osservazioniConclusive} fornisce un 
+riepilogo dei concetti importanti presentati in questo capitolo.
 
-\section{Osservazioni generali}
-\label{sec:osservazioniGenerali}
-La maggior parte della toolchain di \ac{FASTER} è sviluppata in C++, 
-linguaggio di programmazione a oggetti sviluppato da Bjarne Stroustrup 
-\cite{CppStroustrup} come miglioramento del C, creato invece da Dennis Ritchie 
-\cite{CKernighanRitchie}. La parte di interfaccia grafica, chiamata \emph{ASAP 
-GUI} è sviluppata in C\#, linguaggio di programmazione ad oggetti sviluppato da 
-Microsoft nell'ambito del \emph{framework .NET} \cite{ProCSharp}. ASAP GUI 
-si interfaccia con l'esecuzione e l'output dei tool lanciando degli script scritti
-in Python \cite{ThinkPython}, che si occupano di modificare l'XML del file di progetto
-come specificato dall'utente tramite l'interfaccia grafica.
-% FIXME scrivere dei backend in python?
-\paragraph{Convenzioni implementative della toolchain}
-Riguardo allo sviluppo in C++ della toolchain di \ac{FASTER}, si è deciso di 
-usare le strutture (\verb+struct+), per indicare tipi di dati dedicati alla 
-memorizzazione di informazioni o utilizzati come ``contenitori''; le classi 
-(\verb+class+) vengono utilizzate invece per rappresentare oggetti che hanno 
-degli algoritmi al loro interno, invocabili dall'esterno come metodi.
 
-\paragraph{Organizzazione dei namespace}
-Nel codice si è deciso di includere le strutture e le classi dentro a 
-\emph{namespace}, allo scopo di prevenire eventuali conflitti di nomi e di 
-organizzare logicamente per categorie le varie parti della toolchain. Ogni componente
-della toolchain è incluso nel suo namespace dedicato, ad esempio il componente che
-gestisce lo scheduling è incluso nel namespace \verb+faster::applications::scheduler+.
+\section{Integrazione nella toolchain di \acs{FASTER}}
+\label{sec:integrazioneToolchainFASTER}
 
+Come descritto nel precedente capitolo, l'obiettivo del progetto europeo 
+\ac{FASTER} è fornire un framework per la sintesi ad alto livello di 
+applicazioni, scritte in linguaggio di programmazione C, su vari dispositivi 
+riconfigurabili; la toolchain che permette di realizzare questa sintesi è 
+composta da varie fasi eseguite in sequenza. Ogni fase deve essere il più 
+possibile self-contained, ovvero deve poter essere invocata separatamente e non 
+deve avere nozioni sul funzionamento interno delle altre fasi.
+
+Condizione necessaria perchè ciò accada è la definizione di specifiche 
+interfacce per ogni strumento che deve essere invocato. Ad esempio, la fase di 
+mapping ha la propria interfaccia di input e di output; lo scheduler 
+(incapsulato nell'algoritmo evolvibile di esplorazione delle soluzioni) ha 
+anch'esso una interfaccia di input e una di output, contenenti tutte 
+le strutture dati necessarie per l'elaborazione e per la memorizzazione delle 
+informazioni calcolate dall'algoritmo, rispettivamente. 
+
+%%% FIXME: color
 \begin{figure}
  \begin{center}
-\includegraphics[width=\textwidth]{capitoli/figure/cap4/FASTERNamespaces.pdf}
-\caption{Gerarchia dei namespace di \acs{FASTER}.}
-\label{fig:gerarchiaNamespace}
+  \includegraphics[width=0.9\textwidth]{capitoli/figure/cap3/MapperWorkflow.pdf}
+  \caption{Flusso di lavoro dell'algoritmo di esplorazione.}
+  \label{fig:mapperWorkflow}
  \end{center}
 \end{figure}
 
-Una rappresentazione della struttura dei namespace è visibile in figura 
-\ref{fig:gerarchiaNamespace}. La maggior parte di questi namespace verrà 
-spiegata al momento in cui saranno descritte classi o strutture che ne fanno parte 
-e sono rilevanti per il lavoro oggetto della tesi.
+A livello dell'algoritmo di esplorazione delle soluzioni, dunque, si avrà un 
+flusso di lavoro come rappresentato nella figura \ref{fig:mapperWorkflow}, in 
+cui è messo in evidenza dove si colloca la fase di scheduling oggetto del 
+lavoro, con le relative interfacce di input e output.
 
-\paragraph{Convenzioni nell'assegnazione dei nomi}
-È stata scelta la seguente convenzione per nominare i dati membro o i metodi 
-delle strutture/classi:
+Anche la fase di mapping, che si occupa dell'invocazione del tool che gestisce lo 
+scheduling, è caratterizzata dalle proprie interfacce di input e output. Come 
+si può vedere nella figura \ref{fig:mapperWorkflow}, l'interfaccia di 
+output del mapper e l'interfaccia di input dello scheduler avranno alcuni dati 
+in comune, poichè la fase di scheduling è immediatamente successiva a quella di mapping
+nel flusso dell'algoritmo di esplorazione.
+
+
+\subsection{Interfaccia di input}
+
+\begin{figure}
+ \begin{minipage}[b]{0.4\textwidth}
+  \begin{center}
+\includegraphics[width=\linewidth]{capitoli/figure/cap3/TaskGraphExample.pdf}
+  \subcaption{Task graph}\label{fig:taskGraphExample2}
+  \end{center}
+ \end{minipage}
+ \hfill
+ \begin{minipage}[b]{0.5\textwidth}
+  \begin{center}
+   \begin{tabular}{| c | c | c |}
+    \hline
+    \textbf{Task} & \textbf{Component} & \textbf{Implementation}\\
+    \hline
+    A & p1 & impl\textunderscore0\\
+    \hline
+    B & p2 & impl\textunderscore1\\
+    \hline
+    C & p1 & impl\textunderscore2\\
+    \hline
+    D & p3 & impl\textunderscore3\\
+    \hline
+   \end{tabular}
+   \subcaption{Lista dei mapping}\label{tab:listaMapping}
+  \end{center}
+ \end{minipage}
+ \caption{Esempio di task graph e di lista dei mapping.}
+ \label{fig:taskGraphAndMapping}
+\end{figure}
+
+
+L'interfaccia di input per la fase di scheduling contiene tutti i dati 
+necessari all'esecuzione dello scheduler, alcuni definiti prima 
+dell'invocazione del tool, altri creati o modificati durante le differenti fasi 
+dell'esecuzione. In particolare, i dati definiti prima dell'invocazione sono:
 \begin{itemize}
- \item nomi di dati membro o metodi aventi specificatore di accesso 
-\verb+public+ o \verb+protected+ sono scritti normalmente;
- \item nomi di dati membro o metodi aventi specificatore di accesso 
-\verb+private+ sono scritti aggiungendo la stringa ``\verb+m_+'' come prefisso.
+ \item dati provenienti dal file XML di specifica del progetto correntemente in 
+elaborazione dalla toolchain, relativi alla descrizione dell'architettura, del 
+task graph che rappresenta l'applicazione, delle implementazioni e dei vari elementi 
+di computazione, di 
+comunicazione e di memoria presenti;
+ \item dati provenienti dall'output della fase di mapping.
+\end{itemize}
+Questi ultimi sono organizzati come una lista di triple \emph{$<$processing 
+task, processing element, implementazione$>$} calcolata dal mapper, che 
+specifica per ogni task:
+\begin{enumerate}
+ \item l'elemento di computazione che dovrà eseguire il task, può essere un 
+core hardware su scheda oppure un core software (processore);\footnote{Il termine
+\emph{core software} non deve essere confuso con il termine \emph{softcore} introdotto
+nella sezione \ref{sec:algoritmiEuristici}, che rappresenta un core implementato su
+logica riconfigurabile invece che un processore.}
+ \item l'implementazione da utilizzare per l'esecuzione del task, si può 
+dividere in implementazione software o hardware a seconda che il task debba 
+essere eseguito su scheda o su un processore.
+\end{enumerate}
+Nella figura \ref{fig:taskGraphAndMapping} sono rappresentati un esempio di 
+task graph e di un possibile output della fase di mapping basato su quel task graph.
+
+Le informazioni provenienti dal mapper vengono quindi utilizzate per 
+determinare se alcune aree dovranno essere riconfigurate durante l'esecuzione 
+dell'applicazione oppure no, oltre a dare informazioni sull'occupazione dei 
+vari componenti del dispositivo.
+
+
+\subsection{Interfaccia di output}
+
+Il compito dello scheduler è assegnare delle stime di tempo di inizio e di fine 
+esecuzione ad ogni task in modo che le precedenze imposte dal task graph
+vengano rispettate, e che nessun altro vincolo sia violato: ad esempio, 
+task che devono essere eseguiti sullo stesso componente non possono avere tempi 
+di esecuzione sovrapposti. Tutte queste informazioni sulle stime calcolate 
+dallo scheduler vengono memorizzate nell'interfaccia di output, che è composta 
+da:
+\begin{itemize}
+ \item una rappresentazione in forma di \emph{diagramma di Gantt}, che delinea 
+per ogni componente quando questo è occupato nell'esecuzione di un task;
+ \item per ogni task, una lista delle informazioni riguardanti lo scheduling, 
+ad esempio il tempo d'esecuzione stimato, il componente su cui deve essere 
+eseguito, l'implementazione che ne caratterizza l'esecuzione e le stime di 
+inizio e fine esecuzione che gli sono state assegnate;
+ \item le informazioni relative agli indirizzi di memoria assegnati ai task
+ di computazione.
 \end{itemize}
 
-Eventuali tipi di dato ridefiniti tramite l'uso di \verb+typedef+ iniziano 
-con una lettera maiuscola e sono scritti aggiungendo la stringa ``\verb+_t+'' 
-come suffisso.
-
-\paragraph{Puntatori e librerie esterne}
-Allo scopo di prevenire il verificarsi di \emph{memory leak} difficili da 
-identificare e debuggare, si è deciso all'inizio della progettazione di non 
-utilizzare i puntatori standard forniti dal linguaggio C++, in favore degli 
-shared pointer delle librerie \emph{Boost} \cite{BoostLibrary, BoostSharedPtr}.
-Infatti, un oggetto di tipo \verb+boost::shared_ptr+ gestisce automaticamente 
-la distruzione dell'oggetto a cui si riferisce una volta che l'ultimo shared 
-pointer che punta all'oggetto è distrutto.
-
-L'utilizzo degli shared pointer permette di istanziare l'oggetto tramite 
-allocazione dinamica una sola volta, utilizzando poi i puntatori associati per 
-l'accesso ai suoi dati e metodi, o per il passaggio come parametro.
-
-Nel codice sorgente della toolchain sono presenti delle \verb+typedef+ globali 
-aventi il suffisso ``\verb+Ptr+'' che semplificano la definizione degli shared 
-pointer per alcune strutture/classi del progetto; ad esempio, alla classe 
-\verb+FasterTask+, che identifica un task (generico) corrisponde lo shared 
-pointer \verb+FasterTaskPtr+.
-
-% TODO parlare di compilazione, CMake e librerie
-
-\section{Strutture dati}
-\label{sec:struttureDati}
-In questa sezione vengono presentate alcune strutture dati della toolchain. La 
-sezione si divide in due sotto-sezioni: la sezione 
-\ref{subsec:struttureDatiFaster} presenta le strutture dati generali della 
-toolchain, non relative allo scheduler; la sezione 
-\ref{subsec:struttureDatiScheduler} presenta invece le strutture utilizzate 
-dall'algoritmo di scheduling.
+Nella prossima sezione verrà spiegato in dettaglio il flusso di 
+esecuzione dell'algoritmo di scheduling e come le interfacce vengono 
+utilizzate durante l'elaborazione.
 
 
-\subsection{\acs{FASTER}}
-\label{subsec:struttureDatiFaster}
-% TODO
+\section{Panoramica della metodologia}
+\label{sec:panoramicaMetodologia}
+
+In questa sezione viene descritto il funzionamento dell'algoritmo proposto e le 
+fasi in cui esso si articola, con una spiegazione dettagliata della struttura 
+di ogni fase e del flusso di lavoro completo dell'algoritmo.
+
+Come accennato nella sezione precedente, l'interfaccia di input è 
+caratterizzata da dati ``statici'', presenti prima dell'invocazione dello 
+scheduler e da dati ``dinamici'', che subiscono modifiche oppure vengono creati 
+durante l'esecuzione del tool. L'interfaccia di output è invece costruita 
+incrementalmente, aggiungendo e modificando dati man mano che la computazione 
+prosegue.
 
 
-\subsection{Scheduler}
-\label{subsec:struttureDatiScheduler}
-L'obiettivo di questa sezione è presentare le più importanti strutture dati 
-utilizzate dallo scheduler, che si trovano nella cartella 
-\emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/scheduler}. 
-Tutte le strutture che saranno esaminate in questa sezione appartengono al 
-namespace \verb+faster::applications::scheduler+.
+\begin{figure}[ht]
+ \begin{center}
+\includegraphics[width=0.9\textwidth]
+{capitoli/figure/cap3/SchedulerWorkflow.pdf}
+  \caption{Flusso di lavoro dell'algoritmo di scheduling.}
+  \label{fig:schedulerWorkflow}
+ \end{center}
+\end{figure}
 
-\subsubsection{Scheduler input}
-I file \emph{schedulerInput.hpp} e \emph{schedulerInput.cpp} contengono la 
-dichiarazione e l'implementazione della struttura \verb+SchedulerInput+, 
-rispettivamente.
 
-Il seguente frammento di codice mostra le parti rilevanti della 
-dichiarazione della struttura.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct SchedulerInput {
-  private:
-      FasterProjectPtr m_fasterProject;
-      explorer::ExplorerTrace m_explorerTrace;
-      std::vector<FasterTaskPtr> m_topologicalSorting;
-      CriticalPathInfoMap_t m_criticalPathInfo;
-      std::vector<ProcessingTaskPair_t> m_reconfigurationsList;
-      bool m_busAvailable;
-      FasterTaskGraphPtr m_taskGraph;
-      FasterReconfigurationElementPtr m_reconfigurationController;
-      FasterMemoryElementPtr m_ramElement;
-      FasterCommunicationElementPtr m_busElement;
-      SchedulerMemoryManagerPtr m_memoryManager;
-      int m_readPortsNum;
-      int m_writePortsNum;
-      // code...
-  };
-\end{minted}
-La struttura \verb+SchedulerInput+ contiene i dati principali che vengono usati 
-dallo scheduler nel corso dell'elaborazione, dal preprocessing allo scheduling 
-effettivo. In particolare, si notano il puntatore alla struttura 
-\verb+FasterProject+, che è necessaria per accedere alle informazioni 
-sull'architettura e sull'applicazione, come spiegato nella sezione precedente.
-Il dato membro \verb+m_taskGraph+ viene impostato in seguito alla fase di 
-preprocessing, e contiene il task graph arricchito delle comunicazioni e 
-riconfigurazioni da considerare nella fase di scheduling vera e propria.
-Il dato membro \verb+m_explorerTrace+ contiene la lista di triple calcolata dal
-mapper per l'iterazione corrente dell'esplorazione.
+La prima fase dell'algoritmo ha il compito di 
+effettuare una elaborazione preliminare dei dati statici, che permetterà di 
+ottenere una formulazione più specifica e dettagliata del problema; questa 
+prima fase è chiamata \emph{fase di preprocessing}. La seconda fase è 
+costituita dallo \emph{scheduling effettivo} dei task, utilizzando le 
+informazioni calcolate in precedenza nella pre-elaborazione. La terza e ultima 
+fase, pur non essendo strettamente legata all'assegnazione delle stime dei tempi 
+e dell'ordine di esecuzione dei task, è fondamentale per permettere l'effettiva 
+esecuzione dell'applicazione sul dispositivo riconfigurabile; consiste in una 
+parziale rielaborazione dell'output prodotto dalla fase di scheduling ed è 
+chiamata \emph{fase di postprocessing}.
 
-Oltre a questi, vi sono anche dei puntatori al gestore della memoria e ai 
-componenti di riconfigurazione e di comunicazione (\acs{RAM} e BUS, se 
-presente), il numero di porte di lettura/scrittura disponibili sulla \acs{RAM} 
-e variabili aggiuntive che contengono le informazioni di percorso critico dei 
-task, l'ordinamento topologico dei task e la lista delle riconfigurazioni.
+Le tre fasi sono rappresentate nella figura \ref{fig:schedulerWorkflow}, che 
+illustra il flusso di lavoro dello scheduler, con i relativi dati di input per 
+ogni fase. Nelle prossime sezioni ogni fase verrà analizzata nel dettaglio.
 
-\subsubsection{Scheduler Data}
-I file \emph{schedulerData.hpp} e \emph{schedulerData.cpp} contengono il codice 
-sorgente della struttura \verb+SchedulerData+, che memorizza dati continuamente 
-aggiornati durante l'esecuzione dell'algoritmo di scheduling. A differenza dei 
-dati contenuti in \verb+SchedulerInput+, questi dati sono racchiusi in una 
-struttura a sé stante perchè figurino come logicamente separati dai dati che 
-invece fanno parte dell'input dell'algoritmo. La dichiarazione della struttura è
-inclusa nel namespace \verb+faster::applications::scheduler::data+.
 
-Viene ora presentato un frammento di codice rilevante per la dichiarazione 
-della struttura.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct SchedulerData {
-      TaskSet_t unscheduledTasksSet;
-      std::vector<FasterTaskPtr> scheduledTasksList;
-      std::vector<FasterTaskPtr> readyTasksList;
-  };
-\end{minted}
-Come si può vedere, la struttura contiene l'insieme dei task non ancora 
-selezionati per lo scheduling e i vettori dei task già schedulati e pronti per 
-essere schedulati. Si è deciso di incapsulare questi dati in una struttura 
-modificabile da tutti i componenti dell'algoritmo perchè alcuni componenti 
-potrebbero dover fare delle modifiche on-the-fly.\footnote{Ad esempio, nel caso 
-la policy di scheduling delle comunicazioni scelga di utilizzare il BUS come 
-mezzo di comunicazione, il task \emph{READ} corrispondente dev'essere 
-eliminato dalla lista dei task rimanenti.}
+\subsection{Fase di preprocessing}
+\label{subsec:fasePreprocessing}
+La fase di preprocessing è la prima ad essere eseguita dopo l'invocazione del 
+tool di scheduling da parte dell'algoritmo di esplorazione; ha come obiettivo 
+principale l'identificazione delle comunicazioni e delle riconfigurazioni che 
+devono essere prese in considerazione per la corretta esecuzione 
+dell'applicazione sul dispositivo. Un obiettivo secondario è il calcolo di 
+informazioni aggiuntive che verranno poi utilizzate nella fase di scheduling 
+per quanto concerne la scelta del task migliore (vedi sezione 
+\ref{sec:euristicaSceltaTask}).
 
-\subsubsection{Scheduler Gantt}
-La struttura \verb+SchedulerGantt+ è definita nei file 
-\emph{schedulerGantt.hpp} e \emph{schedulerGantt.cpp}; la struttura contiene il 
-diagramma di Gantt utilizzato dall'algoritmo per visualizzare la soluzione 
-calcolata. All'inizio dell'elaborazione il diagramma è vuoto, viene 
-progressivamente riempito con le informazioni di scheduling calcolate ad ogni 
+Per ottenere questi obiettivi, la fase di preprocessing si divide in tre 
+sotto-fasi eseguite nel seguente ordine:
+\begin{enumerate}
+ \item aggiunta delle comunicazioni: nuovi task, detti \emph{task di 
+comunicazione} vengono aggiunti al task graph originale, a rappresentare le 
+comunicazioni che si verificano tra i task di computazione;
+ \item aggiunta delle riconfigurazioni: può non essere richiesto e dipende 
+dagli assegnamenti stabiliti dal mapper, consiste nell'introduzione di nuovi 
+task, detti \emph{task di riconfigurazione}, dove necessario;
+ \item calcolo delle informazioni sul percorso critico.
+\end{enumerate}
+
+\subsubsection{Aggiunta delle comunicazioni}
+L'inserimento dei task di comunicazione viene fatto solamente in base 
+all'analisi del task graph dell'applicazione, in quanto indipendente dal 
+mapping: poichè ogni arco in tale grafo rappresenta una relazione 
+produttore-consumatore tra due task,\footnote{Ovvero, denominati $i$ e $j$ i due 
+task, un arco $(i,j)$ indica che l'output della computazione del task $i$ viene 
+utilizzato come input per la computazione del task $j$.} ogni arco viene 
+trattato come una comunicazione.
+
+Dati due task di computazione $i$, $j$ e un 
+arco $(i,j)$ nel task graph, vi sono due tipi di task di comunicazione, che si 
+differenziano per come viene operato il trasferimento dei dati:
+\begin{itemize}
+ \item task di comunicazione di tipo \emph{WRITE}, che \emph{scrivono} 
+l'output del task $i$ in una memoria;
+ \item task di comunicazione di tipo \emph{READ}, che \emph{leggono} dei dati 
+da una memoria e li trasferiscono come input per il task $j$. 
+\end{itemize}
+Stanti queste premesse, ogni arco nel task graph implica l'inserimento di 
+entrambi i tipi di task di comunicazione. L'arco originale viene rimosso e 
+sostituito con nuovi archi che collegano i task di computazione con i task di 
+comunicazione appena inseriti, rispettando i criteri precedentemente stabiliti.
+
+
+\begin{figure}
+ \begin{minipage}[b]{0.4\textwidth}
+  \begin{center}
+   $\vcenter{\includegraphics[width=\linewidth]
+{capitoli/figure/cap3/TaskGraphExample.pdf}}$
+  \end{center}
+ \end{minipage}
+ \hfill
+ \begin{minipage}[b]{0.4\textwidth}
+ \begin{center}
+    $\vcenter{\includegraphics[width=\linewidth]
+{capitoli/figure/cap3/TaskGraphCommunicationExample.pdf}}$
+ \end{center}
+ \end{minipage}
+ \caption[Aggiunta delle comunicazioni]{Modifica del task graph in seguito all'aggiunta
+ delle comunicazioni.}
+ \label{fig:taskGraphCommunicationExample}
+\end{figure}
+
+
+Si veda la figura \ref{fig:taskGraphCommunicationExample}
+per un esempio di come viene modificato il task graph della figura 
+\ref{fig:taskGraphExample2} in seguito all'aggiunta dei task di 
+comunicazione.\footnote{Gli archi del grafo originale sono stati 
+tratteggiati per evidenziare come la struttura generale non sia cambiata ma 
+siano stati soltanto introdotti nuovi nodi e archi nel grafo.}
+
+Dopo l'inserimento dei task di comunicazione, viene eseguito l'inserimento dei 
+task di riconfigurazione, qualora il particolare mapping utilizzato lo 
+richieda; nel caso, si procede come descritto nel prossimo paragrafo.
+
+
+\subsubsection{Aggiunta delle riconfigurazioni}
+\label{sec:aggiuntaRiconfigurazioni}
+L'inserimento dei task di riconfigurazione avviene in seguito all'analisi della 
+lista di tuple fornita dal mapper ed è necessario nel caso in cui gli 
+assegnamenti stabiliti dal mapper verifichino le seguenti condizioni:
+\begin{enumerate}
+ \item due task di comunicazione sono mappati sullo stesso componente 
+(processing element);
+ \item le implementazioni dei due task sono diverse e di tipo hardware, ovvero 
+i due task devono essere eseguiti su logica riconfigurabile: questa condizione 
+implica che il modulo hardware non sia riutilizzabile da parte del secondo task.
+\end{enumerate}
+Se queste condizioni sussistono per una qualsiasi coppia di task, allora 
+un nuovo task di riconfigurazione deve essere aggiunto al grafo. Nella tabella 
+\ref{tab:esempioRiconfigurazione} è illustrato un esempio di quando si 
+verificano le precedenti condizioni ed è necessario introdurre un nuovo task di 
+riconfigurazione.
+
+\begin{table}
+\begin{center}
+\begin{tabular}{| c | c | c |}
+ \hline
+    \textbf{Task} & \textbf{Component} & \textbf{Implementation}\\
+    \hline
+    A & \textcolor{red}{p1} & \textcolor{blue}{impl\textunderscore0}\\
+    \hline
+    B & p2 & impl\textunderscore1\\
+    \hline
+    C & \textcolor{red}{p1} & \textcolor{blue}{impl\textunderscore2}\\
+    \hline
+    D & p3 & impl\textunderscore3\\
+    \hline
+\end{tabular}
+\caption[Mapping con riconfigurazione necessaria]{Esempio di mapping con
+riconfigurazione necessaria.}
+\label{tab:esempioRiconfigurazione}
+\end{center}
+\end{table}
+
+
+L'inserimento avviene seguendo un preciso criterio per l'introduzione delle 
+dipendenze: non si può semplicemente inserire il nuovo task tra i due task di 
+computazione e collegarlo a questi con dei nuovi archi, è necessario tenere 
+conto delle comunicazioni appena introdotte. Ad esempio, dati due task di 
+computazione $i$ e $j$ anche non adiacenti, non è possibile eseguire la 
+riconfigurazione prima che l'output del task $i$ sia stato salvato in memoria 
+perchè i dati sarebbero sovrascritti e non più disponibili; allo stesso tempo 
+e per il medesimo motivo, non è possibile eseguirla dopo che i dati siano stati 
+trasferiti come input per il task $j$. Questi vincoli determinano i seguenti
+criteri di assegnazione delle precedenze:
+\begin{itemize}
+ \item nuovi archi sono introdotti da tutti i task di comunicazione di tipo 
+\emph{WRITE} uscenti dal task $i$ al task di riconfigurazione;
+ \item nuovi archi sono introdotti dal task di riconfigurazione a tutti i task 
+di comunicazione di tipo \emph{READ} entranti nel task $j$.
+\end{itemize}
+
+
+\begin{figure}
+ \begin{minipage}[b]{0.4\textwidth}
+$\vcenter{\includegraphics[width=\linewidth]
+{capitoli/figure/cap3/TaskGraphCommunicationExample.pdf}}$
+ \end{minipage}
+ \hfill
+ \begin{minipage}[b]{0.4\textwidth}
+$\vcenter{\includegraphics[width=\linewidth]
+{capitoli/figure/cap3/TaskGraphCommRecExample.pdf}}$
+ \end{minipage}
+ \caption[Aggiunta delle riconfigurazioni]{Modifica del task graph in seguito
+ all'aggiunta delle riconfigurazioni.}
+ \label{fig:taskGraphCommRecExample}
+\end{figure}
+
+
+Nella figura \ref{fig:taskGraphCommRecExample} è rappresentata l'evoluzione del 
+task graph successiva all'introduzione dei task di riconfigurazione, sulla 
+base dei mapping riportati nella figura \ref{tab:listaMapping} e nella
+tabella \ref{tab:esempioRiconfigurazione}. Si può vedere il nuovo task di 
+riconfigurazione introdotto, di colore rosso; gli archi entranti e uscenti dal 
+nuovo task impongono le precedenze sopra elencate.
+
+Una considerazione 
+aggiuntiva riguarda gli archi tratteggiati che, nel grafo sulla destra, 
+collegano i due task di computazione con il task di riconfigurazione: questi 
+archi vengono inseriti in ogni caso durante il preprocessing, per esplicitare 
+che deve verificarsi una riconfigurazione tra l'esecuzione del task $A$ e 
+l'esecuzione del task $C$. La loro introduzione non influenza tuttavia il 
+funzionamento dello scheduler. Le precedenze aggiuntive introdotte dal cammino 
+$A \rightarrow REC\_0 \rightarrow C$ sono infatti dominate dai cammini già 
+esistenti $A \rightarrow W\_AC \rightarrow REC\_0 \rightarrow R\_AC \rightarrow 
+C$ e $A \rightarrow W\_AB \rightarrow REC\_0 \rightarrow R\_AC \rightarrow C$, 
+quindi la presenza di tali archi non introduce nessun ritardo e non comporta 
+svantaggi rispetto alla loro assenza.
+
+Dopo l'aggiunta dei task di riconfigurazione, l'ultimo passo della fase di 
+preprocessing consiste nel calcolo delle informazioni sul percorso critico del 
+task graph.
+
+
+\subsubsection{Calcolo delle informazioni sul percorso critico}
+Le informazioni calcolate durante questa fase vengono utilizzate per stabilire 
+quali task sono sul percorso critico;\footnote{In inglese \emph{critical path}, 
+avendo un grafo che simboleggia un progetto composto da attività (nodi) con 
+precedenze (archi), rappresenta un cammino dal nodo iniziale al nodo finale del 
+grafo costituito da attività che non possono essere ritardate senza allungare 
+il tempo di esecuzione del progetto.} nella fase di scheduling vero e proprio
+saranno poi utilizzate per l'assegnazione della priorità ai task.
+
+Tali informazioni consistono in tre dati, calcolati per ogni task del grafo 
+preprocessato:
+\begin{itemize}
+ \item istante al più presto \emph{(asap)},
+ \item istante al più tardi \emph{(alap)},
+ \item scarto \emph{(slack)}: differenza tra istante al più tardi e istante al 
+più presto.
+\end{itemize}
+I task con scarto pari a $0$ fanno parte del percorso critico.
+
+Il calcolo delle tre informazioni sopra elencate viene effettuato tramite un 
+semplice algoritmo comunemente utilizzato in ricerca operativa: il \emph{metodo
+del percorso critico}, in inglese \ac{CPM}.
+Vengono quindi aggiunti due \emph{nodi dummy}: sorgente, collegato ai nodi del 
+grafo senza predecessori e destinazione, collegato ai nodi senza successori.
+Il grafo viene poi ordinato topologicamente,\footnote{Si noti che il task graph 
+è aciclico quindi l'ordinamento topologico è sempre possibile.} e l'algoritmo 
+\ac{CPM} viene eseguito. Lo pseudocodice dell'algoritmo di ordinamento 
+topologico è illustrato nell'algoritmo \ref{alg:CPM}, dove $\delta^-(i)$ e 
+$\delta^+(i)$ rappresentano il taglio entrante e il taglio uscente del nodo 
+$i$, rispettivamente.
+
+\IncMargin{1em}
+\begin{algorithm}
+ \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+ \SetKwArray{Asap}{asap}\SetKwArray{Alap}{alap}
+ \SetKw{KwDownTo}{downto}
+ 
+ \Input{Un grafo $G=(N,A)$, con $n = \vert N \vert$ e $d_i,\; \forall i = 
+1,\dots,n$ durata del task $i$}
+ \Output{$asap[i]$ e $alap[i],\; \forall i = 1,\dots, n$}
+ \BlankLine
+ \Asap{1} $\leftarrow 0$\;
+ \For{$i = 2$ \KwTo $n$}{
+ \Asap{i} $\leftarrow max\{$\Asap{p}$+ d_p\;:\;(p,i) \in \delta^-(i)\}$\;
+ }
+ \Alap{n} $\leftarrow$ \Asap{n}\;
+ \For{$i=n-1$ \KwDownTo $1$}{
+ \Alap{i} $\leftarrow min\{$\Alap{t}$- d_i\;:\;(i,t) \in \delta^+(i)\}$\;
+ }
+ \caption{Algoritmo CPM}
+\label{alg:CPM}
+\end{algorithm}
+\DecMargin{1em}
+
+Il calcolo delle informazioni sul percorso critico conclude la fase di 
+preprocessing. Al termine di questa fase, il task graph presente 
+nell'interfaccia di input dello scheduler viene sostituito con il grafo 
+arricchito di comunicazioni e riconfigurazioni; le informazioni sul percorso 
+critico appena calcolate sono aggiunte all'interfaccia, per essere utilizzate 
+nella fase successiva.
+
+
+\subsection{Fase di scheduling}
+\label{subsec:faseScheduling}
+La fase di scheduling effettivo gestisce l'assegnazione di tempi di inizio e 
+fine dell'esecuzione di ogni task, sia esso di computazione, comunicazione o 
+riconfigurazione. In particolare, la fase di scheduling assegna un ordine di 
+esecuzione dei task che rispetti tutte le precedenze imposte dal task graph e 
+che cerchi di minimizzare il tempo di esecuzione \emph{stimato}, a condizione
+che le stime sulla durata dei task siano il più precise possibile.
+
+\IncMargin{1em}
+\begin{algorithm}
+ \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
+ \SetKwData{UnscheduledSet}{unscheduledSet}
+ \SetKwData{SchedulerOutput}{schedulerOutput }
+ \SetKwData{SchedulerInput}{schedulerInput}
+ \SetKwData{BestTask}{bestTask}
+ \SetKwData{ReadyTaskSet}{readyTaskSet}
+ \SetKwData{TimeInfo}{timeInfo}
+ 
+ \Input{the input interface of the scheduler}
+ \Output{the output interface of the scheduler}
+ \BlankLine
+ \SchedulerOutput $\leftarrow \emptyset$\;
+ \UnscheduledSet $\leftarrow$ \SchedulerInput.getTaskSet()\;
+ \While{\UnscheduledSet is not empty}{
+ \ReadyTaskSet $\leftarrow$ tasks with precedences satisfied\;
+ \BestTask $\leftarrow$ best task to be scheduled among the ready tasks\;
+ \TimeInfo $\leftarrow$ compute start/end time estimations for the best task\;
+ \SchedulerOutput $\leftarrow$ \SchedulerOutput $\cup$ \TimeInfo\;
+ \ReadyTaskSet $\leftarrow$ \ReadyTaskSet $\setminus$ \BestTask\;
+ \UnscheduledSet $\leftarrow$ \UnscheduledSet $\setminus$ \BestTask\;
+ }
+ \Return{\SchedulerOutput}
+\caption{Algoritmo per la fase di scheduling}
+\label{alg:faseScheduling}
+\end{algorithm}
+\DecMargin{1em}
+
+Come si può vedere nell'algoritmo \ref{alg:faseScheduling}, la fase di 
+scheduling è costituita principalmente da un ciclo ripetuto finchè vi sono 
+task che non sono ancora stati schedulati. A ogni ripetizione del ciclo viene 
+prima aggiornato l'insieme dei task che sono ``pronti'' per l'assegnazione dei 
+tempi, ossia i task le cui precedenze sono state tutte già considerate. Tra 
+questi, tramite un'opportuna euristica di scelta (vedi sezione 
+\ref{sec:euristicaSceltaTask}) viene eletto il miglior task da considerare al 
+passo corrente; a questo vengono poi assegnate le stime dei tempi, 
+successivamente inserite nell'interfaccia di output dello scheduler e nel 
+diagramma di Gantt dei componenti occupati.
+
+I dati di output dello scheduler vengono poi restituiti all'algoritmo di 
+esplorazione che ha invocato il tool, e possono essere usati per avere una 
+stima del tempo totale di esecuzione dell'applicazione.
+
+
+\subsection{Fase di postprocessing}
+Il postprocessing consiste in una rielaborazione dei dati di output dello 
+scheduler, effettuata separatamente in quanto i dati prodotti in output da 
+questa fase devono essere utilizzati solamente dal runtime manager per gestire 
+l'esecuzione dell'applicazione.
+
+\paragraph{Ruolo del runtime manager}
+Poichè lo scheduler assegna degli istanti di inizio e fine dei task basati 
+puramente su delle \emph{stime}, non vi è alcuna garanzia che tali istanti 
+vengano rispettati nel corso di una reale esecuzione dell'applicazione sulla 
+piattaforma riconfigurabile. Ciò vale soprattutto per i task la cui
+durata di esecuzione è fortemente dipendente dalla quantità di dati da 
+scambiare, da possibili conflitti sul BUS o sul canale di comunicazione 
+utilizzato che rendono necessario serializzare le esecuzioni nel caso di 
+task di comunicazione, oppure dalla dimensione dell'area da configurare e 
+dalle caratteristiche dell'architettura sottostante nel caso di task di 
+riconfigurazione.
+
+Di fronte a questi errori nelle stime, non si può ritenere accurato il piano di 
+esecuzione formulato dallo scheduler sotto forma di diagramma di Gantt; è 
+necessario dunque che un componente si faccia carico dell'esecuzione dei vari 
+task, lanciandone di nuovi quando i predecessori sono terminati: tale 
+componente è il \emph{runtime manager}. Il ruolo del runtime manager è quello 
+di coordinare le esecuzioni di tutti i task, rispettando le precedenze imposte 
+dal grafo e l'ordine stabilito dallo scheduler.
+
+\begin{figure}
+ \begin{minipage}[b]{0.45\textwidth}
+  $\vcenter{\includegraphics[width=\linewidth]
+  {capitoli/figure/cap3/SchedulingConflict.pdf}}$
+  \subcaption{Prima della risoluzione}
+  \label{fig:schedulingConflictA}
+ \end{minipage}
+ \hfill
+ \begin{minipage}[b]{0.45\textwidth}
+  $\vcenter{\includegraphics[width=\linewidth]
+  {capitoli/figure/cap3/SchedulingConflictResolved.pdf}}$
+  \subcaption{Dopo la risoluzione}
+  \label{fig:schedulingConflictB}
+ \end{minipage}
+ \caption[Risoluzione di un conflitto tra due task]{Esempio di risoluzione di un
+ conflitto tra due task.}
+\label{fig:schedulingConflict}
+\end{figure}
+
+\paragraph{Definizione dell'ordine di scheduling}
+Durante l'esecuzione dell'algoritmo di scheduling illustrato nella sezione 
+\ref{subsec:faseScheduling} si possono avere più task eleggibili per essere 
+schedulati nello stesso passo, ovvero più task con le stesse precedenze 
+soddisfatte. Si consideri la figura \ref{fig:schedulingConflict} per un 
+semplice esempio di conflitto tra due task. La figura 
+\ref{fig:schedulingConflictA} rappresenta una parte del task graph, 
+nell'ipotesi che al passo corrente il task $A$, di colore grigio, sia già stato 
+schedulato mentre i due task di comunicazione $W\_AB$ e $W\_AC$, di colore 
+azzurro, siano eleggibili per il passo di scheduling successivo. Quando questa
+situazione si verifica, l'algoritmo deve effettuare una decisione su quale 
+task sia meglio considerare per primo; tale scelta esplicita una relazione 
+d'ordine tra i task in conflitto, rappresentata da un arco aggiuntivo inserito 
+nella fase di postprocessing. La figura \ref{fig:schedulingConflictB} 
+rappresenta l'arco aggiuntivo inserito tra i due task di comunicazione, 
+nell'ipotesi che nella fase di scheduling il task $W\_AB$ sia stato scelto
+prima di $W\_AC$.
+
+È importante evidenziare come i conflitti effettivi si abbiano solo tra task 
+che sono eleggibili per lo scheduling in uno stesso passo. Inoltre, è sempre possibile 
+che più task eleggibili durante lo stesso passo vengano poi eseguiti in 
+parallelo, a prescindere dall'ordine con cui sono stati considerati 
+dall'algoritmo; si ha un vero conflitto solo quando la loro esecuzione implica 
+l'utilizzo di uno stesso componente. In tal caso, infatti, le esecuzioni devono 
+necessariamente essere serializzate.
+
+\paragraph{Analisi dell'output dello scheduler}
+I conflitti descritti nel precedente paragrafo sono ricavati durante la fase di
+postprocessing dall'analisi del comportamento tenuto dallo scheduler.
+La lista (ordinata) dei task selezionati per lo scheduling viene analizzata; nel
+corso dell'analisi vengono tracciati nuovi archi seguendo l'ordine dei task nella
+lista. In questo modo le informazioni sull'ordine scelto dallo scheduler vengono
+incluse nel task graph finale, sotto forma di precedenze aggiuntive.
+
+\paragraph{Scrittura dei dati su file XML}
+Dopo aver analizzato il diagramma di Gantt e aver aggiunto gli archi seguendo 
+l'ordine di scheduling, le informazioni rilevanti per il runtime manager 
+vengono scritte nel file XML del progetto di \ac{FASTER}. I dati scritti sono:
+\begin{itemize}
+ \item tutte le implementazioni usate dai task che compongono il task graph 
+finale, incluse eventuali implementazioni aggiuntive create ex novo per i task di 
+comunicazione e di riconfigurazione;
+ \item la lista dei mapping fornita dal mapper per i task di computazione, con 
+mapping aggiuntivi per i task di comunicazione e riconfigurazione, che 
+specificano l'implementazione da utilizzare e il componente su cui verranno 
+eseguiti (componenti di comunicazione per i primi, controllore della 
+riconfigurazione per i secondi);
+ \item informazioni sul task graph finale, cioè con ordine di scheduling 
+esplicito.
+\end{itemize}
+
+Tutte queste informazioni verranno poi utilizzate dal runtime manager per 
+gestire l'effettiva esecuzione dell'applicazione.
+
+Nella prossima sezione verrà descritta la parte più importante dell'algoritmo 
+di scheduling, ossia la scelta di quale task è meglio considerare ad ogni 
 passo.
 
-Vengono inizialmente ridefiniti alcuni tipi di dato, per semplificare la lettura
-del codice.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  typedef std::set<ScheduledTaskInfo> BusyInfoSeries_t;
-  typedef std::unordered_map<std::string, BusyInfoSeries_t> GanttMap_t;
-\end{minted}
 
-Nel seguente frammento di codice sono illustrate le parti rilevanti della 
-dichiarazione della struttura.
-\newline
-% FIXME aggiustare indentazione codice
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct SchedulerGantt {
-      private:
-          GanttMap_t m_gantt;
-          // code...
-      public:
-          // code...
-          void addBusyInfo(const ScheduledTaskInfo & timeInfo);
-          bool isOverlapping(
-               const FasterComponentPtr & elem,
-               const ScheduledTaskInfo & timeInfo
-          ) const;
-          bool isComponentBusy(
-               const FasterComponentPtr & elem,
-               long int timestamp) const;
-          std::unordered_map<std::string, BusyInfoSeries_t> 
-              getBusyComponentsGivenTime(long int timestamp) const;
-          BusyInfoSeries_t getBusyInfoGivenComponentAndTime(
-                           const FasterComponentPtr & elem,
-                           long int timestamp) const;
-          long int getFirstAvailableTime(
-                   const FasterComponentPtr & elem, 
-                   long int timestamp, long int execTime) const;
-          // code...
-  };
-\end{minted}
-Il diagramma di Gantt è quindi rappresentato tramite una mappa non ordinata 
-che ha per chiavi delle stringhe, gli id dei componenti, e per valori un 
-insieme di \verb+ScheduledTaskInfo+, struttura che contiene le informazioni di 
-scheduling di un task.
+\section{Euristica di scelta dei task}
+\label{sec:euristicaSceltaTask}
+In questa sezione viene spiegato come l'algoritmo di scheduling opera ad ogni 
+passo la scelta di quale task è più conveniente considerare per l'assegnazione 
+dei tempi, così da minimizzare la lunghezza totale dello schedule finale.
 
-Sono a disposizione dei metodi pubblici per aggiungere le informazioni di 
-scheduling relative a un task, per verificare se un determinato componente è 
-occupato in un determinato istante di tempo e per ottenere il primo istante di 
-tempo in cui un determinato componente è libero.
+\paragraph{Utilizzo di un algoritmo euristico}
+Come visto nel capitolo \ref{chap:SOA}, è stato preferito l'utilizzo di un 
+algoritmo euristico basato su una lista con uno scheduling effettuato 
+iterativamente e in maniera incrementale, rispetto a una euristica 
+esplorativa/evolvibile, che richiede un tempo di esecuzione superiore prima di 
+giungere a risultati accettabili e rischia di generare molte soluzioni non 
+applicabili. Allo stesso tempo, il procedimento di scegliere un task ad ogni 
+passo sulla base di una determinata priorità, pur essendo molto veloce 
+rappresenta una scelta \emph{greedy}, che in generale non garantisce il 
+raggiungimento di obiettivi accettabili.
 
-\subsubsection{Scheduler Output}
-I file \emph{schedulerOutput.hpp} e \emph{schedulerOutput.cpp} contengono la 
-dichiarazione e la definizione della struttura \verb+SchedulerOutput+. Questa 
-struttura contiene i dati di output dello scheduler, che vengono 
-progressivamente aggiornati man mano che l'esecuzione dell'algoritmo avanza, e 
-alla fine sono utilizzati per il calcolo della metrica \emph{makespan}.
+Per questo è importante considerare diversi fattori e combinarli; sulla 
+base di conoscenze pregresse è possibile identificare comportamenti 
+ricorrenti che si verificano durante l'esecuzione di una generica applicazione, 
+ad esempio possibili colli di bottiglia nell'esecuzione. Queste regolarità 
+riscontrabili portano alla formulazione di diversi parametri che possono essere 
+combinati nel calcolo della priorità che caratterizza ogni task, creando una 
+funzione di priorità ``pesata'' rispetto alle possibili cifre di merito. Questo 
+è l'approccio alla base dell'euristica utilizzata per la scelta dei task che 
+viene illustrata in questa sezione.
+
+\paragraph{Garanzia di applicabilità delle soluzioni generate}
+L'algoritmo di scheduling proposto permette di evitare che vengano generate 
+delle soluzioni \emph{infeasible}, soluzioni che violino i vincoli sul tempo di 
+esecuzione (per esempio nel caso di tempi di esecuzione sovrapposti per task 
+mappati sullo stesso componente), oppure che siano caratterizzate da un mancato 
+rispetto delle precedenze tra i task del grafo.
+
+Si assiste quindi alla generazione di una soluzione sempre valida per 
+costruzione, poichè i task presi in esame ad ogni passo dall'euristica di 
+scelta sono soltanto quelli le cui precedenze siano già state considerate. 
+Questa caratteristica dell'algoritmo, combinata a una veloce euristica di scelta 
+dei task, permette di ottenere in un tempo molto breve una soluzione che non 
+viola nessun vincolo e che fornisce una stima del tempo di esecuzione fedele, 
+nell'ipotesi che le stime dei tempi di esecuzione siano ragionevolmente 
+affidabili.
 
 
-Nel seguente frammento di codice sono presentate le ridefinizioni di tipo di 
-dato utilizzate in \emph{schedulerOutput.hpp}.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  typedef std::tr1::tuple<FasterTaskPtr,
-                          FasterComponentPtr, 
-                          FasterImplementationPtr> MappingStep_t;
-  typedef std::unordered_map<FasterTaskPtr,
-                             ScheduledTaskInfo, 
-                             utilities::HashUtility<FasterTaskPtr>, 
-                             utilities::EqualUtility<FasterTaskPtr> > 
-                             ScheduledTaskInfoMap_t;
-\end{minted}
+\subsection{Funzionamento}
+L'algoritmo per la scelta del task migliore viene invocato a ogni passo di 
+scheduling, e opera su una lista aggiornata di task le cui precedenze sono 
+soddisfatte.
 
-Il seguente frammento illustra la dichiarazione della struttura \verb+SchedulerOutput+.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct SchedulerOutput {
-      private:
-          SchedulerGantt m_schedulingGantt;
-          ScheduledTaskInfoMap_t m_scheduledTaskInfo;
-          std::set<MappingStep_t> m_schedulerMapping;
+Appena inizia l'esecuzione dell'algoritmo viene effettuata un'analisi 
+preliminare della lista dei task per determinare se la lista contiene un solo 
+elemento, ad esempio nel caso in cui si stia esaminando il primo nodo del 
+grafo. Se si verifica questa situazione, allora l'unico elemento della lista è 
+selezionato come task migliore. Nel caso in cui la lista contenga più di un 
+elemento, è necessario procedere al calcolo delle priorità.
 
-      public:
-          // code...
-          void addSchedulingTimeInfo(const ScheduledTaskInfo & timeInfo);
-          void addScheduledTaskInfo(
-               const FasterTaskPtr & task,
-               const ScheduledTaskInfo & info);
-          long int computeMakespan() const;
-  };
-\end{minted}
-Come si può vedere dal codice, la struttura agisce come wrapper attorno ai 
-metodi della struttura \verb+SchedulerGantt+ vista in precedenza, ed espone dei 
-metodi che permettono di aggiungere all'output le informazioni appena calcolate.
-Il metodo \verb+computeMakespan()+ permette di calcolare la metrica di valutazione
-dello scheduling. Nella struttura sono presenti dati membro aggiuntivi che rendono
-meglio accessibili le informazioni di scheduling già ricavabili dal diagramma di Gantt.
-Da queste variabili aggiuntive è possibile ricavare in maniera semplice le informazioni
-per ogni task tramite la mappa \verb+m_scheduledTaskInfo+ e il mapping assegnato dallo
-scheduler tramite la variabile \verb+m_schedulerMapping+.\footnote{Mentre il mapping
-determinato dal mapper è specificato solamente per processing task (relativi al task 
-graph originale), il mapping presente nell'output dello scheduler è relativo ai 
-task del task graph preprocessato.}
+Viene eseguito un ciclo su tutta la lunghezza della lista, ad ogni passo del 
+ciclo si calcola la priorità del task secondo il procedimento descritto nella 
+prossima sezione; la priorità viene confrontata con la massima priorità trovata 
+fino a quel momento. Dopo che tutti i task sono stati presi in esame, il task 
+con la massima priorità in assoluto viene selezionato per l'assegnazione dei 
+tempi, e l'algoritmo termina.
 
-\subsubsection{Scheduler Utility}
-I file \emph{schedulerUtility.hpp} e \emph{schedulerUtility.cpp}, infine, 
-contengono la definizione di alcune strutture comunemente utilizzate dallo 
-scheduler e viste anche nei precedenti frammenti di codice sorgente.
+% TODO scrivere del caching delle priorità
 
-La struttura \verb+TaskTimes+ incapsula gli istanti di inizio e fine di un task.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct TaskTimes {
-      long int startTime;
-      long int endTime;
-      // constructor, destructor and operators
-  };
-\end{minted}
+\subsection{Calcolo delle priorità}
+Il calcolo della priorità di un task dipende dal suo tipo; diverse regole e 
+modi per assegnare la priorità sono utilizzati a seconda che il task sia di 
+computazione, comunicazione o riconfigurazione. Anche l'implementazione 
+utilizzata per i task di computazione riveste un ruolo importante per definire 
+come calcolarne la priorità.
 
-La struttura \verb+CriticalPathInfo+ contiene le informazioni relative al 
-percorso critico di un task.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct CriticalPathInfo {
-      long int asap;
-      long int alap;
-      long int slack;
-  };
-\end{minted}
+\subsubsection{Task con implementazione software}
+I task con implementazione di tipo software non possono essere eseguiti su 
+scheda, bensì vengono mappati su un processore general-purpose. Partendo da 
+questo presupposto, la metrica utilizzata per calcolare la priorità di un task 
+mappato con implementazione software è basata sulle informazioni sul percorso 
+critico. In questo ambito diventano rilevanti tali informazioni, calcolate 
+in precedenza durante la fase di preprocessing.
 
-La struttura \verb+ScheduledTaskInfo+ contiene le informazioni riguardanti lo 
-scheduling di un task.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct ScheduledTaskInfo {
-      FasterTaskPtr task;
-      FasterImplementationPtr implementation;
-      FasterComponentPtr component;
-      TaskTimes times_info;
-      long int executionTime;
-      // operators
-  };
-\end{minted}
+A seconda che il task sia o meno sul percorso critico del grafo, e in 
+base all'eventuale scarto se così non è, viene calcolata la priorità del task 
+di computazione. La funzione di calcolo della priorità dei task di computazione 
+con implementazione software diventa quindi
+\begin{equation} \label{eq:softwarePriority}
+ f=C*CPInfo
+\end{equation}
+dove $C$ rappresenta un parametro costante e $CPInfo$ le informazioni sul 
+percorso critico.
 
-La struttura \verb+MemoryOccupationInfo+ contiene le informazioni relative a 
-un'area di memoria che viene allocata a un processing task.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct MemoryOccupationInfo {
-      unsigned long base_addr;
-      unsigned long data_size;
-      TaskSet_t consumersSet;
-      bool reusable_area;
-  };
-\end{minted}
+\subsubsection{Task con implementazione hardware}
+Nel caso di task che devono essere eseguiti su logica riconfigurabile, quindi 
+mappati su implementazioni di tipo hardware, vengono utilizzate tre metriche:
+\begin{enumerate}
+ \item informazioni sul percorso critico, come nel caso dei task con 
+implementazione di tipo software;
+ \item l'istante di inizio al più presto, o \emph{\ac{EST}}: rappresenta 
+l'istante al più presto nel quale il task può iniziare l'esecuzione;
+ \item l'istante di fine al più presto, o \emph{\ac{EFT}}.
+\end{enumerate}
+La funzione di calcolo della priorità risulta quindi diversa rispetto alla 
+\ref{eq:softwarePriority}, assumendo la forma
+\begin{equation} \label{eq:hardwarePriority}
+ f=-A*EST - B*EFT + C*CPInfo
+\end{equation}
+dove $A$, $B$ e $C$ sono parametri fissati e $CPInfo$, $EST$ e $EFT$ sono le 
+tre metriche sopra elencate.
 
-Infine, all'interno del file \emph{schedulerUtility.cpp} è presente un 
-namespace \verb+utilities+, che contiene due strutture che hanno l'operatore 
-\verb+()+ ridefinito. Queste strutture vengono utilizzate per testare 
-l'equivalenza o per calcolare l'hash di un oggetto del tipo specificato tramite 
-template. Vengono utilizzate nelle mappe e negli insiemi non ordinati mostrati 
-nelle strutture precedenti, e operano sul dato membro ``\verb+id+'' 
-dell'oggetto passato come parametro.
+Nei prossimi paragrafi viene descritto come si calcolano le tre metriche 
+utilizzate nelle funzioni \ref{eq:softwarePriority} e \ref{eq:hardwarePriority}.
 
+\paragraph{Informazioni sul percorso critico}
+Il calcolo della metrica relativa al percorso critico si basa sulle 
+informazioni riguardanti lo \emph{scarto} (slack) del task. I dati sugli 
+scarti di tutti i task sono stati calcolati durante la fase di preprocessing, 
+e sono disponibili in quanto inseriti nell'interfaccia di input dello scheduler.
 
-\section{Classi e gerarchie principali}
-\label{sec:classiGerarchie}
-In questa sezione vengono presentate le classi principali della toolchain 
-relativa all'algoritmo di esplorazione (mapper) e in particolare 
-dell'algoritmo di scheduling utilizzato per la valutazione quantitativa della 
-soluzione proposta dal mapper.
+Si fissa una soglia per lo scarto al di sotto della quale si considera il task 
+come facente parte del percorso critico; al task si assegna quindi la massima 
+priorità per questa cifra di merito se il suo scarto è sotto soglia. La 
+definizione di una soglia permette all'algoritmo di essere meno rigido nel 
+controllo dello scarto di un task, che viene così considerato come critico anche 
+se il suo scarto è di poco superiore a $0$, invece che considerare critici 
+solamente task con scarto esattamente pari a $0$.
 
-\subsection{Algoritmo di esplorazione}
-\label{subsec:algoritmoEsplorazione}
-Il codice sorgente dell'algoritmo di esplorazione è localizzato nella cartella 
-\emph{toolchain/sources/explorer}. L'eseguibile dell'algoritmo di esplorazione 
-è compilato a partire dal \verb+main()+ che si trova nel file sorgente 
-\emph{explorerMain.cpp} nella suddetta cartella. Il main si occupa di 
-istanziare i vari componenti che verranno spiegati nelle prossime sezioni e di 
-lanciare la procedura di esplorazione. Al termine, viene generato un file di 
-output e stampate le statistiche dell'esplorazione.
+Se, invece, lo scarto del task supera la soglia, si considera il logaritmo di 
+tale scarto. Il valore della cifra di merito è così calcolato:
+\begin{equation}
+ CPInfo = \begin{cases}
+           MAX & \mbox{se } 0 \leq s \leq THRESHOLD\\
+           \frac{1}{log_2\left(s\right)} & \mbox{se } s > THRESHOLD
+          \end{cases}
+\end{equation}
+dove $s$ è lo scarto del task.
 
-\subsubsection{Componente di esplorazione}
-Il componente di esplorazione viene istanziato dalla funzione \verb+main()+ e 
-si occupa di gestire l'esplorazione dal momento del lancio, effettuato nel main, 
-fino alla terminazione. Il codice di questo componente è contenuto nei file 
-\emph{explore.hpp} ed \emph{explore.cpp}, presenti nella sottocartella 
-\emph{explore}.
+\paragraph{Earliest Start Time}
+L'istante al più presto nel quale il task può iniziare l'esecuzione, senza 
+contare possibili conflitti nell'utilizzo dei componenti, è concettualmente 
+uguale al tempo \emph{asap}, anch'esso calcolato nella fase di preprocessing 
+come lo scarto. Il valore della cifra di merito è così calcolato:
+\begin{equation}
+ EST = \begin{cases}
+        0 & \mbox{se } asap = 0\\
+        log_2\left(asap\right) & \mbox{se } asap > 0
+       \end{cases}
+\end{equation}
+Si è deciso di utilizzare il logaritmo in modo da non penalizzare 
+significativamente task che hanno un EST più elevato rispetto a task con un EST 
+minore. Il logaritmo infatti permette di basarsi sulla differenza tra gli ordini 
+di grandezza in base $2$.
+% TODO spiegare cosa l'est permette di considerare
 
-Poichè il componente di esplorazione rappresenta un oggetto contenente un 
-algoritmo invocabile, secondo la convenzione definita nella sezione
-\ref{sec:osservazioniGenerali}, è implementato come \verb+class+ e 
-inserito nel namespace \verb+faster::applications::explorer+, come tutti i 
-componenti che vedremo di seguito relativi all'algoritmo di esplorazione.
+\paragraph{Earliest Finish Time}
+L'istante al più presto in cui il task termina l'esecuzione è calcolato come la 
+stima asap del task, a cui viene sommato il tempo di esecuzione stimato.
 
-Il componente di esplorazione ha una propria interfaccia di input, definita 
-nella struttura \verb+ExplorerInput+, contenuta nella cartella 
-\emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/explorer}. 
-Al suo interno presenta dei riferimenti ai componenti di iterazione e di 
-terminazione. Entrambi questi componenti verranno descritti nelle prossime 
-sezioni, e si trovano nella sottocartella \emph{explore/exploreComponents}.
+Il valore di questa metrica è così calcolato:
+\begin{equation}
+ EFT = log_2\left(asap + eTime\right)
+\end{equation}
+Si noti che il caso in cui l'argomento del logaritmo abbia valore $0$ non è 
+gestito, poichè il tempo di esecuzione di un task di computazione è supposto 
+non nullo, e l'unico caso in cui si abbia una stima $asap$ pari a $0$ si 
+verifica nell'analisi dei task iniziali, che si suppone siano sempre task di 
+computazione.
 
-\subsubsection{Componente di iterazione}
-Data l'ampia modularità decisa in fase di progettazione, il componente di 
-iterazione è rappresentato da una classe astratta che espone 
-\verb+nextIteration()+, un metodo virtuale puro\footnote{Un metodo virtuale 
-puro deve essere implementato da tutte le sottoclassi della classe che lo 
-dichiara.} che si occupa di gestire un'iterazione dell'esplorazione.
+Valgono considerazioni analoghe rispetto alla precedente cifra di merito 
+per quanto concerne l'uso del logaritmo nel calcolo del valore.
+% TODO spiegare cosa l'eft permette di considerare
 
-L'interfaccia della classe astratta è definita in 
-\emph{explore/exploreComponents/iteration/exploreIterationAlgorithm.hpp}; è 
-presente anche una sottoclasse che implementa la funzionalità iterativa, nella 
-sottocartella \emph{explore/exploreComponents/iteration/aco}. In ogni caso si 
-può estendere aggiungendo altri componenti come sottoclassi separate che 
-ridefiniscono il metodo per l'iterazione.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  class ExploreIterationAlgorithm {
-      protected:
-          const ExplorerInput& m_explorerInput;
-      public:
-          // constructor and destructor
-          virtual std::set<ExplorerOutput> nextIteration() = 0;
-          virtual ExplorerOutput getCurrentBestSolution() const = 0;
-          virtual std::set<ExplorerOutput> getLastIterationSolutions()
-              const = 0;
-  };
-\end{minted}
+\subsection{Regole aggiuntive}
+Oltre al calcolo delle varie metriche presentato nella precedente sezione, sono 
+state introdotte delle regole aggiuntive che modificano i valori delle cifre di 
+merito e, di conseguenza, della priorità finale dei task. Queste regole non 
+operano avendo conoscenza isolata a livello del singolo task, bensì agiscono in 
+base al comportamento tenuto in precedenza dall'algoritmo o considerando anche 
+altri task. L'aggiunta di queste regole consente quindi all'algoritmo di 
+effettuare scelte più ``intelligenti'' nella scelta dei task migliori da 
+schedulare.
 
+\subsubsection{Fattore di degrado}
+La prima di queste tecniche è l'introduzione di un \emph{fattore di degrado} 
+(in inglese \emph{decay factor}). Può capitare che, nel corso dell'esecuzione 
+dello scheduler, venga data sempre massima priorità ai task sul percorso 
+critico, che vengono quindi scelti dall'euristica come migliori a ogni passo di 
+scheduling. Laddove vi siano molti conflitti (soprattutto nelle comunicazioni) 
+questo può portare al verificarsi di un collo di bottiglia nell'utilizzo delle 
+risorse, che vengono occupate prevalentemente da task che si trovano sul 
+percorso critico, mentre altri task non possono essere eseguiti per la continua 
+occupazione delle risorse su cui questi sono mappati.
 
-\subsubsection{Componente di terminazione}
-La terminazione dell'algoritmo di esplorazione viene decisa dal componente di 
-terminazione. Come per l'iterazione, anche il componente di iterazione è 
-composto da una classe astratta che espone un metodo che deve essere 
-reimplementato dalle sottoclassi, \verb+isTerminated()+.
+Per scongiurare il verificarsi di questa situazione, si è deciso di introdurre 
+un fattore di degrado, che riduca progressivamente il massimo valore della 
+cifra di merito corrispondente alle informazioni sul percorso critico; in 
+questo modo viene data una sempre minore priorità ai task sul percorso critico. 
+Il fattore di degrado è inizialmente unitario, così da avere impatto nullo; man 
+mano che si scelgono task sul percorso critico esso viene ridotto 
+progressivamente di una quantità $\delta_1$. Non appena viene scelto un 
+task che non appartiene al percorso critico (quindi avente scarto sopra la 
+soglia), il fattore di degrado viene incrementato di una quantità $\delta_2$. 
+In questo modo, se non si scelgono task sul percorso critico si torna a dare 
+maggiore priorità ai task critici.
 
-Come nel caso del componente di iterazione, è presente un'implementazione della 
-classe astratta, che termina quando il numero di iterazioni raggiunge il limite 
-specificato nel file di configurazione dell'explorer.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  class ExploreTerminationAlgorithm {
-      protected:
-          const ExplorerInput & m_sd;
-      public:
-          // constructor and destructor
-          virtual bool isTerminated() const = 0;
-          virtual void updateState(std::set<ExplorerOutput>) = 0;
-          virtual faster::dataStructures::FasterPerformanceStatistics 
-              getStatistics() = 0;
-  };
-\end{minted}
+L'assegnamento del valore alla cifra di merito relativa al task critico, 
+delineato nella \ref{eq:softwarePriority}, viene sostituito con
+\begin{equation} \label{eq:newSoftwarePriority}
+ CPInfo = \begin{cases}
+           MAX*df & \mbox{se } 0 \leq s \leq THRESHOLD\\
+           \frac{1}{log_2\left(s\right)} & \mbox{se } s > THRESHOLD
+           \end{cases}
+\end{equation}
+dove $df$ rappresenta il fattore di degrado.
 
-% TODO metriche dell'algoritmo di esplorazione
+\subsubsection{Priorità per task di comunicazione}
+La seconda tecnica utilizzata è una diversa assegnazione di priorità per alcuni 
+task di comunicazione. Come visto nella sezione 
+\ref{sec:aggiuntaRiconfigurazioni}, eventuali task di riconfigurazione vengono 
+inseriti tra i task di comunicazione di tipo \emph{WRITE} e \emph{READ} che 
+leggono e scrivono dati su quell'area, rispettivamente. Poichè il tempo 
+impiegato per la riconfigurazione di un'area in generale introduce un 
+overhead considerevole nell'esecuzione dell'applicazione, è auspicabile che 
+il tempo di riconfigurazione venga ``nascosto'' il più possibile dal tempo 
+impiegato per l'esecuzione di altri task (le dipendenze del task da eseguire 
+successivamente sull'area riconfigurata), così da ridurre il più possibile eventuali
+ritardi che peseranno sul makespan finale.
 
-\subsection{Algoritmo di scheduling}
-\label{subsec:algoritmoScheduling}
-L'obiettivo di questa sezione è presentare le porzioni più importanti del 
-codice dell'algoritmo di scheduling. Le interfacce di input/output e le 
-strutture dati utilizzate sono già state descritte nella sezione 
-\ref{subsec:struttureDatiScheduler}, mentre in questa sezione verranno esaminati i 
-vari componenti dello scheduler che gestiscono l'elaborazione.
-
-Il codice sorgente dell'algoritmo di scheduling è contenuto nella cartella 
-\emph{toolchain/sources/scheduler}; la sua struttura rispecchia quella 
-dell'algoritmo di esplorazione, come verrà spiegato nelle prossime sezioni per 
-l'esame dei componenti dello scheduler. Tutte le classi che compongono 
-sono incluse nel namespace \verb+faster::applications::scheduler+.
-
-\subsubsection{Componente di scheduling}
-La sottocartella \emph{schedule} contiene la dichiarazione e definizione di
-\verb+Schedule+, una classe astratta che espone un metodo virtuale puro per il 
-calcolo dello scheduling. In questo modo è possibile utilizzare algoritmi 
-completamente differenti semplicemente creando una nuova sottoclasse di 
-\verb+Schedule+ che implementa il metodo \verb+computeSchedule()+.
-\newline
-% FIXME perchè c'è m_explorerInput dentro???
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  class Schedule {
-      protected:
-          const explorer::ExplorerInput & m_explorerInput;
-          SchedulerOutput m_schedulerOutput;
-      public:
-          // code
-          virtual SchedulerOutput computeSchedule(
-                  const explorer::ExplorerTrace & trace) = 0;
-  };
-\end{minted}
-
-La sottoclasse che implementa lo scheduler seguendo l'approccio descritto nel capitolo 
-\ref{chap:approccio}, è chiamata \verb+ScheduleRB+ ed è contenuta nella 
-sottocartella \emph{schedule/scheduleComponents}. Nel seguente frammento 
-vengono riportate le parti rilevanti della dichiarazione della classe, con 
-l'inclusione dei vari componenti.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  class ScheduleRB : public Schedule {
-    private:
-      SchedulerInput m_schedulerInput;
-      SchedulerBestSchedulableTaskAlgorithmPtr m_bestSchedulableAlgorithm;
-      SchedulerTimeAssignmentAlgorithmPtr m_timeAssignmentAlgorithm;
-      data::SchedulerData m_schedulerData;
-      // code...
-    public:
-      // code...
-      virtual SchedulerOutput computeSchedule(
-              const explorer::ExplorerTrace & trace);
-  };
-\end{minted}
-
-Viene di seguito presentato il core loop dell'algoritmo di scheduling.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  // code...
-  ScheduleRBAnalyzeTrace preprocessingAlgorithm(m_schedulerInput);
-  preprocessingAlgorithm.doPreprocessing();
-  // code...
-  do {
-    m_resolveDependencies();
-    FasterTaskPtr bestTask;
-    bestTask = m_bestSchedulableAlgorithm->bestSchedulableTask(
-               m_schedulerData.readyTasksList);
-    // code...
-    ScheduledTaskInfo taskInfo;
-    taskInfo = m_timeAssignmentAlgorithm->calculateSchedulingInfo(bestTask);
-    m_schedulerData.scheduledTasksList.push_back(bestTask);
-    m_lastScheduledTask = bestTask;
-    m_schedulerOutput.addScheduledTaskInfo(bestTask, taskInfo);
-    m_schedulerData.readyTasksList.erase(
-                        std::find(m_schedulerData.readyTasksList.begin(), 
-                        m_schedulerData.readyTasksList.end(), bestTask));
-    m_schedulerData.unscheduledTasksSet.erase(bestTask);
-  } while (!m_schedulerData.unscheduledTasksSet.empty());
-\end{minted}
-
-Il metodo \verb+m_resolveDependencies()+ riempie la lista di task pronti per 
-essere schedulati con i task che hanno tutte le precedenze soddisfatte; come si 
-può vedere dal frammento di codice precedente, il task migliore tra quelli 
-pronti viene selezionato da un componente dedicato alla selezione dei task e 
-schedulato da un altro componente dedicato all'assegnazione dei tempi. Una 
-volta che le informazioni di scheduling per il task selezionato sono state 
-calcolate, il task è considerato come schedulato, le informazioni sono aggiunte 
-all'output (metodo \verb+addScheduledTaskInfo()+) e il task è rimosso dalla 
-lista ``ready'' e dall'insieme dei task non ancora schedulati. Il ciclo è 
-ripetuto fino a che vi sono task non schedulati.
-
-\subsubsection{Componente di preprocessing}
-Il codice del componente dedicato al preprocessing è contenuto nella 
-sottocartella \emph{schedule/scheduleComponents/preprocessing}; la classe 
-\verb+ScheduleRBPreprocessingAlgorithm+ è una classe astratta che espone un 
-metodo virtuale puro da reimplementare per poter personalizzare la fase di 
-preprocessing. La sottoclasse \verb+ScheduleRBAnalyzeTrace+ ne fornisce 
-un'implementazione, che è quella utilizzata nell'algoritmo di scheduling 
-trattato in questa tesi e descritta ad alto livello nella sezione 
-\ref{subsec:fasePreprocessing}.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape ]{c}
-  void ScheduleRBAnalyzeTrace::doPreprocessing()
-  {
-    std::vector<explorer::ExplorerTraceStep_t> traceSteps = 
-        m_schedulerInput.getExplorerTrace().getTrace();
-    m_taskGraph = 
-      m_schedulerInput.getFasterProject()->getPartition(0)->taskgraph->clone();
-    m_integrateCommunications(traceSteps);
-    m_integrateReconfigurations(traceSteps);
-    m_schedulerInput.setTaskGraph(m_taskGraph);
-    m_schedulerInput.setReconfigurations(m_reconfigurationsList);
-    m_computeCriticalPathInfo();
-  }
-\end{minted}
-
-Come si può vedere dal codice, la fase di preprocessing clona il task graph 
-originale del progetto, lo modifica di conseguenza integrando comunicazioni e 
-riconfigurazioni e lo imposta come input dell'algoritmo di scheduling.
-
-\subsubsection{Componente di scelta dei task}
-Il codice del componente di scelta dei task è contenuto nella sottocartella 
-\emph{schedule/scheduleComponents/bestTaskAlgorithm}; il suo compito è 
-implementare un generico metodo di scelta dei task. In maniera simile ai 
-componenti precedentemente descritti, esiste una classe astratta base 
-\verb+SchedulerBestSchedulableTaskAlgorithm+ che contiene il metodo virtuale 
-puro \verb+bestSchedulableTask()+, che dev'essere reimplementato dalle 
-sottoclassi nel caso si voglia utilizzare un diverso criterio di scelta dei 
-task.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  class SchedulerBestSchedulableTaskAlgorithm {
-    protected:
-      const SchedulerInput & m_schedulerInput;
-    public:
-      // constructor and destructor
-      virtual FasterTaskPtr bestSchedulableTask(
-              const std::vector<FasterTaskPtr> & readyList) const = 0;
-  };
-\end{minted}
-
-La sottoclasse di \verb+SchedulerBestSchedulableTaskAlgorithm+
-che implementa il metodo come visto nella sezione \ref{sec:euristicaSceltaTask}
-è chiamata \verb+ScheduleRBPriorityHeuristic+ e si trova nella sottocartella 
-\emph{schedule/scheduleComponents/bestTaskAlgorithm/priorityHeuristic} ed è 
-dichiarata e definita nei file \emph{scheduleRBPriorityHeuristic.hpp} e 
-\emph{scheduleRBPriorityHeuristic.cpp}.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct PriorityMetrics {
-    FasterTaskPtr task;
-    float longestPath;
-    float est;
-    float eft;
-  };
-  class ScheduleRBPriorityHeuristic : public 
-          SchedulerBestSchedulableTaskAlgorithm {
-    private:
-      enum PriorityFunctionParameters {
-              LP = 10,
-              EST = 5,
-              EFT = 2,
-              WriteBeforeReconfiguration = 50
-      };
-      // code...
-      mutable float m_decayFactor;
-    public:
-      // constructor and destructor
-      virtual FasterTaskPtr bestSchedulableTask(
-              const std::vector<FasterTaskPtr> & readyList) const;
-  };
-\end{minted}
-
-Nel frammento di codice è inclusa la dichiarazione della 
-struttura \verb+PriorityMetrics+, che contiene le tre metriche utilizzate per 
-il calcolo della priorità di un task.
-
-All'interno della classe che implementa l'euristica si trovano invece i 
-parametri (pesi) assegnati alle varie metriche e il boost di priorità assegnato 
-ai task di comunicazione di tipo \emph{WRITE} che precedono una 
-riconfigurazione, nella enum \verb+PriorityFunctionParameters+. Il dato membro 
-\verb+m_decayFactor+ rappresenta il fattore di degrado che riduce la cifra di 
-merito corrispondente alle informazioni sul percorso critico.
-
-Viene ora presentato il codice della funzione che inizializza i valori delle 
-metriche nella struttura, con le relative funzioni per il calcolo delle singole 
-metriche.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  PriorityMetrics ScheduleRBPriorityHeuristic::m_computePriorityMetrics(const 
-                      FasterTaskPtr & task, bool isSoftCoreMapped) const
-  {
-    PriorityMetrics metrics;
-    metrics.task = task;
-    if (isSoftCoreMapped) {
-      metrics.longestPath = m_computeLongestPath(task);
-    } else {
-      metrics.longestPath = m_computeLongestPath(task);
-      metrics.est = m_computeEST(task);
-      metrics.eft = m_computeEFT(task);
-    }
-    return metrics;
-  }
-  // ...
-  float ScheduleRBPriorityHeuristic::m_computeLongestPath(
-        const FasterTaskPtr & task) const
-  {
-    const CriticalPathInfoMap_t & criticalPathInfo = 
-            m_schedulerInput.getCriticalPathInfo();
-    CriticalPathInfo info = criticalPathInfo.find(task)->second;
-    long int slack = info.slack;
-    if (slack >= 0 && slack <= SLACK_THRESHOLD) {
-      return PRIORITY_MAX * m_decayFactor;
-    }
-    float logSlack = ::log2(slack);
-    return 1 / logSlack;
-  }
-  // ...
-  float ScheduleRBPriorityHeuristic::m_computeEST(
-        const FasterTaskPtr & task) const
-  {
-    const CriticalPathInfoMap_t & criticalPathInfo = 
-            m_schedulerInput.getCriticalPathInfo();
-    CriticalPathInfo info = criticalPathInfo.find(task)->second;
-    return info.asap == 0 ? info.asap : ::log2(info.asap);
-  }
-  // ...
-  float ScheduleRBPriorityHeuristic::m_computeEFT(
-        const FasterTaskPtr & task) const
-  {
-    const CriticalPathInfoMap_t & criticalPathInfo = 
-          m_schedulerInput.getCriticalPathInfo();
-    CriticalPathInfo info = criticalPathInfo.find(task)->second;
-    long int asap = info.asap;
-    long int execTime = m_helperAlgorithms.computeExecTime(task);
-    return ::log2(asap + execTime);
-  }
-\end{minted}
+Per mascherare il più possibile l'esecuzione di una riconfigurazione è 
+necessario che questa parta il prima possibile, il che implica, per la 
+struttura del grafo costruito dopo la fase di preprocessing, che tutte le 
+comunicazioni di tipo \emph{WRITE} che precedono la riconfigurazione vengano 
+eseguite il prima possibile. Questo requisito è stato risolto creando una 
+regola speciale per il calcolo della priorità dei task di comunicazione di tipo 
+\emph{WRITE} che precedono una riconfigurazione; per questi tipi di task, la 
+priorità è calcolata nel seguente modo:
+\begin{equation} \label{eq:writeBeforeRecPriority}
+ f=-A*EST - B*EFT + C*CPInfo + EP
+\end{equation}
+dove il termine aggiuntivo $EP$ rappresenta la priorità extra che viene 
+assegnata ai task. La formula \ref{eq:writeBeforeRecPriority} sostituisce la 
+\ref{eq:hardwarePriority} in questi casi.
 
 
-\subsubsection{Componente di assegnazione dei tempi}
-Il componente dell'algoritmo di scheduling che gestisce l'assegnazione dei 
-tempi è contenuto nella sottocartella 
-\emph{schedule/scheduleComponents/timeAssignmentAlgorithm}; il suo compito è 
-implementare la policy di assegnazione dei tempi ai vari task che vengono via 
-via selezionati. La classe astratta \verb+SchedulerTimeAssignmentAlgorithm+ 
-contiene un metodo virtuale puro che viene reimplementato dalle sottoclassi.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  class SchedulerTimeAssignmentAlgorithm {
-    protected:
-      const SchedulerInput & m_schedulerInput;
-    public:
-      // constructor and destructor
-      virtual ScheduledTaskInfo calculateSchedulingInfo(
-              const FasterTaskPtr & task) const = 0;
-  };
-\end{minted}
+\acrodef{RAM}{Random Access Memory}
 
-La sottoclasse che implementa il metodo nell'algoritmo trattato in questa tesi 
-è chiamata \verb+ScheduleRBASAPAlgorithm+, nel seguente frammento di codice ne 
-è illustrata la dichiarazione.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  class ScheduleRBASAPAlgorithm : public SchedulerTimeAssignmentAlgorithm {
-    private:
-      // code...
-      ScheduledTaskInfo m_calculateSchedulingInfoProcessingTask(
-                        const FasterTaskPtr & procTask) const;
-      ScheduledTaskInfo m_calculateSchedulingInfoCommunicationTask(
-                        const FasterTaskPtr & commTask) const;
-      ScheduledTaskInfo m_calculateSchedulingInfoReconfigurationTask(
-                        const FasterTaskPtr & reconfTask) const;
-      ScheduledTaskInfo m_calculateSchedulingInfoCommWriteTask(
-                        const FasterCommunicationWriteTaskPtr & commWriteTask) const;
-      ScheduledTaskInfo m_calculateSchedulingInfoCommReadTask(
-                        const FasterCommunicationReadTaskPtr & commReadTask) const;
-      void m_allocateMemoryForTask(const FasterTaskPtr & task) const;
-      // code...
-    public:
-      // constructor and destructor
-      virtual ScheduledTaskInfo calculateSchedulingInfo(
-              const FasterTaskPtr & task);
-  };
-\end{minted}
-Dal codice precedente è possibile vedere le dichiarazioni dei metodi che 
-calcolano le informazioni di scheduling per le tre principali categorie di 
-task e per i due tipi di task di comunicazione. Al momento di effettuare lo 
-scheduling di un task di comunicazione, viene istanziato l'oggetto che 
-implementa la policy di scheduling delle comunicazioni.
+\section{Elementi di comunicazione e gestione della memoria}
+\label{sec:elementiComunicazioneGestioneMemoria}
+In questa sezione viene presentata la struttura degli elementi di comunicazione 
+supportata dall'algoritmo di scheduling proposto in questo lavoro.
+Allo scopo di semplificare la gestione delle comunicazioni, è stato scelto 
+l'utilizzo di due \emph{template} di comunicazione standard, descritti nella 
+sezione \ref{sec:templateComunicazione}.
 
-Il metodo \verb+m_allocateMemoryForTask()+ gestisce l'allocazione della memoria 
-per i task di computazione chiamando i metodi del gestore della memoria.
+L'allocazione statica della memoria per i task di computazione, costituita da 
+un partizionamento della memoria \acs{RAM} effettuato per ogni task è invece 
+illustrata nella sezione \ref{sec:gestioneMemoria}.
 
-\paragraph{Policy di scheduling delle comunicazioni}
-La classe \verb+ScheduleRBCommunicationPolicy+ gestisce lo scheduling dei task 
-di comunicazione e implementa la policy spiegata nella sezione 
-\ref{subsec:policyComunicazioni}. La classe è dichiarata e definita nei file 
-\emph{scheduleRBCommunicationPolicy.hpp} e  \emph{scheduleRBCommunicationPolicy.cpp},
-contenuti nella sottocartella  \emph{schedule/scheduleComponents/timeAssignmentAlgorithm/asap/communicationPolicy}.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  class ScheduleRBCommunicationPolicy {
-    public:
-      // code...
-      ScheduledTaskInfo scheduleCommunicationTask(
-                        const FasterCommunicationTaskPtr & commTask, long int precTime);
-    private:
-      void m_removeConsumers(
-           const FasterCommunicationTaskPtr & commTask, bool scheduledOnBus);
-      // other private members
-  };
-\end{minted}
 
-Il metodo \verb+scheduleCommunicationTask()+ implementa la policy di scheduling dei
-task di comunicazione vista nel capitolo precedente; una volta calcolate le informazioni
-di scheduling, viene invocato il metodo \verb+m_removeConsumers()+ che si occupa di
-eliminare il task target della comunicazione dalla lista dei task in attesa per
-i dati presenti in memoria.
+\subsection{Template di comunicazione}
+\label{sec:templateComunicazione}
 
-\subsubsection{Allocazione della memoria}
-La classe \verb+SchedulerMemoryManager+, dichiarata e definita nei file
-\emph{schedulerMemoryManager.hpp} e \emph{schedulerMemoryManager.cpp} contenuti nella cartella
-\emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/scheduler}, gestisce
-gestisce l'allocazione della memoria per i processing task che compongono l'applicazione.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,mathescape]{c}
-  typedef std::unordered_map<FasterTaskPtr, MemoryOccupationInfo,
-          utilities::HashUtility<FasterTaskPtr> > MemoryOccupationMap_t;
-  class SchedulerMemoryManager {
-    public:
-      // constructor and destructor
-      void addMemoryInfo(
-           const FasterTaskPtr & task,
-           const MemoryOccupationInfo & info);
-      void addMemoryInfo(
-           const FasterTaskPtr & task,
-           unsigned long base_addr,
-           unsigned long data_size,
-           TaskSet_t consumersSet);
-      void allocateMemoryForTask(
-           const FasterTaskPtr & task,
-           unsigned long data_size,
-           const TaskSet_t & consumersSet);
-      void removeConsumer(const FasterTaskPtr & consumer);
-      MemoryOccupationInfo getMemoryOccupationInfo(
-                           const FasterTaskPtr & task) const;
-      MemoryOccupationMap_t getMemoryOccupationMap() const;
-      void setMemoryOccupationMap(const MemoryOccupationMap_t & map);
-    private:
-      unsigned long m_getFirstAvailableAddress(unsigned long data_size);          
-      MemoryOccupationMap_t m_memoryOccupationMap;          
-      unsigned long m_largestAvailableAddress;
-  };
-\end{minted}
+\paragraph{Comunicazione tramite \acs{RAM}}
+Il primo template, più semplice, è rappresentato dallo scenario in cui tutti i 
+core (sia \emph{hard} che \emph{soft}, oltre a processori general purpose) presenti sulla 
+scheda possano comunicare tramite letture e scritture di dati su una memoria 
+\acs{RAM} condivisa. Ogni unità computazionale può pertanto comunicare con ogni 
+altra unità computazionale, utilizzando quindi due task di comunicazione:
+\begin{itemize}
+ \item un task \emph{WRITE} che scrive i dati di output in memoria;
+ \item un task \emph{READ} che legge i dati da memoria e li carica come input 
+per il task destinatario della comunicazione.
+\end{itemize}
+Questo schema segue l'aggiunta delle comunicazioni spiegata precedentemente 
+nella sezione sulla fase di preprocessing.
 
-La mappa \verb+m_memoryOccupationMap+ contiene le aree di memoria allocate per tutti i
-task e i metodi necessari per riservare uno spazio di indirizzi a un nuovo task, oltre
-al metodo per rimuovere un task di comunicazione (consumatore) dalla lista di task in
-attesa dei dati contenuti nella memoria.
+\subparagraph{Stima del tempo di esecuzione}
+La stima del tempo di esecuzione di una comunicazione effettuata su \acs{RAM} è 
+calcolata partendo da una serie di parametri disponibili nell'XML del progetto 
+\ac{FASTER}: la lunghezza del burst di dati trasferiti, il tempo medio di upload 
+di un burst,\footnote{Il tempo medio necessario perchè un burst di dati venga 
+effettivamente trasferito in memoria dal controller.} oltre alla dimensione 
+dei dati da trasferire in memoria (ovvero il \emph{produce rate} del task). Da 
+questi dati è possibile calcolare una stima del tempo di esecuzione del task di 
+comunicazione come
+\begin{equation}
+execTime = \ceil[\bigg]{\frac{produceRate}{burstLength}} \cdot 
+mediumBurstUploadTime
+\end{equation}
+
+\subparagraph{Porte di lettura/scrittura}
+In fase di implementazione del template che prevede la comunicazione tramite 
+\acs{RAM} è stata fornita la possibilità di specificare come parametro nel file 
+XML del progetto l'eventuale numero di porte di lettura/scrittura disponibili 
+per la memoria, in modo da poter specificare quante letture/scritture è 
+possibile effettuare contemporaneamente in memoria senza bisogno di 
+serializzare le comunicazioni.
+
+L'algoritmo tiene conto del numero di porte disponibili in un determinato istante
+e posticipa l'esecuzione di task di comunicazione tramite \acs{RAM} se il
+massimo numero di letture/scritture in parallelo è raggiunto.
+
+
+\paragraph{Comunicazione tramite \acs{RAM} e BUS}
+Il secondo template è un'estensione del primo: in questo scenario tutti i 
+core possono comunicare tra loro anche mediante un BUS, che rende possibile 
+effettuare dei collegamenti punto-punto tra tutti i core. Nel caso venga deciso 
+in fase di scheduling di usare il BUS invece che la comunicazione tramite 
+memoria per un determinato scambio di dati, è necessario ristrutturare i task 
+aggiunti in fase di preprocessing per quella comunicazione, considerando 
+soltanto la presenza di un task di tipo \emph{WRITE}, il cui compito è inviare 
+tramite BUS i dati direttamente dal task sorgente al task destinazione,
+senza usare una memoria come tramite.
+
+\subparagraph{Stima del tempo di esecuzione}
+Il calcolo della stima del tempo di esecuzione di una comunicazione effettuata 
+su BUS è più semplice rispetto alle comunicazioni tramite memoria e coinvolge 
+un numero inferiore di parametri. Infatti, è necessario sapere soltanto il rate 
+di trasferimento del BUS e ovviamente la dimensione dei dati da trasferire. 
+Noti i due parametri, la stima della durata della comunicazione si calcola 
+semplicemente come
+\begin{equation}
+ execTime = \ceil[\bigg]{\frac{produceRate}{transferRate}}
+\end{equation}
+
+\subparagraph{Accesso esclusivo al BUS}
+Un'importante differenza tra le comunicazioni basate su \acs{RAM} e quelle 
+tramite BUS consiste nel fatto che mentre la memoria può avere più di una porta 
+per la lettura/scrittura dei dati, il BUS non ammette l'esecuzione 
+di trasferimenti in parallelo. L'algoritmo quindi posticipa l'esecuzione di un 
+trasferimento su BUS se un altro trasferimento è in esecuzione sulla risorsa.
+
+
+% TODO introdurre la sezione all'inizio della sezione su comunicazioni e memoria
+\subsection{Policy di assegnazione delle comunicazioni}
+\label{subsec:policyComunicazioni}
+Al momento di effettuare lo scheduling di una comunicazione possono occorrere
+due situazioni, a seconda dei template a disposizione nell'architettura:
+\begin{enumerate}
+ \item le comunicazioni possono essere effettuate soltanto tramite \acs{RAM};
+ \item le comunicazioni possono essere effettuate sia tramite \acs{RAM} che su 
+BUS.
+\end{enumerate}
+Nel primo caso, la comunicazione viene assegnata all'esecuzione su 
+memoria e vengono calcolate le informazioni relative ai tempi di esecuzione, 
+basandosi sulla disponibilità del componente e sull'eventuale numero di porte 
+specificato; nel secondo, dev'essere controllato se la comunicazione è ``eleggibile'' 
+per il BUS. Questa condizione dipende dai seguenti fattori:
+\begin{itemize}
+ \item se il task di comunicazione è del tipo \emph{WRITE};\footnote{Infatti, 
+task di comunicazione di tipo \emph{READ} indicherebbero che si sta 
+considerando per lo scheduling la seconda parte di una comunicazione tramite 
+memoria.}
+ \item se i processing task sorgente e destinazione della comunicazione non 
+sono su aree oggetto di riconfigurazione.\footnote{In caso di riconfigurazione 
+di un'area è preferibile trasferire i dati in memoria prima di 
+effettuare la riconfigurazione, onde evitare perdite di dati.}
+\end{itemize}
+Se queste condizioni si verificano, il task di comunicazione è eleggibile per 
+essere eseguito tramite BUS oltre che tramite memoria. In questo caso, è scelto 
+il mezzo di comunicazione che per primo è disponibile a eseguire il task.
+
+Nel caso venga scelto il BUS come mezzo di comunicazione, il task graph è 
+ristrutturato eliminando la comunicazione \emph{READ} correlata e collegando 
+il task di comunicazione con i nodi destinazione degli archi uscenti dal task 
+eliminato.
+
+
+\subsection{Gestione della memoria}
+\label{sec:gestioneMemoria}
+La gestione della memoria dell'algoritmo di scheduling è costituita dal 
+partizionamento della memoria disponibile: a ogni processing task viene 
+assegnata una quantità di memoria sotto forma di una tupla 
+$<\text{base\_address, size}>$.
+
+Quando un task di computazione è selezionato per lo scheduling, il gestore 
+della memoria cerca una porzione di memoria libera sufficientemente grande
+per contenere i dati prodotti dal task. Se non viene 
+trovata nessuna area riutilizzabile, viene assegnato un nuovo spazio di 
+indirizzi al task. Eventuali tecniche per evitare la frammentazione della 
+memoria non sono utilizzate, in quanto non di interesse per il lavoro dello 
+scheduler.
+
+Al momento di allocare memoria per il primo processing task, il gestore della 
+memoria parte dall'indirizzo \verb+0x0+ e riserva tanta memoria quanta ne 
+serve per contenere i dati prodotti per tutti i processing task successori nel 
+task graph, allineata a $4$ byte. Internamente, il gestore della memoria marca 
+quell'area come occupata dal task, e costruisce una lista di tutti i task 
+successori che hanno bisogno di recuperare dati da quell'area.
+% TODO figura esplicativa
+Ogni volta che viene schedulata una comunicazione che ha come sorgente il processing
+task per cui è stata allocata memoria, il corrispondente successore 
+viene eliminato dalla lista dei processing task in attesa dei dati. Quando 
+tutti i successori sono stati eliminati e la lista è vuota, l'area di memoria è 
+marcata come libera e una successiva allocazione di un task la può occupare, a 
+patto che la dimensione dell'area di memoria sia compatibile con la dimensione dei
+dati da memorizzare.
+
+
+\section{Osservazioni conclusive}
+\label{sec:osservazioniConclusive}
+In questa sezione viene fornito un riepilogo dei concetti importanti relativi 
+alla metodologia proposta per risolvere il problema dello scheduling dei task 
+per l'esecuzione di un applicazione su hardware riconfigurabile, considerando 
+le comunicazioni e le riconfigurazioni.
+
+\begin{itemize}
+  \item Sono state definite delle interfacce di input e di output per 
+l'algoritmo proposto, per consentire allo scheduler di avere conoscenza dei 
+dati contenuti nel file XML di \ac{FASTER}, di rielaborarli e modificarli 
+consentendo l'introduzione dei task di comunicazione e riconfigurazione, oltre 
+al calcolo di informazioni rilevanti per l'esecuzione dell'euristica di scelta dei task;
+ \item l'obiettivo è fornire un algoritmo di scheduling che sia veloce, per 
+consentire alla fase di esplorazione delle soluzioni di terminare in un tempo 
+ragionevolmente breve. Questa necessità ha portato allo sviluppo di un algoritmo euristico
+che non è basato su tecniche esplorative o evolvibili, ma sulla base di una 
+lista di priorità e una scelta ``greedy'';
+ \item sono state introdotte delle regole aggiuntive, oltre al semplice calcolo 
+delle metriche per assegnare le priorità ai task, che tengono conto di 
+possibili colli di bottiglia che possono verificarsi durante l'esecuzione e 
+cercano di ridurre l'impatto di tali fenomeni sulla lunghezza dello schedule;
+ \item è stato implementato un gestore della memoria basilare, che assegna gli spazi di
+ indirizzi ai task di computazione dell'applicazione, nel caso il runtime manager abbia
+ bisogno di tali informazioni per memorizzare i dati di output dei task nel corso
+ dell'esecuzione.
+\end{itemize}
