@@ -4,11 +4,6 @@
 In questo capitolo verrà fornito un esame dello stato dell'arte e verranno presentate 
 alcune soluzioni relative al lavoro oggetto di questa tesi.
 
-Nella sezione~\ref{sec:progettoFASTER} è descritto il progetto europeo 
-\acs{FASTER} con una spiegazione sulla metodologia proposta per la toolchain e 
-l'algoritmo che effettua l'analisi esplorativa delle soluzioni, che interagisce 
-con lo scheduler.
-
 Nella sezione~\ref{sec:algoritmiProposti} si esaminano i vari approcci proposti 
 dagli autori nell'ambito del problema dello scheduling dei task su dispositivi 
 riconfigurabili, divisi in algoritmi esatti, trattati nella
@@ -20,306 +15,6 @@ e fornisce le motivazioni alla base dello sviluppo dell'algoritmo di scheduling
 trattato in questa tesi.
 
 \newpage
-
-\section[Il progetto \acs{FASTER}]{Il progetto \acs{FASTER}}
-\label{sec:progettoFASTER}
-In questa sezione vengono presentati il fondamento logico e le motivazioni alla 
-base del progetto \acs{FASTER}. La sezione~\ref{subsec:fasterIntro} fornisce 
-un'introduzione al progetto e spiega gli obiettivi e le motivazioni alla 
-base che hanno portato alla creazione del progetto; infine, la
-sezione~\ref{sec:fasterMetodologia} illustra la metodologia tramite la quale si possono 
-raggiungere gli obiettivi prefissati.
-
-
-%%% acro definitions
-\acrodef{NIDS}{Network Intrusion Detection System}
-\acrodef{RTM}{Reverse Time Migration}
-\acrodef{TCO}{Total Cost of Ownership}
-\acrodef{ICS}{Institute of Computer Science}
-\acrodef{FORTH}{Foundation for Research and Technology - Hellas}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
-
-\subsection{Introduzione}
-\label{subsec:fasterIntro}
-\acs{FASTER} è l'acronimo di \emph{\ac{FASTER}}, un progetto\footnote{Sito del 
-progetto: \url{http://www.fp7-faster.eu/}.} organizzato dalla comunità europea 
-che coinvolge diverse aziende e atenei,\footnote{I collaboratori del progetto 
-sono: l'\ac{ICS} di \ac{FORTH} in Grecia, Chalmers University of Technology in 
-Svezia, l'università di Ghent in Belgio, l'Imperial College di Londra, il 
-Politecnico di Milano e le aziende Maxeler, ST Microelectronics e Synelixis.} 
-tra cui il Politecnico di Milano. Il progetto è stato avviato l'1/09/2011,
-ha una durata di 36 mesi ed è supportato tramite fondi stanziati dalla 
-comunità europea.
-
-\subsubsection{Motivazioni e obiettivi del progetto}
-L'ambito di applicazione del progetto \ac{FASTER} sono le architetture 
-riconfigurabili; in particolare \ac{FASTER} è pensato, come il nome 
-suggerisce, per facilitare la definizione e l'uso di sistemi implementati in 
-hardware riconfigurabile \cite{FasterPaper}.
-
-Sfruttando le potenzialità delle promettenti architetture hardware basate sulla 
-logica riconfigurabile, introdotte nel capitolo~\ref{chap:intro}, si possono 
-infatti estendere le funzionalità (e quindi la durata utile della vita) di 
-un'applicazione senza dover riprogettare interamente l'hardware necessario per 
-eseguirla, consentendo allo stesso tempo di raggiungere performance equiparabili 
-a quelle di un'esecuzione su hardware dedicato.
-
-% FIXME spostare nell'introduzione?
-Si pensi, a titolo esemplificativo, a un \ac{NIDS}, il cui scopo è eseguire la 
-scansione di tutti i pacchetti in ingresso per rilevare possibili minacce, e 
-tale scansione deve essere sufficientemente veloce da non costituire un collo 
-di bottiglia e rallentare così le comunicazioni; inoltre, nuove regole devono 
-essere aggiunte costantemente con il crescere della lista delle minacce. In 
-risposta a questi requisiti di velocità e dinamicità dell'applicazione, la 
-logica riconfigurabile rappresenta una soluzione per il soddisfacimento di 
-entrambi i requisiti.
-
-Nonostante il vantaggio di utilizzare architetture riconfigurabili rispetto 
-all'eseguire le applicazioni puramente in software, il design e 
-l'implementazione di un sistema basato su logica riconfigurabile hanno delle 
-limitazioni rispetto alla più facile estensione delle funzionalità di 
-un'applicazione software, per le seguenti ragioni:
-\begin{itemize}
- \item il supporto di tool esterni per il design del sistema è ancora 
-``elementare'';
- \item le riconfigurazioni hanno un considerevole impatto in termini di overhead sul 
-tempo di esecuzione dell'applicazione, pertanto devono essere utilizzate con 
-attenzione;
- \item la gestione delle risorse disponibili sulla scheda (anche a run-time) è 
-interamente affidata all'utente.
-\end{itemize}
-Oltre a queste limitazioni, il designer ha altri compiti da assolvere per 
-implementare correttamente un sistema su hardware riconfigurabile, tra cui 
-l'identificazione di quali parti del codice devono essere eseguite in hardware 
-per avere un effettivo guadagno in termini di velocità di esecuzione, quali 
-moduli hardware possono beneficiare di una riconfigurazione, stabilire uno 
-schedule e verificare la bontà della soluzione così ottenuta.
-
-Il progetto \ac{FASTER} concentra dunque i propri obiettivi nell'introduzione 
-di una nuova metodologia che permetta ai designer di implementare facilmente un 
-sistema su una piattaforma target dotata di processori general-purpose e 
-acceleratori hardware basati su logica riconfigurabile. Questa metodologia 
-consentirà, partendo da un input costituito da una descrizione ad alto livello 
-sia dell'applicazione che dell'architettura, di sfruttare al massimo le 
-possibilità offerte dalla riconfigurazione parziale dinamica.
-
-\paragraph{Lavori precedenti}
-Tra i lavori di ricerca e progetti europei più relativi a \ac{FASTER} si 
-annoverano \emph{hArtes} \cite{HArtes}, \emph{Morpheus}, \emph{ACOTES} 
-\cite{AcotesUrl, ACOTES}, \emph{Andres} e \emph{Reflect} \cite{Reflect}.
-% FIXME citazioni mancanti perchè i siti sono offline
-Questi lavori hanno obiettivi simili a quelli di \ac{FASTER}, tuttavia si 
-concentrano più sugli aspetti architetturali della riconfigurazione; in questi 
-lavori non si accenna esplicitamente al design della riconfigurazione parziale 
-dinamica, nè si considera quale granularità è meglio utilizzare per la 
-riconfigurazione: \emph{region-based}\footnote{Nella riconfigurazione di tipo 
-region-based, sono riconfigurati interi moduli che occupano arbitrarie porzioni 
-della scheda.} oppure \emph{micro-riconfigurazione}\footnote{Nella 
-micro-riconfigurazione vengono identificati dei parametri del modulo che 
-sono soggetti a cambiamenti; tali parametri non vengono inclusi nel bitstream, 
-lasciando così dei ``buchi''. Quando i valori per tali parametri devono essere 
-fissati, è sufficiente lanciare una riconfigurazione con un bitstream di 
-dimensioni molto ridotte, che vada a modificare solamente i buchi lasciati in 
-precedenza.}.
-
-%TODO aggiungere tabella presente nel paper su dprds
-
-\paragraph{Contributi di \ac{FASTER}}
-\ac{FASTER} si distingue rispetto ai lavori precedentemente sviluppati in 
-quanto ha come obiettivo l'introduzione della riconfigurazione parziale 
-dinamica come un concetto di design esplicito, fornendo anche i metodi per 
-supportare la riconfigurazione a run-time nell'intera metodologia di design.
-Il progetto \ac{FASTER} quindi, possiede le seguenti caratteristiche:
-\begin{enumerate}
- \item fornisce supporto per la riconfigurazione parziale 
-dinamica, sia region-based che micro-riconfigurazione, in maniera trasparente 
-all'utente;
- \item fornisce un framework per il design di un sistema su logica 
-riconfigurabile, gestendo l'analisi, la sintesi e la verifica delle soluzioni 
-ottenute.
-\end{enumerate}
-
-Gli obiettivi che il progetto \ac{FASTER} si prefigge di raggiungere sono un 
-significativo aumento della produttività nel design e nell'implementazione di 
-sistemi riconfigurabili, aumento delle performance delle applicazioni 
-sviluppate in hardware in presenza di vincoli sul consumo energetico e 
-riduzione del costo totale di proprietà\footnote{In inglese \emph{\ac{TCO}}, 
-rappresenta l'insieme di tutti i costi da sostenere per l'intero ciclo di 
-vita di un sistema o un'apparecchiatura IT.} per sistemi come \ac{NIDS} e 
-\ac{RTM} \cite{RTMArticle} implementati su hardware riconfigurabile, grazie alla minore 
-manutenzione richiesta. Come scritto dagli autori nel factsheet di \ac{FASTER}
-\cite{FasterFactsheet}
-
-\selectlanguage{english}
-
-\begin{quotation}
-  \ac{FASTER} will facilitate the use of reconfigurable technology by providing a complete
-  methodology that enables designers to easily implement and verify applications on
-  platforms with general-purpose processors and acceleration modules implemented in the
-  latest reconfigurable technology.
-  We expect that the 
-  project will lead to a 20\% productivity improvement due to seamless 
-  implementation and verification of dynamically changing systems, a 50\% total 
-  ownership cost reduction for NIDS and Reverse Time Migration systems, with a 2x 
-  performance improvement under power constraints for Global Illumination and 
-  Image Analysis.
-\end{quotation}
-
-\selectlanguage{italian}
-
-Nella prossima sezione verranno illustrate le piattaforme hardware supportate 
-da \ac{FASTER} e la metodologia proposta per il framework. 
-
-
-\subsection{Metodologia utilizzata}
-\label{sec:fasterMetodologia}
-
-\subsubsection{Piattaforme supportate e applicazioni}
-L'obiettivo di \ac{FASTER} è sfruttare le opportunità offerte dalle 
-architetture riconfigurabili, sia nel campo dei sistemi \ac{HPC} sia nei 
-sistemi embedded. Pertanto, \ac{FASTER} supporta due tipi di piattaforme 
-hardware:
-\begin{enumerate}
- \item sistemi \ac{HPC} desktop, ad esempio \emph{Maxeler MaxWorkstation};% TODO
- \item sistemi embedded basati su \ac{FPGA}, ad esempio la 
-scheda \emph{University Program XUPV5-LX110T} di \emph{Xilinx} o la scheda 
-\emph{ZedBoard} di \emph{AVNET}.
-\end{enumerate}
-
-Oltre a supportare queste differenti piattaforme, \ac{FASTER} ha come obiettivo 
-l'aumento delle performance di tre applicazioni provenienti da diversi ambiti:
-\begin{itemize}
- \item \acf{RTM} \cite{RTMArticle}, un algoritmo applicato nella tomografia sismica per 
-fornire una rappresentazione più realistica del sottosuolo in aree 
-geologicamente complesse e caratterizzate da differenti velocità di 
-propagazione delle onde sismiche;
- \item sistemi di riconoscimento di intrusione in una rete, descritti in 
-precedenza;
- \item Global Illumination and Image Analysis, un insieme di algoritmi 
-utilizzati per rendere più realistici oggetti e scene rappresentati in grafica 
-computerizzata tridimensionale; un esempio è l'algoritmo di \emph{ray tracing}.
-\end{itemize}
-
-\subsubsection{Descrizione del framework}
-In questa sezione viene descritto il framework e il flusso del progetto ad  
-alto livello.
-
-%%% FIXME credit to Santa?
-\begin{figure}
- \begin{center}  
-\includegraphics[width=0.9\textwidth]
-{capitoli/figure/cap2/FASTERWorkflow.pdf}
-\caption{Workflow di \acs{FASTER}.}
-\label{fig:FASTERWorkflow}
- \end{center}
-\end{figure}
-
-La figura~\ref{fig:FASTERWorkflow} illustra la panoramica della metodologia 
-adottata da \ac{FASTER} e il flusso di lavoro che, partendo dalla specifica 
-dell'applicazione annotata e dalla descrizione dell'architettura target, riesce 
-a derivare un bitfile utilizzabile per configurare l'architettura ed eseguire 
-l'applicazione tramite un runtime manager.
-
-L'approccio adottato da \ac{FASTER} prevede che i vari componenti del framework
-si interfaccino tra loro mediante l'uso di file XML. L'input di un progetto
-\ac{FASTER} è costituito dall'applicazione da sintetizzare, che può essere
-scritta in un linguaggio ad alto livello (ad esempio il linguaggio C) e
-provvista di annotazioni, ad esempio in formato OpenMP,\footnote{OpenMP è un
-  formato standard per la specifica di applicazioni parallele, che permette di
-  specificare quali funzioni di un'applicazione sono parallelizzabili e di
-suddividere l'applicazione nei vari task.} che ne consentono la suddivisione
-iniziale in task; altro dato in input \`e la descrizione delle funzionalità di
-riconfigurazione a disposizione dell'architettura. Oltre all'applicazione
-possono essere presenti degli attributi specificati dal designer che impongono
-vincoli particolari all'applicazione, quali ad esempio scadenze nell'esecuzione
-oppure una richiesta in termini di throughput.
-
-\paragraph{High-level analysis}
-La prima fase del flusso di lavoro prevede l'analisi ad alto livello 
-dell'applicazione e dei suoi requisiti. In questa fase è fornito un modello di 
-design riconfigurabile che mette in relazione i requisiti dell'applicazione con 
-determinate metriche di valutazione delle performance.
-
-Tramite questo processo si possono identificare dei componenti e determinare le 
-performance delle relative implementazioni: esempi di parametri relativi a
-un'implementazione sono le stime di risorse occupate, dell'overhead introdotto 
-dalle riconfigurazioni o del consumo di energia in base all'area occupata su 
-scheda.
-
-\paragraph{Identificazione dei core}
-Durante questa fase viene analizzata l'applicazione per estrarne i vari core, 
-ovvero moduli composti da una serie di operazioni. I moduli sono estratti 
-partendo dal \ac{CDFG} dell'applicazione, cercando di identificare opportuni 
-sottografi isomorfi; nel caso l'identificazione abbia successo, è possibile 
-riutilizzare uno o più moduli senza fare uso di riconfigurazione e guadagnando 
-quindi in termini di tempo di esecuzione.
-I core possono essere di due tipi:
-\begin{enumerate}
- \item \emph{statici}, moduli configurati staticamente e non soggetti a
-   riconfigurazioni durante l'esecuzione (ad esempio core IP);
- \item \emph{riconfigurabili}, i quali a loro volta si dividono in:
-  \begin{itemize}
-   \item \emph{region-based}, in cui l'intero modulo viene riconfigurato;
-   \item \emph{micro-riconfigurabili}, in cui solo piccole parti del modulo 
-sono riconfigurate e il resto viene riutilizzato.
-  \end{itemize}
-\end{enumerate}
-
-Al termine dell'identificazione dei core, si svolge la fase di 
-\emph{partitioning}, in cui si stabilisce quali parti dell'applicazione debbano 
-essere eseguite in software su un processore general-purpose e quali in 
-hardware su logica riconfigurabile.
-
-\paragraph{Baseline scheduling}
-A questo punto, partendo dalle informazioni calcolate nei passi precedenti, 
-viene calcolato un baseline schedule dei task sulla piattaforma target. Lo 
-schedule viene calcolato da uno scheduler euristico che deve essere consapevole
-delle riconfigurazioni che vengono introdotte. Lo scheduler deve quindi 
-avere le seguenti funzionalità:
-\begin{itemize}
- \item \emph{configuration prefetching}: una riconfigurazione per un 
-modulo viene eseguita il prima possibile rispetto all'inizio dell'esecuzione 
-del modulo, così facendo in alcuni casi è possibile mascherare l'overhead di 
-riconfigurazione;
- \item \emph{riutilizzo dei moduli}: eventuali moduli che devono 
-essere eseguiti in hardware (stabilito nella fase di partitioning) e sono 
-caratterizzati dalla stessa implementazione non necessitano di riconfigurazione 
-dell'area.
-\end{itemize}
-Obiettivo di questa fase è ottenere uno scheduling \emph{feasible} che abbia il 
-minore makespan possibile.
-
-Il floorplanner viene eseguito in questa fase e si occupa del piazzamento dei 
-moduli sull'area della scheda \ac{FPGA}; vengono definiti i vincoli spaziali e 
-la dimensione delle aree su cui configurare i moduli da eseguire, e viene 
-stabilito se un determinato piazzamento è fattibile oppure se il posizionamento
-viola alcuni vincoli.
-
-\paragraph{Generazione del codice} % TODO sistemare e ampliare
-In questa fase viene generato il codice necessario per eseguire l'applicazione 
-sulla piattaforma target, tramite l'utilizzo di backend specifici per ogni tipo 
-di piattaforma supportata.
-
-Partendo dal progetto \ac{FASTER} così creato si può derivare un progetto 
-interfacciato con i vari tool sviluppati dal fornitore della piattaforma target 
-per la sintesi dei vari IP core o del sistema di comunicazione tra i moduli.
-
-
-\subsubsection{Conclusioni}
-In questa sezione si è fornita una descrizione del progetto europeo 
-\ac{FASTER}. Sono state descritte le motivazioni e il fondamento logico alla 
-base del progetto, gli obiettivi che esso si profigge di raggiungere nel 
-facilitare il design di applicazioni per dispositivi in grado di sfruttare le 
-potenzialità offerte dalla \emph{riconfigurazione}. Infine, è stato esaminato 
-ad alto livello il flusso di lavoro del progetto e le varie fasi in cui questo 
-si divide sono state descritte brevemente.
-
-Nella prossima sezione ci si concentrerà sul lavoro oggetto di questa tesi, 
-ovvero la fase di baseline scheduling del progetto; verranno presentate alcune 
-soluzioni presenti nello stato dell'arte riguardanti questo problema, con 
-relativi pregi e difetti.
-
 
 \section{Algoritmi proposti}
 \label{sec:algoritmiProposti}
@@ -353,7 +48,7 @@ comportamento di sistemi presenti in natura.
   {capitoli/figure/cap2/MetaheuristicsClassification.pdf}
   \caption[Classificazione degli algoritmi meta-euristici]{Classificazione delle
   varie categorie di meta-euristiche. Immagine 
-realizzata da Johann Dréo e tradotta in inglese da Caner Candan.}
+realizzata da Johann Dréo \cite{MetaheuristicsClassifications} e tradotta in inglese da Caner Candan.}
 \label{fig:metaheuristicsClassification}
  \end{center}
 \end{figure}
@@ -383,8 +78,9 @@ euristici.
 Come esposto nell'introduzione a questa sezione, gli algoritmi esatti 
 permettono di ottenere la soluzione ottima in assoluto. Un algoritmo esatto, 
 applicato a un'istanza di un problema di ottimizzazione combinatoria qual è un
-problema di scheduling di task su un numero vincolato di unit\`a computazionali, 
-permette di ottenere lo schedule caratterizzato dal minimo makespan possibile. 
+problema di scheduling di task su un numero vincolato di unit\`a computazionali,
+definito tramite una formulazione (modello), permette di ottenere lo schedule
+caratterizzato dal minimo makespan possibile che rispetti la formulazione. 
 
 A prescindere dal particolare algoritmo utilizzato per risolvere il problema, 
 il costo computazionale necessario per giungere a una soluzione è elevato e 
@@ -462,11 +158,12 @@ del tempo di esecuzione può essere ottenuta solamente risolvendo unitamente le
 fasi di mapping, scheduling e floorplanning (per verificare che la soluzione 
 sia fisicamente implementabile). In generale, la risoluzione separata delle fasi, in 
 particolare la separazione di mapping e scheduling, non porta alla 
-minimizzazione assoluta del tempo di esecuzione. La scelta tra queste due 
+minimizzazione assoluta del tempo di esecuzione \cite{AntColonyOptimization}. La scelta tra queste due 
 possibilità implica il dover fare un compromesso tra l'accuratezza della 
 soluzione, che può non essere la migliore se i problemi sono risolti 
 separatamente, e la dimensione dello spazio delle soluzioni possibili, che 
 cresce in maniera esponenziale nel caso in cui i problemi si risolvano congiuntamente.
+% TODO citazione per frase precedente
 
 \paragraph{Modello \acs{ILP} di Banerjee}
 \label{par:BanerjeeILP}
@@ -516,7 +213,7 @@ considera le posizioni in cui vengono piazzati i vari task, vedrebbe che al
 tempo $t_2$ vi sono due colonne libere; tuttavia, non essendo $C_1$ e $C_4$ colonne 
 adiacenti, il piazzamento non è possibile. Da questa situazione si evince che 
 la fattibilità del piazzamento lineare non è garantita dall'utilizzo di un 
-algoritmo esatto.
+algoritmo esatto \cite{BanerjeePhysicalConstraints}.
 
 \subparagraph{Modello e vincoli}
 Il modello \ac{ILP} proposto nel loro lavoro prevede quindi la presenza di $n$ 
@@ -557,7 +254,7 @@ dei moduli} ed eventuali tecniche per evitare un'eccessiva \emph{frammentazione}
 delle aree occupate dai task sulla scheda.
 
 
-\paragraph{Modelli \acs{ILP} di Redaelli}
+\paragraph{Modelli \acs{ILP} di Redaelli} % TODO guardare lavoro di Diana Gohringer su frammentazione
 La formulazione \ac{ILP} proposta da Redaelli et al.~\cite{Redaelli1DILP} cerca 
 di superare alcune limitazioni che caratterizzano i lavori 
 \cite{BanerjeeHwSwPartitioning} e \cite{BanerjeePhysicalConstraints}, visti nel 
@@ -683,9 +380,14 @@ soddisfano i vincoli di precedenza.
 La principale limitazione del modello proposto in \cite{FeketeOptimal} è 
 l'assunzione che ci sia un numero potenzialmente infinito di controllori di 
 riconfigurazione, un'ipotesi che toglie realismo nell'applicazione del metodo 
-in scenari concreti; infatti, l'overhead introdotto dalle riconfigurazioni non 
-è trascurabile e l'esecuzione di un numero considerevole di riconfigurazioni 
-diventa inevitabilmente un collo di bottiglia, penalizzando il tempo di 
+in scenari concreti. Infatti, non esistono e non esisteranno mai architetture
+riconfigurabili con un numero arbitrario di controllori, perch\`e ci\`o comporterebbe
+una contention sulla memoria da cui si recupera il bitstream.
+Per questo motivo, l'algoritmo \cite{FeketeOptimal} rischia di sottostimare in maniera
+non trascurabile il makespan dell'applicazione; l'overhead introdotto dalle riconfigurazioni
+infatti non è trascurabile e l'esecuzione di un numero considerevole di riconfigurazioni 
+diventa inevitabilmente un collo di bottiglia in casi reali (senza ipotizzare un numero
+potenzialmente infinito di controllori), penalizzando il tempo di 
 esecuzione.
 
 
@@ -832,7 +534,7 @@ dimensione; inoltre, il riutilizzo dei moduli per guadagnare tempo di esecuzione
 non viene mai considerato.
 
 \paragraph{PARLGRAN}
-Gli stessi autori introducono PARLGRAN in un lavoro seguente 
+Banerjee et al.~introducono PARLGRAN in un lavoro seguente 
 \cite{BanerjeePARLGRAN}, come soluzione migliorata ai problemi di 
 scheduling e placement in presenza di vincoli di risorse. L'obiettivo di 
 PARLGRAN è selezionare il miglior livello di granularità di parallelismo dei 
@@ -1014,6 +716,8 @@ architetture; inoltre, la differenza tra risorse rinnovabili e non modellizza
 sia processori general purpose, risorse rinnovabili per definizione, sia core 
 implementati su logica riconfigurabile, rinnovabili tramite la riconfigurazione.
 
+% TODO manca AHS 2013
+
 
 \section{Osservazioni conclusive}
 \label{sec:osservazioniConclusiveSoA}
@@ -1045,3 +749,5 @@ un'euristica, per soddisfare i requisiti di velocità. L'algoritmo di scheduling
 dovrebbe essere un'euristica esplorativa, quanto più un algoritmo veloce di tipo list-based,
 con una funzione di calcolo delle priorità che gli consenta di essere sufficientemente preciso,
 restituendo quindi degli schedule di buona qualità.
+
+% TODO FIXME delta rispetto agli altri algoritmi presentati!
