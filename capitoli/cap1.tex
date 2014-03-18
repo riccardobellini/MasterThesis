@@ -416,53 +416,53 @@ il bitstream finale viene solitamente generato utilizzando strumenti proprietari
 
 \section{Definizione del problema}
 \label{sec:definizioneProblema}
-In questa sezione vengono descritte le problematiche che emergono nella fase di de\-sign
-di un sistema basato su logica riconfigurabile, con particolare enfasi sul problema dello
-scheduling dei task.
+L'obiettivo di questa sezione \`e descrivere nel dettaglio la fase di scheduling dei task, introdotta
+nella precedente sezione, e le problematiche che emergono in questa fase con riferimento
+specifico al caso di design di un sistema riconfigurabile.
 
-\subsection{Hardware/Software Co-design}
-Come visto nella precedente sezione, il reconfigurable computing offre elevate
-prestazioni senza sacrificare la flessibilità, rappresentando pertanto un'area di
-ricerca in continua crescita. Per questo motivo, date anche la crescente complessità
-delle applicazioni e la richiesta di elevate prestazioni, i sistemi embedded
-eterogenei\footnote{I sistemi embedded eterogenei sono dispositivi progettati per
-svolgere un numero limitato di funzioni con requisiti di alte prestazioni, basso consumo
-energetico e prestazioni in tempo reale, come i normali sistemi embedded; si
-differenziano da questi perchè parte dell'applicazione può essere eseguita da
-acceleratori hardware (ad esempio una porzione di scheda riconfigurabile FPGA), da
-hardware general-purpose oppure da \ac{DSP}.} stanno guadagnando popolarità.
+%\subsection{Hardware/Software Co-design}
+%Come visto nella precedente sezione, il reconfigurable computing offre elevate
+%prestazioni senza sacrificare la flessibilità, rappresentando pertanto un'area di
+%ricerca in continua crescita. Per questo motivo, date anche la crescente complessità
+%delle applicazioni e la richiesta di elevate prestazioni, i sistemi embedded
+%eterogenei\footnote{I sistemi embedded eterogenei sono dispositivi progettati per
+%svolgere un numero limitato di funzioni con requisiti di alte prestazioni, basso consumo
+%energetico e prestazioni in tempo reale, come i normali sistemi embedded; si
+%differenziano da questi perchè parte dell'applicazione può essere eseguita da
+%acceleratori hardware (ad esempio una porzione di scheda riconfigurabile FPGA), da
+%hardware general-purpose oppure da \ac{DSP}.} stanno guadagnando popolarità.
 
-Il nuovo paradigma introdotto dalle architetture riconfigurabili procura
-vantaggi soprattutto nel design \ac{ESL}, in particolare
-l'\mbox{hardware/software} co-design. Inizialmente, l'applicazione era
-partizionata e le due componenti (hardware e software) venivano sviluppate
-separatamente e integrate successivamente, verso la fine del processo di
-design; tuttavia, in caso di problemi nella fase di integrazione, modificare
-opportunamente l'hardware o il software comportava delle difficoltà aggiuntive,
-complicando la manutenibilità del progetto e aumentandone i costi.
+%Il nuovo paradigma introdotto dalle architetture riconfigurabili procura
+%vantaggi soprattutto nel design \ac{ESL}, in particolare
+%l'\mbox{hardware/software} co-design. Inizialmente, l'applicazione era
+%partizionata e le due componenti (hardware e software) venivano sviluppate
+%separatamente e integrate successivamente, verso la fine del processo di
+%design; tuttavia, in caso di problemi nella fase di integrazione, modificare
+%opportunamente l'hardware o il software comportava delle difficoltà aggiuntive,
+%complicando la manutenibilità del progetto e aumentandone i costi.
 
-L'HW-SW co-design è stato proposto per colmare le limitazioni della metodologia classica di
-sviluppo. Il concetto chiave dell'HW-SW co-design è la continua integrazione tra hardware e software
-durante il flusso di sviluppo. In questo modo si facilita la verifica del software e l'assenza di
-errori nella parte hardware.
+%L'HW-SW co-design è stato proposto per colmare le limitazioni della metodologia classica di
+%sviluppo. Il concetto chiave dell'HW-SW co-design è la continua integrazione tra hardware e software
+%durante il flusso di sviluppo. In questo modo si facilita la verifica del software e l'assenza di
+%errori nella parte hardware.
 
-\paragraph{Reconfigurable computing in HW-SW co-design}
-Nonostante la maggiore integrazione caratteristica dell'HW-SW co-design, il design dell'hardware
-è un processo costoso in termini di tempo; lo sviluppo della parte hardware infatti include il
-design del sistema, il debug, la produzione dell'hardware e infine il test. L'uso di linguaggi
-di modellazione dell'hardware come SystemC \cite{SystemCBook} per simulare il comportamento del
-sistema non rappresentano una soluzione definitiva, principalmente perchè la velocità della
-simulazione pu\`o impattare sull'analisi delle prestazioni.
+%\paragraph{Reconfigurable computing in HW-SW co-design}
+%Nonostante la maggiore integrazione caratteristica dell'HW-SW co-design, il design dell'hardware
+%è un processo costoso in termini di tempo; lo sviluppo della parte hardware infatti include il
+%design del sistema, il debug, la produzione dell'hardware e infine il test. L'uso di linguaggi
+%di modellazione dell'hardware come SystemC \cite{SystemCBook} per simulare il comportamento del
+%sistema non rappresentano una soluzione definitiva, principalmente perchè la velocità della
+%simulazione pu\`o impattare sull'analisi delle prestazioni.
 
-L'impiego di architetture riconfigurabili come prototipizzazione dell'hardware finale permette
-di abbattere i costi dovuti allo sviluppo e al debug di una piattaforma hardware e di ottenere
-risultati molto più realistici di quelli che può fornire un simulatore. Il reconfigurable
-computing velocizza quindi il processo di HW-SW co-design, riducendo il time-to-market.
+%L'impiego di architetture riconfigurabili come prototipizzazione dell'hardware finale permette
+%di abbattere i costi dovuti allo sviluppo e al debug di una piattaforma hardware e di ottenere
+%risultati molto più realistici di quelli che può fornire un simulatore. Il reconfigurable
+%computing velocizza quindi il processo di HW-SW co-design, riducendo il time-to-market.
 
-\subsection{Design di hardware riconfigurabile}
-In questa sezione viene descritto come sia possibile progettare un sistema che esegue
-un'applicazione parzialmente accelerata, sfruttando le potenzialità fornite dall'hardware
-riconfigurabile.
+%\subsection{Design di hardware riconfigurabile}
+%In questa sezione viene descritto come sia possibile progettare un sistema che esegue
+%un'applicazione parzialmente accelerata, sfruttando le potenzialità fornite dall'hardware
+%riconfigurabile.
 
 \begin{figure}[ht]
 \begin{center}
