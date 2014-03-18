@@ -90,7 +90,7 @@ tra loro tramite BUS. Le architetture \ac{MPSoC} si dividono in due categorie:
 
 
 
-\section{Reconfigurable computing}
+\section{Reconfigurable computing e introduzione ai flussi di sviluppo}
 \label{sec:reconfComp}
 L'integrazione introdotta nella precedente sezione tuttavia apre una serie di problemi nella progettazione
 di un \ac{MPSoC}, tra cui elevato costo di progettazione dei sistemi, bassa affidabilità e, ultimo
@@ -160,6 +160,8 @@ sistolici la computazione è affidata a una matrice di \acp{DPU} invece che a \a
 avviene tramite il trasporto dei dati, che vengono scritti nelle \emph{triggering ports}
 delle \acp{DPU}.}.
 
+
+
 \begin{table}[ht]
 \begin{center}
  \begin{tabular}{l | l}
@@ -189,9 +191,21 @@ computazione sono illustrati da Nick Tredennick nella
 tabella~\ref{tab:TredennickClassificationScheme} \cite{TredennickClassification}: si può
 osservare che le architetture riconfigurabili offrono la possibilità di configurare sia le
 risorse per la computazione (\emph{configware}) sia gli algoritmi da eseguire
-(\emph{flowware}). Tale soluzione porta a un minore costo di progettazione e
-maggiore flessibilità rispetto a circuiti dedicati; si osservano inoltre prestazioni
-superiori rispetto a soluzioni general-purpose.
+(\emph{flowware}). 
+
+\subsubsection{Vantaggi del reconfigurable computing}
+L'utilizzo di architetture riconfigurabili garantisce un ciclo di sviluppo pi\`u rapido;
+\`e infatti possibile testare continuamente i componenti del sistema man mano che questo viene
+progettato. Questo consente di rilevare in anticipo eventuali errori o incongruenze rispetto alle
+specifiche iniziali, che nel caso della progettazione su circuiti dedicati \ac{ASIC} emergerebbero
+soltanto al termine del ciclo di sviluppo, in fase di test finale.
+
+Oltre alla riduzione del time-to-market del sistema, la possibilit\`a di riconfigurare
+il dispositivo consente di implementare tecniche di tolleranza ai guasti, o di adattare
+in maniera dinamica il numero di elementi di calcolo a seconda della quantit\`a di richieste
+da soddisfare in un determinato momento. Tale soluzione porta quindi a un minore costo di progettazione
+e maggiore flessibilità rispetto a circuiti dedicati; si osservano inoltre prestazioni superiori
+rispetto a soluzioni general-purpose.
 
 %Viene ora illustrata la struttura generica di un'architettura riconfigurabile.
 
@@ -204,7 +218,7 @@ registro delle istruzioni, il \emph{program counter} e unit\`a di elaborazione (
 a differenza di sistemi dedicati \ac{ASIC}, la funzionalit\`a che implementano pu\`o essere
 modicata caricandone opportunamente una nuova.
 
-Uno degli esempi pi\`u conosciuti di logica riconfigurabile sono i chip \ac{FPGA},i cui dati di
+Uno degli esempi pi\`u conosciuti di logica riconfigurabile sono i chip \ac{FPGA}, i cui dati di
 configurazione sono contenuti in un file chiamato \emph{bitstream}.
 
 % TODO spostare in capitolo a parte su rec computing e flussi
@@ -326,6 +340,58 @@ maniera dinamica.
 
 Nella prossima sezione vengono descritte le motivazioni e la problematica oggetto del
 lavoro.
+
+
+\subsection{Introduzione ai flussi di sviluppo}
+\label{subsec:introFlussi}
+
+
+Nonostante gli indubbi vantaggi derivanti dall'utilizzo delle architetture riconfigurabili,
+allo stato attuale l'operazione di riconfigurazione di tutto o di parte del dispositivo \`e
+un'operazione onerosa e pu\`o introdurre un overhead nel tempo di esecuzione dell'applicazione;
+\`e necessario quindi determinare quando il sistema possa trarre beneficio dall'impiego delle
+riconfigurazioni e quando queste siano vantaggiose. Oltre al tempo di riconfigurazione non trascurabile,
+in molti dispositivi il controllore della riconfigurazione \`e unico, il che implica che sia possibile
+eseguire soltanto una riconfigurazione alla volta.
+Da queste premesse si evince che progettare un sistema riconfigurabile che abbia le prestazioni desiderate
+\`e un compito impegnativo per il designer. Per questo motivo nella letteratura sono stati presentati dei framework
+di sviluppo che automatizzano totalmente o parzialmente i passi necessari per eseguire un'applicazione
+su MPSoC riconfigurabili.
+
+\begin{figure}[t]
+  \begin{center}
+    \includegraphics[width=0.4\textwidth]{./capitoli/figure/cap1/StrutturaFlusso.pdf}
+    \caption{Struttura di un flusso generico, con input e output.}
+    \label{fig:strutturaFlusso}
+  \end{center}
+\end{figure}
+
+Come rappresentato in figura \ref{fig:strutturaFlusso}, un flusso generico ha come dati di input la descrizione
+dell'architettura target e dell'applicazione, scritta in un linguaggio di alto livello.
+Al termine dell'elaborazione, l'output restituito \`e l'insieme di direttive di configurazione sotto forma
+di bitstream, o serie di bitstream. Nei prossimi paragrafi i componenti della struttura verranno descritti
+maggiormente nel dettaglio.
+
+\subsubsection{Input}
+\begin{enumerate}
+  \item \emph{descrizione dell'architettura}: rappresenta, mediante una specifica ad alto livello (ad esempio
+    in formato XML), l'architettura target del sistema:
+    \begin{itemize}
+      \item caratteristiche dei dispositivi riconfigurabili presenti;
+      \item caratteristiche dei processori software presenti;
+      \item elementi di comunicazione e interconnessioni;
+      \item descrizione delle memorie.
+    \end{itemize}
+  \item \emph{descrizione dell'applicazione}: algoritmi che compongono l'applicazione da implementare sul sistema
+    in linguaggio ad alto livello (ad esempio C, C++ o altro).
+\end{enumerate}
+
+\subsubsection{Fasi del flusso}
+L'applicazione viene dapprima codificata in una rappresentazione interna al flusso, che ne consente la manipolazione
+e l'elaborazione da parte del framework. Esistono diverse possibili rappresentazioni possibili, nel contesto di
+questo lavoro ci riferiremo alla rappresentazione tramite \emph{task graph}, descritta nella sezione
+\ref{subsec:faseSchedulingIntro}.
+
 
 \section{Definizione del problema}
 \label{sec:definizioneProblema}
