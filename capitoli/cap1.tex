@@ -488,8 +488,8 @@ specifico al caso di design di un sistema riconfigurabile.
 \end{figure}
 
 \subsubsection{Modello}
-
-La specifica dell'applicazione da accelerare è data sotto forma di un grafo che
+Come anticipato nella sezione \ref{subsec:introFlussi}, la specifica dell'applicazione
+da accelerare è data sotto forma di un grafo che
 rappresenta il flusso di esecuzione dell'applicazione, chiamato \emph{task
 graph}: questo è composto da \emph{task},
 che rappresentano unità computazionali, ed \`e descritto nella forma
@@ -500,17 +500,19 @@ task graph.
 
 A ogni task corrispondono una o più \emph{implementazioni}, ovvero diversi modi di
 realizzarne la funzionalità; le implementazioni possono essere di due tipi: software
-oppure hardware. Le implementazioni software sono prodotte dai compilatori, ne possono
+oppure hardware. Le prime sono prodotte dai compilatori, ne possono
 esistere più versioni per ogni task date da differenti ottimizzazioni abilitate dal
 compilatore.
-
-Le implementazioni hardware non sono sempre assegnabili ai task; può capitare infatti
-che un particolare task non sia sintetizzabile a causa di particolari costrutti al suo interno.
+Nel caso delle implementazioni hardware, pu\`o capitare che un particolare task non sia adatto
+alla sintesi a causa di particolari costrutti al suo interno; in questo caso si pu\`o modificare
+la struttura del task conservandone la semantica, ottenendo un task equivalente e sintetizzabile.
 Solitamente, possono esistere più implementazioni hardware per un singolo task,
 che differiscono per il tempo di esecuzione e l'area che occupano su scheda.
 
-Il dispositivo riconfigurabile viene abitualmente rappresentato come una griglia di \ac{RU}, 
-costituita da un insieme di righe $R=\left\{r_1, r_2, \dots, r_{\vert R \vert}\right\}$ e 
+Sfruttando la notazione introdotta tratta da \cite{ModelloRedaelli}
+e \cite{ReconfigurableSystemDesignVerification}, il dispositivo riconfigurabile viene abitualmente
+rappresentato come una griglia di \ac{RU}, costituita da un insieme di righe
+$R=\left\{r_1, r_2, \dots, r_{\vert R \vert}\right\}$ e 
 di colonne $C=\left\{c_1, c_2, \dots, c_{\vert C \vert}\right\}$. Ogni unità 
 riconfigurabile è rappresentata da una tupla $(r,c) \in U$ con $r \in R$ e $c \in C$, e 
 composta da un numero $\rho_{u}$ di \ac{CLB}.
@@ -519,8 +521,7 @@ Le implementazioni sono realizzate tramite particolari combinazioni di risorse (
 e vengono definite \ac{EU}. A ogni task può quindi corrispondere una o più \ac{EU}.
 
 \subsubsection{Partizionamento e scheduling}
-Sfruttando la notazione introdotta nella sezione precedente e tratta da \cite{ModelloRedaelli}
-e \cite{ReconfigurableSystemDesignVerification}, è possibile formulare il problema
+Data la formulazione precedentemente descritta, è possibile formulare il problema
 di partizionamento e scheduling su architetture riconfigurabili come illustrato in questa
 sezione. I task devono essere mappati su un insieme $E$ di \acp{EU}, 
 ottenute configurando le unità riconfigurabili tramite bitstream che specificano 
@@ -563,20 +564,23 @@ esempio per minimizzare la latenza della comunicazione, e ne si determina il pia
 fisico finale su scheda, rispettando i vincoli di area riconfigurabile a disposizione.
 \end{enumerate}
 Il lavoro descritto in questa tesi si concentra su una possibile soluzione per il 
-problema di scheduling dei task, che verrà spiegato più in dettaglio nella prossima 
-sezione.
+problema di scheduling dei task.
 
 
 \subsection{La fase di scheduling}
 \label{subsec:faseSchedulingIntro}
 L'obiettivo dello scheduler è assegnare i tempi di inizio e di fine dell'esecuzione ai
 task che compongono l'applicazione. Dato un task graph come quello in
-figura~\ref{fig:taskGraphExample}, le precedenze esplicitano relazioni produttore-consumatore,
+figura~\ref{fig:taskGraphExample},
+%TODO chiedere a Gian cosa significa dipendenza di controllo
+le precedenze esplicitano relazioni produttore-consumatore,
 ovvero un arco orientato $(i,j)$ simboleggia un trasferimento dell'output della
 computazione del task $i$ in memoria (locale o condivisa), per essere utilizzato
 successivamente come input per il task $j$; gli archi introducono quindi delle
 comunicazioni che devono necessariamente essere prese in considerazione nella fase 
 di scheduling.
+%END TODO
+
 
 Oltre alle comunicazioni, lo scheduler deve anche gestire il verificarsi di 
 riconfigurazioni nel corso dell'esecuzione dell'applicazione. Ad esempio, se due task $i$ 
@@ -597,6 +601,13 @@ dall'esecuzione dei task.
 \end{itemize}
 
 
+\paragraph{Impatto della riconfigurazione sullo schedule}
+Come visto nella sezione \ref{subsec:introFlussi}, l'overhead introdotto dalle riconfigurazioni
+non \`e trascurabile, e pu\`o penalizzare notevolmente il makespan dello schedule.
+Un buon algoritmo di scheduling deve pertanto cercare di ``mascherare'' quanto possibile le
+riconfigurazioni che devono essere eventualmente fatte. Questa tecnica verr\`a spiegata nel capitolo
+\ref{chap:SOA}.
+
 \subsubsection{Complessità}
 Come evidenziato dalla formula \eqref{formula:mappingScheduling}, lo spazio di ricerca è 
 estremamente ampio, e la complessità delle fasi di mapping e scheduling se effettuate 
@@ -608,14 +619,14 @@ di \ac{RCSP}; tale problema appartiene alla classe di complessità computazional
 problemi NP-difficili (si veda l'appendice~\ref{chap:appA} per un riepilogo delle classi 
 di complessità computazionale); per questo tipo di problemi non si è ancora trovato un 
 algoritmo \emph{esatto} che riesca a risolvere questo problema in tempo 
-polinomiale, e si pensa che non ne esistano\footnote{Si veda la
+polinomiale, e si pensa che non ne esistano.\footnote{Si veda la
 sezione~\ref{sec:complessitaProblemi} per una sintesi sulla congettura $\mathcal{P} = 
-\mathcal{NP}$.}.
+\mathcal{NP}$.}
 
 Oltre a questo, un'altra difficoltà che si incontra è che il problema dello scheduling 
 dei task non è indipendente dalla fase di partitioning/mapping; le due fasi sono strettamente 
 collegate e devono essere risolte contemporaneamente per garantire il raggiungimento 
-degli obiettivi ottimali. Tuttavia, ciò aumenta ulteriormente la complessità del 
+degli obiettivi ottimali \cite{AntColonyOptimization}. Tuttavia, ciò aumenta ulteriormente la complessità del 
 problema.
 
 
