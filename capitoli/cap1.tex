@@ -390,7 +390,28 @@ maggiormente nel dettaglio.
 L'applicazione viene dapprima codificata in una rappresentazione interna al flusso, che ne consente la manipolazione
 e l'elaborazione da parte del framework. Esistono diverse possibili rappresentazioni possibili, nel contesto di
 questo lavoro ci riferiremo alla rappresentazione tramite \emph{task graph}, descritta nella sezione
-\ref{subsec:faseSchedulingIntro}.
+\ref{subsec:faseSchedulingIntro}. L'applicazione viene quindi suddivisa in un insieme di task caratterizzati
+da dipendenze. 
+
+Nella fase di \emph{partizionamento HW/SW} viene stabilito quali task verranno eseguiti in hardware
+e quali su un processore general-purpose, oltre ad assegnare le risorse computazionali ai vari task in base al
+partizionamento calcolato; in questa fase si effettua spesso lo scheduling, oggetto del lavoro, che verr\`a descritto
+nella prossima sezione.
+
+Dopo il partizionamento delle risorse vengono generati i sorgenti software per eseguire i task
+assegnati al processore general-purpose e i core hardware per i task assegnati a implementazioni hardware dedicate.
+
+A questo punto vengono generate le interfacce di comunicazione utilizzate dai moduli hardware per comunicare tra loro
+e interfacciarsi con gli altri componenti del sistema, ad esempio la memoria; dopo la generazione delle interfacce
+vengono creati i driver, che astraggono dal protocollo di comunicazione utilizzato.
+
+In ultimo, il sistema viene completato generando la gestione a runtime dell'applicazione e i componenti
+hardware vengono integrati nel sistema.
+
+\subsubsection{Output}
+In uscita del flusso si ha la configurazione del sistema MPSoC, pronta per essere caricata sulla scheda;
+il bitstream finale viene solitamente generato utilizzando strumenti proprietari del produttore della scheda.
+
 
 
 \section{Definizione del problema}
