@@ -259,7 +259,7 @@ configurazione sono contenuti in un file chiamato \emph{bitstream}.
 
 \acrodef{DCT}{Discrete Cosine Transform}
 
-\subsubsection{Applicazioni del reconfigurable computing}
+%\subsubsection{Applicazioni del reconfigurable computing}
 Dati i grandi vantaggi illustrati nei precedenti paragrafi derivanti dall'impiego delle
 architetture riconfigurabili, vengono ora presentati alcuni ambiti in cui questo tipo
 di architetture viene utilizzato per ottenere un incremento di prestazioni.
@@ -289,9 +289,9 @@ di questi sistemi.
 
 \paragraph{Sicurezza delle reti}
 La necessità di scambiare i dati in modo sicuro attraverso Internet ha portato allo sviluppo
-di diversi algoritmi crittografici, sia per lo scambio di informazioni (ad esempio
-\ac{AES} e \ac{DES}), sia per meccanismi di autenticazione e verifica dell'integrità
-(MD5 e \ac{SHA}).
+di diversi algoritmi crittografici, sia per lo scambio di informazioni, ad esempio
+\ac{AES} e \ac{DES}, sia per meccanismi di autenticazione e verifica dell'integrità come
+MD5 e \ac{SHA}.
 
 Il reconfigurable computing permette di adattare facilmente i sistemi di sicurezza
 all'impiego dei diversi standard utilizzati per la cifratura e decifratura dei dati, in
@@ -425,7 +425,7 @@ specifico al caso di design di un sistema riconfigurabile.
 
 \begin{figure}[ht]
 \begin{center}
-\begin{tikzpicture}[scale=.8,auto=left,every node/.style={circle,fill=blue!20},>=stealth]
+\begin{tikzpicture}[scale=.8,auto=left,every node/.style={circle,fill=gray!40},>=stealth]
  \node (n0) at (1,10) {t0};
  \node (n1) at (4,8) {t1};
  \node (n2) at (3,6) {t2};
@@ -468,8 +468,8 @@ la struttura del task conservandone la semantica, ottenendo un task equivalente 
 Solitamente, possono esistere più implementazioni hardware per un singolo task,
 che differiscono per il tempo di esecuzione e l'area che occupano su scheda.
 
-Sfruttando la notazione introdotta tratta da \cite{ModelloRedaelli}
-e \cite{ReconfigurableSystemDesignVerification}, il dispositivo riconfigurabile viene abitualmente
+Sfruttando la notazione tratta da \cite{ModelloRedaelli}
+e \cite{ReconfigurableSystemDesignVerification}, il dispositivo riconfigurabile viene 
 rappresentato come una griglia di \ac{RU}, costituita da un insieme di righe
 $R=\left\{r_1, r_2, \dots, r_{\vert R \vert}\right\}$ e 
 di colonne $C=\left\{c_1, c_2, \dots, c_{\vert C \vert}\right\}$. Ogni unità 
