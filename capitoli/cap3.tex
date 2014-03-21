@@ -742,4 +742,12 @@ dovrebbe essere un'euristica esplorativa, quanto più un algoritmo veloce di tip
 con una funzione di calcolo delle priorità che gli consenta di essere sufficientemente preciso,
 restituendo quindi degli schedule di buona qualità.
 
-% TODO FIXME delta rispetto agli altri algoritmi presentati!
+L'algoritmo di scheduling presentato in questa tesi si differenzia dagli
+altri algoritmi presentati in questo capitolo nei seguenti punti, che riassumono i contributi del lavoro:
+\begin{itemize}
+  \item esplicita considerazione delle comunicazioni tra task e delle riconfigurazioni,
+    cercando di mascherare quanto possibile l'overhead introdotto da queste;
+  \item veloce valutazione qualitativa di un determinato mapping;
+  \item capacit\`a di integrare in fase di scheduling della conoscenza generale riguardante
+    il problema, in fase di calcolo delle priorit\`a.
+\end{itemize}
