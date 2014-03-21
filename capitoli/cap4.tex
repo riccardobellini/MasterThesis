@@ -485,14 +485,14 @@ che le stime sulla durata dei task siano il più precise possibile.
 
 Come si può vedere nell'algoritmo \ref{alg:faseScheduling}, la fase di 
 scheduling è costituita principalmente da un ciclo ripetuto finchè vi sono 
-task che non sono ancora stati schedulati. A ogni ripetizione del ciclo viene 
+task che non sono ancora stati schedulati (riga 3). A ogni ripetizione del ciclo viene 
 prima aggiornato l'insieme dei task che sono ``pronti'' per l'assegnazione dei 
-tempi, ossia i task le cui precedenze sono state tutte già considerate. Tra 
+tempi (riga 4), ossia i task le cui precedenze sono state tutte già considerate. Tra 
 questi, tramite un'opportuna euristica di scelta (vedi sezione 
 \ref{sec:euristicaSceltaTask}) viene eletto il miglior task da considerare al 
-passo corrente; a questo vengono poi assegnate le stime dei tempi, 
+passo corrente (riga 5); a questo vengono poi assegnate le stime dei tempi, 
 successivamente inserite nell'interfaccia di output dello scheduler e nel 
-diagramma di Gantt dei componenti occupati.
+diagramma di Gantt dei componenti occupati (riga 6-7).
 
 I dati di output dello scheduler vengono poi restituiti all'algoritmo di 
 esplorazione che ha invocato il tool, e possono essere usati per avere una 
@@ -788,16 +788,19 @@ La prima di queste tecniche è l'introduzione di un \emph{fattore di degrado}
 (in inglese \emph{decay factor}). Può capitare che, nel corso dell'esecuzione 
 dello scheduler, venga data sempre massima priorità ai task sul percorso 
 critico, che vengono quindi scelti dall'euristica come migliori a ogni passo di 
-scheduling. Laddove vi siano molti conflitti (soprattutto nelle comunicazioni) 
-questo può portare al verificarsi di un collo di bottiglia nell'utilizzo delle 
+scheduling. Laddove vi siano molti conflitti di mapping tra i task critici
+e altri task, schedulare i task sul percorso critico per primi
+può portare al verificarsi di un collo di bottiglia nell'utilizzo delle 
 risorse, che vengono occupate prevalentemente da task che si trovano sul 
 percorso critico, mentre altri task non possono essere eseguiti per la continua 
-occupazione delle risorse su cui questi sono mappati.
+occupazione delle risorse su cui questi sono mappati e la loro esecuzione viene
+ritardata.
 
 Per scongiurare il verificarsi di questa situazione, si è deciso di introdurre 
 un fattore di degrado, che riduca progressivamente il massimo valore della 
 cifra di merito corrispondente alle informazioni sul percorso critico; in 
-questo modo viene data una sempre minore priorità ai task sul percorso critico. 
+questo modo viene data una sempre minore priorità ai task sul percorso critico,
+se schedulati in sequenza. 
 Il fattore di degrado è inizialmente unitario, così da avere impatto nullo; man 
 mano che si scelgono task sul percorso critico esso viene ridotto 
 progressivamente di una quantità $\delta_1$. Non appena viene scelto un 
