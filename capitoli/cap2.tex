@@ -151,16 +151,6 @@ equiparabili
 % END TODO
 a quelle di un'esecuzione su hardware dedicato.
 
-% FIXME spostare nell'introduzione?
-Si pensi, a titolo esemplificativo, a un \ac{NIDS}, il cui scopo è eseguire la 
-scansione di tutti i pacchetti in ingresso per rilevare possibili minacce, e 
-tale scansione deve essere sufficientemente veloce da non costituire un collo 
-di bottiglia e rallentare così le comunicazioni; inoltre, nuove regole devono 
-essere aggiunte costantemente con il crescere della lista delle minacce. In 
-risposta a questi requisiti di velocità e dinamicità dell'applicazione, la 
-logica riconfigurabile rappresenta una soluzione per il soddisfacimento di 
-entrambi i requisiti.
-
 Nonostante il vantaggio di utilizzare architetture riconfigurabili rispetto 
 all'eseguire le applicazioni puramente in software, il design e 
 l'implementazione di un sistema basato su logica riconfigurabile hanno delle 
@@ -198,16 +188,17 @@ annoverano \emph{hArtes} \cite{HArtes}, \emph{Morpheus}, \emph{ACOTES}
 Questi lavori hanno obiettivi simili a quelli di \ac{FASTER}, tuttavia si 
 concentrano più sugli aspetti architetturali della riconfigurazione; in questi 
 lavori non si accenna esplicitamente al design della riconfigurazione parziale 
-dinamica, nè si considera quale granularità è meglio utilizzare per la 
-riconfigurazione: \emph{region-based}\footnote{Nella riconfigurazione di tipo 
-region-based, sono riconfigurati interi moduli che occupano arbitrarie porzioni 
-della scheda.} oppure \emph{micro-riconfigurazione}\footnote{Nella 
-micro-riconfigurazione vengono identificati dei parametri del modulo che 
-sono soggetti a cambiamenti; tali parametri non vengono inclusi nel bitstream, 
-lasciando così dei ``buchi''. Quando i valori per tali parametri devono essere 
-fissati, è sufficiente lanciare una riconfigurazione con un bitstream di 
-dimensioni molto ridotte, che vada a modificare solamente i buchi lasciati in 
-precedenza.}.
+dinamica, nè si considera quale granularità sia meglio utilizzare per la 
+riconfigurazione: 
+%\emph{region-based}\footnote{Nella riconfigurazione di tipo 
+%region-based, sono riconfigurati interi moduli che occupano arbitrarie porzioni 
+%della scheda.} oppure \emph{micro-riconfigurazione}\footnote{Nella 
+%micro-riconfigurazione vengono identificati dei parametri del modulo che 
+%sono soggetti a cambiamenti; tali parametri non vengono inclusi nel bitstream, 
+%lasciando così dei ``buchi''. Quando i valori per tali parametri devono essere 
+%fissati, è sufficiente lanciare una riconfigurazione con un bitstream di 
+%dimensioni molto ridotte, che vada a modificare solamente i buchi lasciati in 
+%precedenza.}.
 
 %TODO aggiungere tabella presente nel paper su dprds
 
@@ -291,12 +282,11 @@ computerizzata tridimensionale; un esempio è l'algoritmo di \emph{ray tracing}.
 In questa sezione viene descritto il framework e il flusso del progetto ad  
 alto livello.
 
-%%% FIXME credit to Santa?
 \begin{figure}
  \begin{center}  
 \includegraphics[width=0.9\textwidth]
 {capitoli/figure/cap2/FASTERWorkflow.pdf}
-\caption{Workflow di \acs{FASTER}.}
+\caption[Workflow di \acs{FASTER}]{Workflow di \acs{FASTER} \cite{FasterApproach}.}
 \label{fig:FASTERWorkflow}
  \end{center}
 \end{figure}
