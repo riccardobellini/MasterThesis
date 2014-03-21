@@ -221,42 +221,6 @@ modicata caricandone opportunamente una nuova.
 Uno degli esempi pi\`u conosciuti di logica riconfigurabile sono i chip \ac{FPGA}, i cui dati di
 configurazione sono contenuti in un file chiamato \emph{bitstream}.
 
-% TODO spostare in capitolo a parte su rec computing e flussi
-%\subsubsection{Tipi di riconfigurazione}
-%Inizialmente, il reconfigurable computing veniva utilizzato per realizzare prototipi
-%economici di soluzioni hardware, mentre oggigiorno non \`e raro trovare in commercio
-%controllori basati su FPGA. Continui progressi tecnologici hanno portato infatti
-%a un'evoluzione della fase di riconfigurazione, in seguito descritta:
-%\begin{enumerate}
- %\item \emph{riconfigurazione totale}: il dispositivo è configurato soltanto
-%dopo la fase di design, prima dell'esecuzione dell'applicazione;
- %\item \emph{riconfigurazione parziale statica}: il dispositivo può essere riconfigurato
-%interrompendo temporaneamente l'esecuzione dell'applicazione;
- %\item \emph{riconfigurazione parziale dinamica}, in inglese \ac{DPR}: parte della logica
-%può essere riconfigurata tramite un bitstream parziale, senza interrompere i task in
-%esecuzione su altre regioni del dispositivo.
-%\end{enumerate}
-
-% TODO spostare in capitolo a parte su rec computing e flussi
-%\paragraph{Bitstream}
-%Il bitstream è un file binario che contiene i dati da copiare nelle celle di memoria RAM
-%statica che contengono la configurazione. In un'architettura provvista di
-%riconfigurazione parziale dinamica, il bitstream può essere di due tipi:
-%\begin{itemize}
- %\item completo, utilizzato per l'inizializzazione della configurazione del dispositivo;
- %\item parziale, che configura soltanto alcune porzioni dell'area riconfigurabile.
-%\end{itemize}
-
-%La configurazione avviene per mezzo di interfacce, che variano a seconda dell'\ac{FPGA}
-%che si utilizza: un'interfaccia può essere basata su microcontrollori, sul caricamento
-%della configurazione da schede compact flash, su un \ac{ICAP}, etc.
-
-%A prescindere dal tipo di interfaccia utilizzato, il dispositivo possiede una
-%\emph{logica di configurazione}, che interpreta il bitstream per poter configurare
-%il dispositivo. Lo stato di tale logica è salvato all'interno di un insieme di \emph{registri di configurazione}.
-%I dati sulla configurazione vengono scritti dal bitstream a questi registri e successivamente
-%vengono copiati dalla logica di configurazione nelle memorie statiche.
-
 \acrodef{DCT}{Discrete Cosine Transform}
 
 %\subsubsection{Applicazioni del reconfigurable computing}
@@ -529,11 +493,11 @@ problema di scheduling dei task.
 \subsection{La fase di scheduling}
 \label{subsec:faseSchedulingIntro}
 L'obiettivo dello scheduler è assegnare i tempi di inizio e di fine dell'esecuzione ai
-task che compongono l'applicazione. Dato un task graph come quello in
+task che compongono l'applicazione. Nel contesto di questo lavoro, dato un task graph come quello in
 figura~\ref{fig:taskGraphExample},
 %TODO chiedere a Gian cosa significa dipendenza di controllo
-le precedenze esplicitano relazioni produttore-consumatore,
-ovvero un arco orientato $(i,j)$ simboleggia un trasferimento dell'output della
+le precedenze esplicitano relazioni produttore-consumatore;
+un arco orientato $(i,j)$ simboleggia un trasferimento dell'output della
 computazione del task $i$ in memoria (locale o condivisa), per essere utilizzato
 successivamente come input per il task $j$; gli archi introducono quindi delle
 comunicazioni che devono necessariamente essere prese in considerazione nella fase 
