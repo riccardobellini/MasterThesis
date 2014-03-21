@@ -562,7 +562,7 @@ requisito di area maggiore.
 \hfill
 \begin{minipage}[b]{0.4\textwidth}
  \begin{center}
-\includegraphics[width=\linewidth]{capitoli/figure/cap2/SlackRecController1.pdf}
+\includegraphics[width=\linewidth]{capitoli/figure/cap2/SlackRecController2.pdf}
 \subcaption{Meno frammentazione}
 \label{fig:slackRecController2}
  \end{center}
@@ -716,29 +716,21 @@ architetture; inoltre, la differenza tra risorse rinnovabili e non modellizza
 sia processori general purpose, risorse rinnovabili per definizione, sia core 
 implementati su logica riconfigurabile, rinnovabili tramite la riconfigurazione.
 
-% TODO manca AHS 2013
-
+Gli stessi autori estendono il modello in un lavoro successivo
+\cite{AntColonyOptimizationPlacing}, considerando anche la fase di piazzamento
+fisico dei moduli nell'area riconfigurabile (floorplacing).
 
 \section{Osservazioni conclusive}
 \label{sec:osservazioniConclusiveSoA}
-In questo capitolo è stato innanzitutto presentato il progetto europeo \ac{FASTER},
-il cui obiettivo è fornire un framework ai designer per l'esecuzione di applicazioni
-su diverse architetture riconfigurabili, considerando la riconfigurazione parziale come
-concetto esplicito nel design del sistema per migliorare le prestazioni dell'applicazione.
-
-La toolchain è composta da diverse parti, sviluppate dai partner del progetto,
-e si occupa della gestione nella maniera più automatizzata possibile dell'analisi
-del codice, delle possibilità di (micro)riconfigurazione, delle fasi di partitioning,
-scheduling e floorplanning dei moduli che compongono l'applicazione.
-
-Sono stati presentati, inoltre, alcuni algoritmi ideati da vari autori per risolvere
+In questo capitolo sono stati presentati, alcuni algoritmi ideati da vari autori per risolvere
 il problema di scheduling (congiuntamente oppure separatamente rispetto a
-partitioning/mapping). In particolare, sono stati descritti gli algoritmi esatti e quelli
-euristici, in due sezioni separate, con relative limitazioni.
+partitioning/mapping e floorplacing). In particolare, sono stati descritti gli algoritmi
+esatti e quelli euristici, in due sezioni separate, con relative limitazioni.
 
 Il flusso di esecuzione della toolchain di \ac{FASTER} prevede l'invocazione del tool di baseline
 scheduling statico come componente esterno, chiamato dall'algoritmo di esplorazione dello spazio
-di design per il mapping; il componente di scheduling effettua la valutazione di una particolare
+di design per il mapping, come si vedr\`a dettagliatamente nel capitolo \ref{chap:approccio};
+il componente di scheduling effettua la valutazione di una particolare
 metrica, la stima del tempo di esecuzione totale dello schedule calcolato. Poichè la fase
 di mapping è implementata come un algoritmo esplorativo evolvibile che chiama lo scheduler
 baseline come componente di valutazione della metrica riguardante il makespan, l'algoritmo di
