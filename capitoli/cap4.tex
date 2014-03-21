@@ -180,7 +180,7 @@ prosegue.
 
 \begin{figure}[ht]
  \begin{center}
-\includegraphics[width=0.9\textwidth]
+\includegraphics[width=\textwidth]
 {capitoli/figure/cap3/SchedulerWorkflow.pdf}
   \caption{Flusso di lavoro dell'algoritmo di scheduling.}
   \label{fig:schedulerWorkflow}
@@ -523,7 +523,10 @@ necessario dunque che un componente si faccia carico dell'esecuzione dei vari
 task, lanciandone di nuovi quando i predecessori sono terminati: tale 
 componente è il \emph{runtime manager}. Il ruolo del runtime manager è quello 
 di coordinare le esecuzioni di tutti i task, rispettando le precedenze imposte 
-dal grafo e l'ordine stabilito dallo scheduler.
+dal grafo e l'ordine stabilito dallo scheduler. Il runtime manager \`e un componente
+a parte che gestisce l'esecuzione dell'applicazione, ordinando i task come stabilito
+dallo scheduler. Per fare ci\`o, nella fase di postprocessing lo scheduler esplicita
+l'ordine di scheduling.
 
 \begin{figure}
  \begin{minipage}[b]{0.45\textwidth}
