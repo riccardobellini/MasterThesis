@@ -2,14 +2,29 @@
 \selectlanguage{italian}
 \vspace{0.5cm}
 Sfruttare efficacemente le potenzialit\`a offerte dall'utilizzo di hardware riconfigurabile
-\`e tuttora un compito impegnativo: la mancanza di metodologie adatte e
+\`e tuttora un compito impegnativo, a causa del lungo processo di design di questi sistemi,
+con un alto rischio di errori: la mancanza di metodologie che facilitino il design e
 la difficolt\`a di queste ad adattarsi all'applicazione da eseguire costituiscono
-un'ostacolo all'adozione di questa tecnologia.
+un ostacolo all'adozione di questa tecnologia.
+Inoltre, gli approcci esistenti non sono in grado di sfruttare in maniera efficace
+l'opportunit\`a di utilizzare la \emph{riconfigurazione parziale dinamica}, in inglese
+\ac{DPR} sin dalle prime fasi del processo di design, ottenendo soluzioni subottimali.
 
-In questo lavoro viene proposto \emph{PaRA-Sched}, un miglioramento a una metodologia
+% TODO nome lavoro
+In questo lavoro viene proposto \emph{TODO}, una metodologia
 altamente automatizzata per la progettazione di \acs{MPSoC} riconfigurabili, che permette
 al progettista di valutare l'impatto della riconfigurazione durante la fase di design.
-Nello specifico, l'algoritmo di scheduling del framework \`e esteso per tenere in considerazione
+Il lavoro oggetto della tesi combina euristiche sia per il design dell'architettura, che per
+le fasi di mapping e scheduling dell'applicazione da eseguire.
+Nello specifico:
+\begin{itemize}
+  \item l'algoritmo di mapping \`e costituito da una meta-euristica evolvibile basata su un
+    algoritmo innovativo noto come \emph{\ac{ACO}}, che permette di esplorare lo spazio delle
+    soluzioni possibili effettuando ottimizzazione multiobiettivo;
+  \item l'algoritmo di scheduling fornisce una valutazione quantitativa del mapping calcolato,
+    fornendo cos\`i una possibile metrica per l'ottimizzazione.
+\end{itemize}
+L'algoritmo di scheduling del framework \`e esteso per tenere in considerazione
 le riconfigurazioni e mascherarle automaticamente quando possibile, per migliorare le
 performance complessive.
 % TODO sommario dei risultati
