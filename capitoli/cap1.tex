@@ -7,17 +7,17 @@ lavoro.
 
 La sezione \ref{sec:introSoC} fornisce una panoramica introduttiva del contesto in cui si
 inquadra l'argomento della tesi, illustrando i concetti di \emph{\acl{SoC}} e
-\emph{\acl{MPSoC}}, il loro utilizzo e il vantaggio che ne deriva a livello di
-rapporto prestazioni/costi.
+\emph{\acl{MPSoC}} e il vantaggio che deriva in termini di rapporto prestazioni/costi.
 
 La sezione \ref{sec:reconfComp} introduce il concetto di \emph{reconfigurable computing},
 e mostra come le architetture hardware possono effettivamente beneficiare dell'impiego
 di questa tecnica per soddisfare i requisiti di performance; viene inoltre presentata
 la struttura di un generico flusso di sviluppo per \acs{MPSoC}.
 
-La sezione \ref{sec:definizioneProblema} descrive il problema dello \emph{scheduling} di un'applicazione
-su architetture riconfigurabili; particolare enfasi viene posta sull'importanza che lo scheduling
-riveste all'interno del flusso di sviluppo e sul perchè questo problema sia impegnativo da risolvere
+La sezione \ref{sec:definizioneProblema} descrive il problema del \emph{mapping} e dello
+\emph{scheduling} di un'applicazione su architetture riconfigurabili; particolare
+enfasi viene posta sull'importanza che queste fasi rivestono all'interno del
+flusso di sviluppo e sul perchè questo problema sia impegnativo da risolvere
 e tuttora oggetto di ricerca non solamente in ambito informatico.
 
 \newpage
@@ -309,24 +309,32 @@ maggiormente nel dettaglio.
     in linguaggio ad alto livello (ad esempio C, C++ o altro).
 \end{enumerate}
 
-\subsubsection{Fasi del flusso}
-L'applicazione viene dapprima codificata in una rappresentazione interna al flusso, che ne consente la manipolazione
-e l'elaborazione da parte del framework. Esistono diverse possibili rappresentazioni possibili, nel contesto di
-questo lavoro ci riferiremo alla rappresentazione tramite \emph{task graph}, descritta nella sezione
-\ref{subsec:faseSchedulingIntro}. L'applicazione viene quindi suddivisa in un insieme di task caratterizzati
-da dipendenze. 
+\subsubsection{Fasi del flusso} L'applicazione viene dapprima codificata in una
+rappresentazione interna al flusso, che ne consente la manipolazione e
+l'elaborazione da parte del framework. Esistono diverse possibili
+rappresentazioni possibili, nel contesto di questo lavoro ci riferiremo alla
+rappresentazione tramite \emph{task graph}, descritta nella sezione
+\ref{subsec:mappingScheduling}. L'applicazione viene quindi suddivisa in un
+insieme di task caratterizzati da dipendenze.\footnote{Nel contesto di questo
+lavoro, i task sono collegati da relazioni produttore-consumatore; pertanto, un arco $(i,j)$ nel task graph implica che
+l'output del task $i$ sia l'input del task $j$.}
 
-Nella fase di \emph{partizionamento HW/SW} viene stabilito quali task verranno eseguiti in hardware
-e quali su un processore general-purpose, oltre ad assegnare le risorse computazionali ai vari task in base al
-partizionamento calcolato; in questa fase si effettua spesso lo scheduling, oggetto del lavoro, che verr\`a descritto
-nella prossima sezione.
+Nella fase di \emph{partizionamento HW/SW} viene stabilito quali task verranno
+eseguiti in hardware e quali su un processore general-purpose (fase di
+\emph{mapping}), oltre ad assegnare le risorse computazionali ai vari task in
+base al partizionamento calcolato; in questa fase si effettua anche lo
+\emph{scheduling}.  Mapping e scheduling, oggetto del lavoro, verranno
+descritti nella prossima sezione.
 
-Dopo il partizionamento delle risorse vengono generati i sorgenti software per eseguire i task
-assegnati al processore general-purpose e i core hardware per i task assegnati a implementazioni hardware dedicate.
+Dopo il partizionamento delle risorse vengono generati i sorgenti software per
+eseguire i task assegnati al processore general-purpose e i core hardware per i
+task assegnati a implementazioni hardware dedicate.
 
-A questo punto vengono generate le interfacce di comunicazione utilizzate dai moduli hardware per comunicare tra loro
-e interfacciarsi con gli altri componenti del sistema, ad esempio la memoria; dopo la generazione delle interfacce
-vengono creati i driver, che astraggono dal protocollo di comunicazione utilizzato.
+A questo punto vengono generate le interfacce di comunicazione utilizzate dai
+moduli hardware per comunicare tra loro e interfacciarsi con gli altri
+componenti del sistema, ad esempio la memoria; dopo la generazione delle
+interfacce vengono creati i driver, che astraggono dal protocollo di
+comunicazione utilizzato.
 
 In ultimo, il sistema viene completato generando la gestione a runtime dell'applicazione e i componenti
 hardware vengono integrati nel sistema.
@@ -339,53 +347,15 @@ il bitstream finale viene solitamente generato utilizzando strumenti proprietari
 
 \section{Definizione del problema}
 \label{sec:definizioneProblema}
-L'obiettivo di questa sezione \`e descrivere nel dettaglio la fase di scheduling dei task, introdotta
-nella precedente sezione, e le problematiche che emergono in questa fase con riferimento
+L'obiettivo di questa sezione \`e descrivere nel dettaglio le fasi di \emph{mapping} e \emph{scheduling}
+dei task, introdotte nella precedente sezione, e le problematiche che emergono in questa fase con riferimento
 specifico al caso di design di un sistema riconfigurabile.
 
-%\subsection{Hardware/Software Co-design}
-%Come visto nella precedente sezione, il reconfigurable computing offre elevate
-%prestazioni senza sacrificare la flessibilità, rappresentando pertanto un'area di
-%ricerca in continua crescita. Per questo motivo, date anche la crescente complessità
-%delle applicazioni e la richiesta di elevate prestazioni, i sistemi embedded
-%eterogenei\footnote{I sistemi embedded eterogenei sono dispositivi progettati per
-%svolgere un numero limitato di funzioni con requisiti di alte prestazioni, basso consumo
-%energetico e prestazioni in tempo reale, come i normali sistemi embedded; si
-%differenziano da questi perchè parte dell'applicazione può essere eseguita da
-%acceleratori hardware (ad esempio una porzione di scheda riconfigurabile FPGA), da
-%hardware general-purpose oppure da \ac{DSP}.} stanno guadagnando popolarità.
+La sezione \ref{subsec:modello} fornisce il modello del problema, tramite una formulazione matematica tratta
+da \cite{ModelloRedaelli,ReconfigurableSystemDesignVerification}.
 
-%Il nuovo paradigma introdotto dalle architetture riconfigurabili procura
-%vantaggi soprattutto nel design \ac{ESL}, in particolare
-%l'\mbox{hardware/software} co-design. Inizialmente, l'applicazione era
-%partizionata e le due componenti (hardware e software) venivano sviluppate
-%separatamente e integrate successivamente, verso la fine del processo di
-%design; tuttavia, in caso di problemi nella fase di integrazione, modificare
-%opportunamente l'hardware o il software comportava delle difficoltà aggiuntive,
-%complicando la manutenibilità del progetto e aumentandone i costi.
-
-%L'HW-SW co-design è stato proposto per colmare le limitazioni della metodologia classica di
-%sviluppo. Il concetto chiave dell'HW-SW co-design è la continua integrazione tra hardware e software
-%durante il flusso di sviluppo. In questo modo si facilita la verifica del software e l'assenza di
-%errori nella parte hardware.
-
-%\paragraph{Reconfigurable computing in HW-SW co-design}
-%Nonostante la maggiore integrazione caratteristica dell'HW-SW co-design, il design dell'hardware
-%è un processo costoso in termini di tempo; lo sviluppo della parte hardware infatti include il
-%design del sistema, il debug, la produzione dell'hardware e infine il test. L'uso di linguaggi
-%di modellazione dell'hardware come SystemC \cite{SystemCBook} per simulare il comportamento del
-%sistema non rappresentano una soluzione definitiva, principalmente perchè la velocità della
-%simulazione pu\`o impattare sull'analisi delle prestazioni.
-
-%L'impiego di architetture riconfigurabili come prototipizzazione dell'hardware finale permette
-%di abbattere i costi dovuti allo sviluppo e al debug di una piattaforma hardware e di ottenere
-%risultati molto più realistici di quelli che può fornire un simulatore. Il reconfigurable
-%computing velocizza quindi il processo di HW-SW co-design, riducendo il time-to-market.
-
-%\subsection{Design di hardware riconfigurabile}
-%In questa sezione viene descritto come sia possibile progettare un sistema che esegue
-%un'applicazione parzialmente accelerata, sfruttando le potenzialità fornite dall'hardware
-%riconfigurabile.
+La sezione \ref{subsec:mappingScheduling} descrive nel dettaglio le due fasi oggetto del lavoro, evidenziando
+la loro forte interdipendenza e i problemi che si devono affrontare nell'effettuare queste fasi.
 
 \begin{figure}[ht]
 \begin{center}
@@ -410,7 +380,8 @@ specifico al caso di design di un sistema riconfigurabile.
 \end{center}
 \end{figure}
 
-\subsubsection{Modello}
+\subsection{Modello}
+\label{subsec:modello}
 Come anticipato nella sezione \ref{subsec:introFlussi}, la specifica dell'applicazione
 da accelerare è data sotto forma di un grafo che
 rappresenta il flusso di esecuzione dell'applicazione, chiamato \emph{task
@@ -490,41 +461,50 @@ Il lavoro descritto in questa tesi si concentra su una possibile soluzione per i
 problema di scheduling dei task.
 
 
-\subsection{La fase di scheduling}
-\label{subsec:faseSchedulingIntro}
-L'obiettivo dello scheduler è assegnare i tempi di inizio e di fine dell'esecuzione ai
-task che compongono l'applicazione. Nel contesto di questo lavoro, dato un task graph come quello in
-figura~\ref{fig:taskGraphExample},
-%TODO chiedere a Gian cosa significa dipendenza di controllo
+\subsection{Le fasi di mapping e scheduling}
+\label{subsec:mappingScheduling}
+La fase di mapping, che spesso incorpora il partizionamento hardware/software, ha il
+compito di determinare dove i task dell'applicazione debbano essere eseguiti
+(su quale processing element) e in quale modo (con quale tra le possibili implementazioni).
+
+Il compito dello scheduler è invece assegnare i tempi di inizio e di fine dell'esecuzione ai
+task che compongono l'applicazione.
+
+
+\subsubsection{Obiettivi di mapping e scheduling}
+Dato un numero sufficiente di processing element, siano essi hardware o software, un generico
+task graph ammette diversi possibili schedule che ne rispettino le 
+precedenze, per ogni possibile mapping. Sfortunatamente, non tutte le scelte di mapping e scheduling
+che soddisfano i vincoli di precedenza senza violarne altri (ad esempio, senza eccedere l'area a disposizione
+nel caso di implementazioni su hardware riconfigurabile)
+hanno uguale ``desiderabilità'' dal punto di vista della soluzione finale. Quindi, una buona fase
+di mapping e scheduling deve scegliere gli assegnamenti ottimi o subottimali dal punto di vista di
+varie metriche, che sono oggetto dell'ottimizzazione, tra le più importanti si ricordano:
+\begin{itemize}
+ \item \emph{makespan}: minimizzare la durata totale dell'esecuzione dello schedule, dato un mapping;
+ \item \emph{power consumption}: limitare il consumo di energia richiesto 
+    dall'esecuzione dei task;
+  \item \emph{area usage}: limitare la quantit\`a di risorse hardware richieste,
+    tramite assegnamenti di mapping pi\`u conservativi.
+\end{itemize}
+
+
+\subsubsection{Impatto di comunicazioni e riconfigurazioni sullo schedule}
+Dato un task graph come quello in figura~\ref{fig:taskGraphExample},
 le precedenze esplicitano relazioni produttore-consumatore;
 un arco orientato $(i,j)$ simboleggia un trasferimento dell'output della
 computazione del task $i$ in memoria (locale o condivisa), per essere utilizzato
-successivamente come input per il task $j$; gli archi introducono quindi delle
+successivamente come input per il task $j$.
+Gli archi introducono quindi delle
 comunicazioni che devono necessariamente essere prese in considerazione nella fase 
-di scheduling.
-%END TODO
-
+di scheduling, poich\'e gli effetti dei trasferimenti di dati sono un aspetto
+di cruciale importanza nel determinare correttamente il makespan dell'applicazione \cite{AntColonyOptimization}.
 
 Oltre alle comunicazioni, lo scheduler deve anche gestire il verificarsi di 
 riconfigurazioni nel corso dell'esecuzione dell'applicazione. Ad esempio, se due task $i$ 
 e $j$ durante la fase di mapping vengono assegnati a uno stesso processing element su 
 scheda con due implementazioni diverse, è necessario riconfigurare quella porzione di 
 scheda nell'intervallo di tempo che intercorre tra l'esecuzione di $i$ e quella di $j$.
-
-\subsubsection{Obiettivi dello scheduling}
-Un generico task graph ammette diversi possibili schedule che ne rispettino le 
-precedenze. Sfortunatamente, non tutti gli schedule che soddisfano i vincoli di precedenza
-hanno uguale ``desiderabilità'' dal punto di vista della soluzione finale. Quindi, un buon
-algoritmo di scheduling deve scegliere quelli ottimi o sub-ottimi dal punto di vista di
-varie metriche, tra le più importanti si ricordano:
-\begin{itemize}
- \item \emph{makespan}: minimizzare la durata totale dell'esecuzione dello schedule;
- \item \emph{power consumption}: limitare il consumo di energia richiesto 
-dall'esecuzione dei task.
-\end{itemize}
-
-
-\paragraph{Impatto della riconfigurazione sullo schedule}
 Come visto nella sezione \ref{subsec:introFlussi}, l'overhead introdotto dalle riconfigurazioni
 non \`e trascurabile, e pu\`o penalizzare notevolmente il makespan dello schedule.
 Un buon algoritmo di scheduling deve pertanto cercare di ``mascherare'' quanto possibile le
@@ -537,32 +517,36 @@ estremamente ampio, e la complessità delle fasi di mapping e scheduling se effe
 contemporaneamente rende quasi impossibile risolvere (in maniera ottima) problemi non 
 banali.
 
-Il problema di fissare uno schedule per i task di un'applicazione è un classico esempio 
-di \ac{RCSP}; tale problema appartiene alla classe di complessità computazionale dei 
-problemi NP-difficili (si veda l'appendice~\ref{chap:appA} per un riepilogo delle classi 
-di complessità computazionale); per questo tipo di problemi non si è ancora trovato un 
-algoritmo \emph{esatto} che riesca a risolvere questo problema in tempo 
-polinomiale, e si pensa che non ne esistano.\footnote{Si veda la
-sezione~\ref{sec:complessitaProblemi} per una sintesi sulla congettura $\mathcal{P} = 
-\mathcal{NP}$.}
+Il problema di fissare un mapping e uno schedule per i task di un'applicazione
+tale da minimizzare una determinata metrica, o un insieme di metriche nel caso
+di ottimizzazione multiobiettivo) è un classico esempio di \ac{RCSP}; tale
+problema appartiene alla classe di complessità computazionale dei problemi
+NP-difficili (si veda l'appendice~\ref{chap:appA} per un riepilogo delle classi
+di complessità computazionale); per questo tipo di problemi non si è ancora
+trovato un algoritmo \emph{esatto} che riesca a risolvere questo problema in
+tempo polinomiale, e si pensa che non ne esistano.\footnote{Si veda la
+  sezione~\ref{sec:complessitaProblemi} per una sintesi sulla congettura
+  $\mathcal{P} = \mathcal{NP}$.}
 
-Oltre a questo, un'altra difficoltà che si incontra è che il problema dello scheduling 
-dei task non è indipendente dalla fase di partitioning/mapping; le due fasi sono strettamente 
-collegate e devono essere risolte contemporaneamente per garantire il raggiungimento 
-degli obiettivi ottimali \cite{AntColonyOptimization}. Tuttavia, ciò aumenta ulteriormente la complessità del 
-problema.
+Oltre a questo, un'altra difficoltà che si incontra è che il problema dello
+scheduling dei task non è indipendente dalla fase di partitioning/mapping; le
+due fasi sono strettamente collegate e devono essere risolte contemporaneamente
+per garantire il raggiungimento degli obiettivi ottimali
+\cite{AntColonyOptimization}. Tuttavia, ciò aumenta ulteriormente la
+complessità del problema e lo spazio delle possibili soluzioni.
 
 
-\subsubsection{Algoritmi utilizzabili}
-Esistono diversi algoritmi per risolvere il problema dello scheduling, alcuni esatti 
-basati sulla \ac{PLI}, altri basati su euristiche più o meno complesse che ricercano 
-soluzioni sub-ottime, entrambi i tipi saranno discussi più nel dettaglio 
-capitolo~\ref{chap:SOA}, in particolare nella sezione~\ref{sec:algoritmiProposti}.
-Lo svantaggio a livello pratico degli algoritmi esatti è l'eccessivo tempo 
-impiegato per lo scheduling di applicazioni non banali, limitazione che tende a far 
-preferire l'uso di metodi non esatti ma più veloci quali le euristiche, per ottenere 
-risultati buoni in tempi accettabili; in questo lavoro l'algoritmo proposto per la fase di 
-scheduling è di tipo euristico, le motivazioni per questa scelta verranno illustrate nel 
-capitolo~\ref{chap:approccio}.
+\subsubsection{Algoritmi utilizzabili} Esistono diversi algoritmi per risolvere
+il problema di mapping e scheduling dei task, alcuni esatti basati sulla
+\ac{PLI}, altri basati su euristiche più o meno complesse che ricercano
+soluzioni sub-ottime, entrambi i tipi saranno discussi più nel dettaglio nel
+capitolo~\ref{chap:SOA}, in particolare nella
+sezione~\ref{sec:algoritmiProposti}.  Lo svantaggio a livello pratico degli
+algoritmi esatti è l'eccessivo tempo impiegato per trovare una soluzione nel caso di
+applicazioni non banali, limitazione che tende a far preferire l'uso di metodi
+non esatti ma più veloci quali le euristiche, per ottenere risultati buoni in
+tempi accettabili; in questo lavoro gli algoritmi proposti per le fasi di
+mapping e scheduling sono di tipo euristico, le motivazioni per questa scelta verranno
+illustrate nel capitolo~\ref{chap:approccio}.
 
 % TODO outline tesi
