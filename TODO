@@ -1,3 +1,8 @@
-- Introduzione:
-  o includere immagine scheduling ottimo
-  o includere schema FPGA
+- Stato arte:
+    o Modificare contributi del lavoro
+- Metodologia:
+    o Includere metodologia del mapper
+    o Includere immagine metodologia, da RSP oppure da FPL
+- Implementazione:
+    o Togliere codice dallo scheduler, e focalizzarsi
+    sull'implementazione della fase di mapping
