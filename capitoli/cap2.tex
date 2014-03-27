@@ -1,18 +1,19 @@
 \chapter{Reconfigurable computing e \acs{FASTER}}
 \label{chap:recComputingFASTER}
 \vspace{1cm}
-Questo capitolo spiega pi\`u dettagliatamente la fase di riconfigurazione,
-introdotta nel capitolo \ref{chap:intro}, e presenta alcuni flussi di sviluppo
-proposti in letteratura.
+Questo capitolo spiega pi\`u dettagliatamente la fase di
+riconfigurazione, introdotta nel capitolo \ref{chap:intro}, e presenta il
+framework \acs{FASTER}.
 
-La sezione \ref{sec:recComputingDettagli} descrive i vari tipi di riconfigurazione
-e il processo di riconfigurazione dei chip \ac{FPGA}.
+La sezione \ref{sec:recComputingDettagli} descrive i vari tipi di
+riconfigurazione e il processo di riconfigurazione dei chip \ac{FPGA}.
 
-La sezione \ref{sec:progettoFASTER} presenta un esempio di framework per il design
-di \ac{MPSoC} riconfigurabili, il progetto europeo \acs{FASTER}, all'interno del
-quale si colloca il lavoro sullo scheduling oggetto di questa tesi. Viene presentata
-la metodolofia proposta per la toolchain e l'algoritmo che effettua l'analisi esplorativa
-delle soluzioni, che interagisce con lo scheduler.
+La sezione \ref{sec:progettoFASTER} presenta un esempio di framework per il
+design di \ac{MPSoC} riconfigurabili, il progetto europeo \acs{FASTER},
+all'interno del quale si colloca il lavoro su mapping e scheduling oggetto di questa
+tesi. Viene presentata la metodologia proposta per la toolchain e l'algoritmo
+che effettua l'analisi esplorativa delle soluzioni, che interagisce con lo
+scheduler.
 
 \newpage
 
@@ -27,15 +28,15 @@ economici di soluzioni hardware, mentre oggigiorno non \`e raro trovare in comme
 controllori basati su \ac{FPGA}. I continui progressi tecnologici hanno portato infatti
 a un'evoluzione della fase di riconfigurazione. Le possibilit\`a di usufruire della
 riconfigurazione sono passate dal poter riconfigurare un dispositivo solamente una volta,
-prima di eseguire l'applicazione al poter riconfigurare in maniera trasparente alcune porzioni
-della logica, consentendo all'esecuzione di altri moduli di proseguire in parallelo.
+prima di eseguire l'applicazione, al poter riconfigurare in maniera trasparente alcune porzioni
+della logica, consentendo ad altri moduli di proseguire la loro esecuzione in parallelo.
 I vari tipi di riconfigurazione sono i seguenti:
 \begin{enumerate}
  \item \emph{riconfigurazione totale}: il dispositivo è configurato soltanto
 dopo la fase di design, prima dell'esecuzione dell'applicazione;
  \item \emph{riconfigurazione parziale statica}: il dispositivo può essere riconfigurato
 interrompendo temporaneamente l'esecuzione dell'applicazione;
- \item \emph{riconfigurazione parziale dinamica}, in inglese \ac{DPR}: parte della logica
+ \item \emph{riconfigurazione parziale dinamica}, in inglese \acf{DPR}: parte della logica
 può essere riconfigurata tramite un bitstream parziale, senza interrompere i task in
 esecuzione su altre regioni del dispositivo.
 \end{enumerate}
@@ -75,7 +76,9 @@ colonna richiede la riconfigurazione di tutta la colonna, il che proibisce il pi
 di altri moduli in colonne sovrapposte al primo. La riconfigurazione a due dimensioni
 permette, invece, di piazzare i due moduli in un'area della scheda molto più compatta e di
 incrementare potenzialmente il numero di moduli che possono essere accelerati se eseguiti
-su logica riconfigurabile.
+su logica riconfigurabile. Inoltre, poich\'e a parit\`a di requisiti del modulo l'area da
+riconfigurare nel caso a due dimensioni \`e minore, i tempi necessari per eseguire
+le riconfigurazioni si riducono.
 
 \footnotetext{Immagine tratta da \cite{Redaelli2DILP}.}
 L'aumento di versatilità derivante dall'uso della riconfigurazione parziale dinamica
@@ -122,10 +125,12 @@ raggiungere gli obiettivi prefissati.
 \acrodef{FORTH}{Foundation for Research and Technology - Hellas}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% mark FASTER acronym as used
+\acused{FASTER}
 
 \subsection{Introduzione}
 \label{subsec:fasterIntro}
-\acs{FASTER} è l'acronimo di \emph{\ac{FASTER}}, un progetto\footnote{Sito del 
+\acs{FASTER} è l'acronimo di \emph{\acl{FASTER}}, un progetto\footnote{Sito del 
 progetto: \url{http://www.fp7-faster.eu/}.} organizzato dalla comunità europea 
 che coinvolge diverse aziende e atenei,\footnote{I collaboratori del progetto 
 sono: l'\ac{ICS} di \ac{FORTH} in Grecia, Chalmers University of Technology in 
