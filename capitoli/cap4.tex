@@ -24,8 +24,10 @@ dell'algoritmo di scheduling con il componente che gestisce il mapping dei task,
 con accenni alle interfacce esterne che collegano il componente 
 con gli altri strumenti utilizzati nella toolchain di \acs{FASTER}; la sezione 
 \ref{sec:panoramicaMetodologia} descrive ad alto livello il funzionamento 
-dell'algoritmo di scheduling, fornendo una panoramica delle fasi in cui questo 
-si divide; la sezione \ref{sec:euristicaSceltaTask} contiene una descrizione 
+dell'algoritmo di esplorazione delle soluzioni e dell'algoritmo di scheduling
+presente al suo interno, fornendo una panoramica delle fasi in cui questi si dividono;
+% TODO trovare sezioni per ACO
+la sezione \ref{sec:euristicaSceltaTask} contiene una descrizione 
 dettagliata della fase più delicata del procedimento di scheduling, la scelta 
 del task migliore da considerare ad ogni passo di decisione; nella sezione 
 \ref{sec:elementiComunicazioneGestioneMemoria} vengono introdotti i modelli di 
@@ -49,7 +51,7 @@ deve avere nozioni sul funzionamento interno delle altre fasi.
 Condizione necessaria perchè ciò accada è la definizione di specifiche 
 interfacce per ogni strumento che deve essere invocato. Ad esempio, la fase di 
 mapping ha la propria interfaccia di input e di output; lo scheduler 
-(invocato dall'algoritmo evolvibile di esplorazione dello spazio delle soluzioni) ha 
+(invocato dall'algoritmo di esplorazione dello spazio delle soluzioni) ha 
 anch'esso una interfaccia di input e una di output, contenenti tutte 
 le strutture dati necessarie per l'elaborazione e per la memorizzazione delle 
 informazioni calcolate dall'algoritmo, rispettivamente. 
@@ -80,8 +82,17 @@ e della fase di scheduling.
 
 \subsection{Interfacce di input}
 
-\subsubsection{Algoritmo di esplorazione}
-L'algoritmo di esplorazione delle soluzioni, basato sulla meta-euristica esplorativa \acl{ACO}.
+L'interfaccia di input dell'algoritmo di esplorazione comprende i dati relativi al
+progetto correntemente aperto in \ac{FASTER}, tra cui:
+\begin{itemize}
+  \item descrizione dell'architettura e degli elementi di computazione, comunicazione
+    e memoria presenti;
+  \item descrizione del task graph che rappresenta l'applicazione e delle implementazioni
+    a disposizione per realizzare la funzionalit\`a di ogni task.
+\end{itemize}
+Oltre a questi, l'input dell'esplorazione comprende anche i vari parametri per la configurazione
+dell'algoritmo, ad esempio parametri sulle metriche da utilizzare e funzioni da utilizzare per il calcolo
+del loro valore, e parametri di configurazione del numero di iterazioni e del criterio di terminazione.
 
 
 \begin{figure}
@@ -118,15 +129,9 @@ L'algoritmo di esplorazione delle soluzioni, basato sulla meta-euristica esplora
 L'interfaccia di input per la fase di scheduling contiene tutti i dati 
 necessari all'esecuzione dello scheduler, alcuni definiti prima 
 dell'invocazione del tool, altri creati o modificati durante le differenti fasi 
-dell'esecuzione. In particolare, i dati definiti prima dell'invocazione sono:
-\begin{itemize}
- \item dati provenienti dal file XML di specifica del progetto correntemente in 
-elaborazione dalla toolchain, relativi alla descrizione dell'architettura, del 
-task graph che rappresenta l'applicazione, delle implementazioni e dei vari elementi 
-di computazione, di 
-comunicazione e di memoria presenti;
- \item dati provenienti dall'output della fase di mapping.
-\end{itemize}
+dell'esecuzione. In particolare, i dati definiti prima dell'invocazione sono
+gli stessi dati relativi al progetto correntemente in elaborazione dalla toolchain,
+e dati provenienti dall'output della fase di mapping effettuata dall'algoritmo di esplorazione.
 Questi ultimi sono organizzati come una lista di triple \emph{$<$processing 
 task, processing element, implementazione$>$} calcolata dal mapper, che 
 specifica per ogni task:
@@ -150,14 +155,20 @@ vari componenti del dispositivo.
 
 
 \subsection{Interfaccia di output}
+L'interfaccia di output dell'algoritmo di esplorazione \`e costituita dalla
+migliore soluzione trovata nel corso dell'esplorazione dello spazio delle soluzioni
+possibili, e include l'output dello scheduler (descritto nel prossimo paragrafo),
+il valore della funzione obiettivo, il numero di processing element utilizzati e
+la dimensione dell'area utilizzata.
 
-Il compito dello scheduler è assegnare delle stime di tempo di inizio e di fine 
-esecuzione ad ogni task in modo che le precedenze imposte dal task graph
-vengano rispettate, e che nessun altro vincolo sia violato: ad esempio, 
-task che devono essere eseguiti sullo stesso componente non possono avere tempi 
-di esecuzione sovrapposti. Tutte queste informazioni sulle stime calcolate 
-dallo scheduler vengono memorizzate nell'interfaccia di output, che è composta 
-da:
+%Il compito dello scheduler è assegnare delle stime di tempo di inizio e di fine 
+%esecuzione ad ogni task in modo che le precedenze imposte dal task graph
+%vengano rispettate, e che nessun altro vincolo sia violato: ad esempio, 
+%task che devono essere eseguiti sullo stesso componente non possono avere tempi 
+%di esecuzione sovrapposti.
+
+L'interfaccia di output dello scheduler è composta da tutte le informazioni
+calcolate dall'algoritmo:
 \begin{itemize}
  \item una rappresentazione in forma di \emph{diagramma di Gantt}, che delinea 
 per ogni componente quando questo è occupato nell'esecuzione di un task;
@@ -170,17 +181,30 @@ inizio e fine esecuzione che gli sono state assegnate;
 \end{itemize}
 
 Nella prossima sezione verrà spiegato in dettaglio il flusso di 
-esecuzione dell'algoritmo di scheduling e come le interfacce vengono 
-utilizzate durante l'elaborazione.
+esecuzione dell'algoritmo di esplorazione (mapping e scheduling), e come le
+interfacce vengono utilizzate durante l'elaborazione.
 
 
 \section{Panoramica della metodologia}
 \label{sec:panoramicaMetodologia}
 
+% FIXME cambiare figura mettendo quella della formichina?
+\begin{figure}[t]
+  \begin{center}
+    \includegraphics[width=0.5\textwidth]{./capitoli/figure/cap4/Methodology.pdf}
+    \caption{Flusso dettagliato dell'algoritmo di esplorazione.}
+    \label{fig:flussoDettagliatoACO}
+  \end{center}
+\end{figure}
+
 In questa sezione viene descritto il funzionamento dell'algoritmo proposto e le 
 fasi in cui esso si articola, con una spiegazione dettagliata della struttura 
 di ogni fase e del flusso di lavoro completo dell'algoritmo.
 
+\subsection{Algoritmo di esplorazione}
+Una rappresentazione dettagliata del flusso di lavoro dell'algoritmo di
+esplorazione \`e mostrata in figura \ref{fig:flussoDettagliatoACO}.
+% TODO continuare da qui
 Come accennato nella sezione precedente, l'interfaccia di input è 
 caratterizzata da dati ``statici'', presenti prima dell'invocazione dello 
 scheduler e da dati ``dinamici'', che subiscono modifiche oppure vengono creati 
