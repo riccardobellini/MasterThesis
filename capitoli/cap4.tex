@@ -6,11 +6,16 @@ relative al lavoro oggetto di questa tesi, in particolare algoritmi esatti ed
 euristici di ottimizzazione atti a risolvere il problema di mapping e 
 scheduling, congiuntamente o separatamente. Alla luce delle limitazioni dei 
 lavori presentati è stato spiegato il motivo per cui si rende necessario questo 
-lavoro di sviluppo di un baseline scheduler nell'ambito del progetto 
-\ac{FASTER}.
+lavoro integrato nel progetto \ac{FASTER}, presentato nel capitolo
+\ref{chap:recComputingFASTER}.
+
+%di sviluppo di un algoritmo che consenta di effettuare un'ottimizzazione
+%multiobiettivo nello spazio delle soluzioni, che consideri la riconfigurazione
+%parziale dinamica come concetto esplicito di design; tale fase esplorativa
+%\`e 
 
 In questo capitolo verrà descritto l'approccio utilizzato per risolvere il 
-problema di scheduling dei task tenendo in considerazione le comunicazioni ed
+problema del mapping di task e successivo scheduling, tenendo in considerazione le comunicazioni ed
 eventualmente le riconfigurazioni introdotte.
 
 Il capitolo è organizzato secondo la seguente struttura: nella sezione 
@@ -44,7 +49,7 @@ deve avere nozioni sul funzionamento interno delle altre fasi.
 Condizione necessaria perchè ciò accada è la definizione di specifiche 
 interfacce per ogni strumento che deve essere invocato. Ad esempio, la fase di 
 mapping ha la propria interfaccia di input e di output; lo scheduler 
-(incapsulato nell'algoritmo evolvibile di esplorazione delle soluzioni) ha 
+(invocato dall'algoritmo evolvibile di esplorazione dello spazio delle soluzioni) ha 
 anch'esso una interfaccia di input e una di output, contenenti tutte 
 le strutture dati necessarie per l'elaborazione e per la memorizzazione delle 
 informazioni calcolate dall'algoritmo, rispettivamente. 
@@ -60,18 +65,24 @@ informazioni calcolate dall'algoritmo, rispettivamente.
 
 A livello dell'algoritmo di esplorazione delle soluzioni, dunque, si avrà un 
 flusso di lavoro come rappresentato nella figura \ref{fig:mapperWorkflow}, in 
-cui è messo in evidenza dove si colloca la fase di scheduling oggetto del 
-lavoro, con le relative interfacce di input e output.
+cui a titolo esemplificativo sono rappresentate le interfacce di input e output
+dello scheduler.
 
-Anche la fase di mapping, che si occupa dell'invocazione del tool che gestisce lo 
-scheduling, è caratterizzata dalle proprie interfacce di input e output. Come 
-si può vedere nella figura \ref{fig:mapperWorkflow}, l'interfaccia di 
-output del mapper e l'interfaccia di input dello scheduler avranno alcuni dati 
+Anche l'algoritmo di esplorazione, che si occupa dell'invocazione del tool che gestisce lo 
+scheduling, è caratterizzato dalle proprie interfacce di input e output. Come 
+si può vedere nella figura \ref{fig:mapperWorkflow}, l'output del mapper e l'interfaccia
+di input dello scheduler avranno alcuni dati 
 in comune, poichè la fase di scheduling è immediatamente successiva a quella di mapping
 nel flusso dell'algoritmo di esplorazione.
 
+Nella prossima sezione verranno descritte le interfacce di input dell'algoritmo di esplorazione
+e della fase di scheduling.
 
-\subsection{Interfaccia di input}
+\subsection{Interfacce di input}
+
+\subsubsection{Algoritmo di esplorazione}
+L'algoritmo di esplorazione delle soluzioni, basato sulla meta-euristica esplorativa \acl{ACO}.
+
 
 \begin{figure}
  \begin{minipage}[b]{0.4\textwidth}
