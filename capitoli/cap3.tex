@@ -5,25 +5,25 @@ In questo capitolo verrà fornito un esame dello stato dell'arte e verranno pres
 alcune soluzioni relative al lavoro oggetto di questa tesi.
 
 Nella sezione~\ref{sec:algoritmiProposti} si esaminano i vari approcci proposti 
-dagli autori nell'ambito del problema dello scheduling dei task su dispositivi 
+dagli autori nell'ambito del problema del mapping e scheduling dei task su dispositivi 
 riconfigurabili, divisi in algoritmi esatti, trattati nella
 sezione~\ref{sec:algoritmiEsatti}, ed euristici, trattati nella
 sezione~\ref{sec:algoritmiEuristici}.
 
 La sezione~\ref{sec:osservazioniConclusiveSoA} riepiloga quanto visto in questo capitolo
-e fornisce le motivazioni alla base dello sviluppo dell'algoritmo di scheduling
-trattato in questa tesi.
+e fornisce le motivazioni alla base dello sviluppo dell'algoritmo di mapping/scheduling
+esplorativo trattato in questa tesi.
 
 \newpage
 
 \section{Algoritmi proposti}
 \label{sec:algoritmiProposti}
-In questa sezione verranno esaminate diverse soluzioni al problema dello 
-scheduling, proposte in altri lavori.
+In questa sezione verranno esaminate diverse soluzioni al problema del
+mapping e scheduling dei task, proposte in altri lavori.
 
 Come anticipato nel capitolo~\ref{chap:intro}, il problema di trovare uno 
-schedule di lunghezza minima per un insieme di task in presenza di vincoli di 
-risorse appartiene alla classe dei problemi di ottimizzazione 
+schedule di lunghezza minima per un insieme di task da mappare su un insieme finito
+di componenti appartiene alla classe dei problemi di ottimizzazione 
 $\mathcal{NP}$-difficili. Tutte le soluzioni proposte appartengono a una 
 tra queste categorie di algoritmi:
 \begin{enumerate}
@@ -35,7 +35,7 @@ soluzioni sub-ottime. Gli algoritmi euristici si possono suddividere a loro
 volta in sottocategorie in base al loro funzionamento, tra le più importanti 
 ricordiamo:
  \begin{itemize}
-  \item euristiche basate su una lista, in cui i task vengono schedulati 
+  \item euristiche basate su una lista, in cui i task vengono mappati e schedulati 
 secondo l'ordine in cui compaiono nella lista, ordinata per priorità decrescenti;
   \item meta-euristiche, che comprendono algoritmi evolutivi o ispirati al 
 comportamento di sistemi presenti in natura.
@@ -67,8 +67,8 @@ et al. \cite{MetaheuristicCombinatorialOptimization} per problemi di
 ottimizzazione combinatoria.
 
 Il resto della sezione è organizzato come segue: nella
-sezione~\ref{sec:algoritmiEsatti} vengono descritte le soluzioni proposte per il 
-problema dello scheduling basate su algoritmi esatti; la
+sezione~\ref{sec:algoritmiEsatti} vengono descritte le soluzioni proposte in letteratura 
+basate su algoritmi esatti; la
 sezione~\ref{sec:algoritmiEuristici} presenta invece le soluzioni basate su metodi 
 euristici.
 
@@ -78,7 +78,7 @@ euristici.
 Come esposto nell'introduzione a questa sezione, gli algoritmi esatti 
 permettono di ottenere la soluzione ottima in assoluto. Un algoritmo esatto, 
 applicato a un'istanza di un problema di ottimizzazione combinatoria qual è un
-problema di scheduling di task su un numero vincolato di unit\`a computazionali,
+problema di mapping e scheduling di task su un numero vincolato di unit\`a computazionali,
 definito tramite una formulazione (modello), permette di ottenere lo schedule
 caratterizzato dal minimo makespan possibile che rispetti la formulazione. 
 
@@ -103,20 +103,24 @@ caratterizzato da \emph{variabili}, \emph{parametri} e \emph{vincoli}.
 La \emph{forma canonica} di un problema di programmazione lineare è espressa 
 come:
 
-\begin{align*}
-& \text{maximize}   && \mathbf{c}^\mathrm{T} \mathbf{x}\\
-& \text{subject to} && A \mathbf{x} \le \mathbf{b},\\
-&  && \mathbf{x} \ge \mathbf{0}
-\end{align*}
+\begin{equation}
+\begin{split}
+ \text{maximize} \qquad  & \mathbf{c}^\mathrm{T} \mathbf{x}\\
+ \text{subject to} \qquad & A \mathbf{x} \le \mathbf{b},\\
+  & \mathbf{x} \ge \mathbf{0}
+\end{split}
+\end{equation}
 
 Alternativamente, il problema si può esprimere in maniera equivalente utilizzando
-la  \emph{forma standard}:
+la \emph{forma standard}:
 
-\begin{align*}
- & \text{maximize}   && \mathbf{c}^\mathrm{T} \mathbf{x}\\
-& \text{subject to} && A \mathbf{x} = \mathbf{b}, \\
-&  && \mathbf{x} \ge \mathbf{0}
-\end{align*}
+\begin{equation}
+\begin{split}
+ \text{maximize}   \qquad & \mathbf{c}^\mathrm{T} \mathbf{x}\\
+ \text{subject to} \qquad & A \mathbf{x} = \mathbf{b}, \\
+  & \mathbf{x} \ge \mathbf{0}
+\end{split}
+\end{equation}
 dove $\mathbf{x}$ rappresenta il vettore di variabili che devono essere 
 determinate per trovare la soluzione ottima, $\mathbf{c}$ e $\mathbf{b}$ sono 
 vettori di coefficienti costanti e noti, $\mathbf{A}$ è una matrice di 
@@ -138,31 +142,31 @@ e $\mathbf{b}$ e della matrice $\mathbf{A}$ sono numeri interi.
 I vincoli di interezza possono anche riguardare soltanto alcune delle variabili o 
 dei coefficienti, in tal caso si parla di problemi \ac{MILP}.
 
-Nel caso dello scheduling di un task graph, le formulazioni proposte nello 
+Nel caso del mapping e scheduling di un task graph, le formulazioni proposte nello 
 stato dell'arte presentano modelli con vincoli di interezza per tutte le 
 variabili e i coefficienti, sono quindi problemi di programmazione lineare 
 intera; i lavori di questo tipo sono descritti nella sezione seguente.
 
 
-\subsubsection{Formulazioni \acs{ILP}}
-Il problema di effettuare lo scheduling di task di un'applicazione per 
-l'esecuzione su hardware, anche riconfigurabile, è un tema ampiamente discusso 
-in letteratura; molte sono le formulazioni che ricorrono alla programmazione 
-lineare intera per trovare una soluzione a questo problema. Spesso, oltre alla 
-ricerca di una soluzione per lo scheduling, il modello consente anche di 
-determinare un mapping adeguato che minimizzi il tempo di esecuzione finale
-dell'applicazione.
+\subsubsection{Formulazioni \acs{ILP}} Il problema di effettuare mapping e
+scheduling di task di un'applicazione per l'esecuzione su hardware, sia
+riconfigurabile che non, è un tema ampiamente discusso in letteratura; molte
+sono le formulazioni che ricorrono alla programmazione lineare intera per
+trovare una soluzione a questo problema. Spesso, il modello consente di
+determinare congiuntamente un mapping e uno scheduling adeguato che minimizzino
+il tempo di esecuzione finale dell'applicazione.
 
-Come visto nella sezione~\ref{subsec:mappingScheduling}, infatti, la minimizzazione assoluta 
-del tempo di esecuzione può essere ottenuta solamente risolvendo unitamente le 
-fasi di mapping, scheduling e floorplanning (per verificare che la soluzione 
-sia fisicamente implementabile). In generale, la risoluzione separata delle fasi, in 
-particolare la separazione di mapping e scheduling, non porta alla 
-minimizzazione assoluta del tempo di esecuzione \cite{AntColonyOptimization}. La scelta tra queste due 
-possibilità implica il dover fare un compromesso tra l'accuratezza della 
-soluzione, che può non essere la migliore se i problemi sono risolti 
-separatamente, e la dimensione dello spazio delle soluzioni possibili, che 
-cresce in maniera esponenziale nel caso in cui i problemi si risolvano congiuntamente.
+Come visto nella sezione~\ref{subsec:mappingScheduling}, infatti, la
+minimizzazione assoluta del tempo di esecuzione può essere ottenuta solamente
+risolvendo unitamente le fasi di mapping, scheduling e floorplanning (per
+verificare che la soluzione sia fisicamente implementabile). In generale, la
+risoluzione separata delle fasi, in particolare la separazione di mapping e
+scheduling, non porta alla minimizzazione assoluta del tempo di esecuzione
+\cite{AntColonyOptimization}. La scelta tra queste due possibilità implica il
+dover fare un compromesso tra l'accuratezza della soluzione, che può non essere
+la migliore se i problemi sono risolti separatamente, e la dimensione dello
+spazio delle soluzioni possibili, che cresce in maniera esponenziale nel caso
+in cui i problemi si risolvano congiuntamente.
 % TODO citazione per frase precedente
 
 \paragraph{Modello \acs{ILP} di Banerjee}
