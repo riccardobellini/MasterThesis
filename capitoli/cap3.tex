@@ -727,8 +727,8 @@ fisico dei moduli nell'area riconfigurabile (floorplacing).
 \section{Osservazioni conclusive}
 \label{sec:osservazioniConclusiveSoA}
 In questo capitolo sono stati presentati, alcuni algoritmi ideati da vari autori per risolvere
-il problema di scheduling (congiuntamente oppure separatamente rispetto a
-partitioning/mapping e floorplacing). In particolare, sono stati descritti gli algoritmi
+i problemi di mapping e scheduling (congiuntamente oppure separatamente).
+In particolare, sono stati descritti gli algoritmi
 esatti e quelli euristici, in due sezioni separate, con relative limitazioni.
 
 Il flusso di esecuzione della toolchain di \ac{FASTER} prevede l'invocazione del tool di baseline
@@ -740,18 +740,26 @@ di mapping è implementata come un algoritmo esplorativo evolvibile che chiama l
 baseline come componente di valutazione della metrica riguardante il makespan, l'algoritmo di
 scheduling deve necessariamente essere veloce, per non rallentare eccessivamente l'esplorazione.
 
-Alla luce di queste considerazioni, si è deciso di sviluppare un algoritmo basato su
+Alla luce di queste considerazioni, si è deciso di sviluppare un algoritmo di scheduling basato su
 un'euristica, per soddisfare i requisiti di velocità. L'algoritmo di scheduling non
 dovrebbe essere un'euristica esplorativa, quanto più un algoritmo veloce di tipo list-based,
 con una funzione di calcolo delle priorità che gli consenta di essere sufficientemente preciso,
 restituendo quindi degli schedule di buona qualità.
+La vera esplorazione \`e infatti effettuata dall'algoritmo evolvibile che invoca lo scheduler.
 
-L'algoritmo di scheduling presentato in questa tesi si differenzia dagli
-altri algoritmi presentati in questo capitolo nei seguenti punti, che riassumono i contributi del lavoro:
+L'algoritmo di esplorazione e il baseline scheduler al suo interno, inoltre, sono stati progettati
+per essere estendibili e permettere l'utilizzo di componenti e metriche personalizzate; unica condizione
+\`e che questi componenti rispettino le interfacce che sono definite.
+In conclusione, i principali contributi della metodologia proposta in questo lavoro
+si riassumono nei seguenti punti:
 \begin{itemize}
-  \item esplicita considerazione delle comunicazioni tra task e delle riconfigurazioni,
+  \item definizione di un framework esplorativo per il design di sistemi riconfigurabili adattabile
+    a diversi algoritmi e metriche;
+  \item la valutazione delle opportunit\`a derivanti dall'utilizzare la riconfigurazione parziale dinamica gi\`a
+    in fase di esplorazione delle soluzioni, permette al designer di capire se conviene applicarla e dove;
+  \item esplicita considerazione delle comunicazioni tra task e delle riconfigurazioni in fase di scheduling,
     cercando di mascherare quanto possibile l'overhead introdotto da queste;
-  \item veloce valutazione qualitativa di un determinato mapping;
+  \item veloce valutazione qualitativa di un determinato mapping da parte dell'algoritmo di scheduling proposto;
   \item capacit\`a di integrare in fase di scheduling della conoscenza generale riguardante
     il problema, in fase di calcolo delle priorit\`a.
 \end{itemize}
