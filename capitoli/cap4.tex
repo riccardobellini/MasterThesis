@@ -78,7 +78,11 @@ progetto correntemente aperto in \ac{FASTER}, tra cui:
   \item descrizione dell'architettura e degli elementi di computazione, comunicazione
     e memoria presenti;
   \item descrizione del task graph che rappresenta l'applicazione e delle implementazioni
-    a disposizione per realizzare la funzionalit\`a di ogni task.
+    a disposizione per realizzare la funzionalit\`a di ogni task, ognuna con la propria stima
+    di risorse richieste e tempo di esecuzione.\footnote{Per implementazioni di tipo software, il tempo di esecuzione
+    stimato si pu\`o ottenere tramite profiling; nel caso di implementazioni hardware \`e possibile
+    ottenere le stime di performance e requisiti tramite strumenti di sintesi ad alto
+    livello come \emph{Vivado HLS} \cite{VivadoHLS}.}
 \end{itemize}
 Oltre a questi, l'input dell'esplorazione comprende anche i vari parametri per la configurazione
 dell'algoritmo, ad esempio parametri sulle metriche da utilizzare e funzioni da utilizzare per il calcolo
@@ -211,8 +215,90 @@ di ogni fase e del flusso di lavoro completo dell'algoritmo.
 
 \subsection{Algoritmo di esplorazione}
 Una rappresentazione dettagliata del flusso di lavoro dell'algoritmo di
-esplorazione \`e mostrata in figura \ref{fig:flussoDettagliatoACO}.
-% TODO continuare da qui
+esplorazione \`e mostrata in figura \ref{fig:flussoDettagliatoACO}: \`e
+possibile vedere come in seguito al calcolo di una soluzione, eseguite le fasi
+di mapping e scheduling, le varie metriche vengano valutate e la soluzione
+aggiunta alla lista. Una volta che il criterio di terminazione \`e soddisfatto,
+l'esplorazione termina e la soluzione migliore (quella con funzione obiettivo pi\`u
+bassa) viene restituita. In figura \ref{fig:flussoDettagliatoACO} sono rappresentate
+anche le interfacce di input e output della fase di scheduling, descritte in precedenza.
+
+\subsubsection{Euristica utilizzata}
+L'esplorazione dello spazio delle soluzioni, in inglese \ac{DSE},  \`e basata su un algoritmo
+meta-euristico chiamato \acf{ACO}. L'algoritmo \ac{ACO}, di recente sviluppo, è stato inizialmente 
+utilizzato per risolvere il problema del commesso viaggiatore (\acs{TSP}) 
+\cite{AntSystem} e poi esteso anche ad altri problemi di ottimizzazione 
+combinatoria.
+
+Nella fattispecie, l'algoritmo cerca di riprodurre il procedimento seguito da una colonia di 
+formiche alla ricerca di cibo; la colonia deve poter giungere al cibo seguendo 
+il percorso più breve, che rappresenta una soluzione (subottima) trovata.
+Quando una colonia va alla ricerca di cibo, tutte le formiche partono dalla 
+colonia seguendo direzioni casuali, lasciando una traccia di 
+\emph{feromone}\footnote{Il feromone è una sostanza emessa da alcuni esseri 
+viventi con funzione di segnalare qualcosa agli individui riceventi 
+della stessa specie: una traccia, un pericolo, una modificazione 
+comportamentale per il ricevente.} sul loro cammino. La traccia di feromone 
+evapora con il tempo, ma il percorso più breve dalla colonia al cibo (la soluzione ottima) conterrà 
+sempre una quantit\`a maggiore di feromone, perch\`e il tempo richiesto dalle formiche
+per percorrerlo \`e minore. Questo implica che pi\`u formiche saranno attratte da
+quel percorso invece che da altri, rilasciando a loro volta feromoni che
+``rinforzeranno'' il percorso. In un certo senso, l'ammontare di feromoni su un cammino
+indica \emph{globalmente} quanto quel cammino sia buono per raggiungere l'obiettivo.
+
+L'euristica si basa sull'astrazione di un agente, la ``formica'', che esplora
+in maniera stocastica lo spazio delle soluzioni, descritto come una sequenza di possibili scelte.
+A ogni iterazione dell'algoritmo, un certo numero di agenti viene istanziato;
+a ogni passo di scelta, ogni agente calcola tutte le possibili scelte e le ordina secondo un
+criterio che guida l'algoritmo nella ricerca della soluzione, man mano che si procede con
+le iterazioni. La regola per l'ordinamento della soluzione si basa su due euristiche:
+\begin{itemize}
+  \item un'euristica \emph{locale}, che assegna un punteggio a una scelta dato
+    lo stato corrente dell'esplorazione;
+  \item un'euristica \emph{globale}, che realizza un modello per rappresentare il concetto
+    di ``feromone'', applicato al problema corrente.
+\end{itemize}
+L'euristica locale permette all'agente, durante la costruzione della soluzione,
+di compiere una decisione informata riguardo alla scelta successiva, e integra conoscenze
+sul problema.
+
+L'euristica globale, invece, permette di aggiornare la quantit\`a di feromoni
+ad ogni iterazione dell'algoritmo.
+In ottica stocastica, la quantità di feromone rappresenta la probabilità, per 
+ciascuna decisione, di giungere a una buona soluzione.
+All'inizio dell'algoritmo, la matrice dei feromoni è inizializzata con valori uniformi 
+(tutte le decisioni hanno uguale probabilità), e viene aggiornata dopo ogni
+iterazione esplorativa.
+
+L'algoritmo \ac{ACO} implementa l'esplorazione in forma iterativa, sfruttando una
+serie di ``generazioni di formiche''. Una \emph{generazione} \`e composta da un
+numero $N$ di formiche, ognuna di esse esplora lo spazio di design e costruisce una soluzione
+utilizzando i medesimi valori della matrice dei feromoni. 
+Il criterio che stabilisce l'ordinamento delle scelte possibili, ad ogni passo decisionale,
+\`e rappresentato da una probabilit\`a, funzione della posizione corrente nel processo decisionale, 
+della destinazione da raggiungere, dell'euristica locale calcolata ogni volta 
+che la probabilità è generata e dell'euristica globale. La formula per il 
+calcolo della probabilità è la seguente:
+\begin{equation}
+ p_{x,y} = \frac{[\tau_{x,y}]^{\alpha}\cdot[\eta_{x,y}]^{\beta}}{\sum_{l \in 
+\Omega_{x}}[\tau_{x,l}]^{\alpha}\cdot[\eta_{x,l}]^{\beta}}
+\end{equation}
+dove $x$ è la posizione corrente nel processo decisionale, $y$ è la 
+destinazione della ricerca, $\eta$ è l'euristica locale legata al problema e 
+$\tau$ è l'euristica globale determinata dal feromone. $\alpha$ e $\beta$ 
+rappresentano i pesi che vengono dati alle due euristiche e che influenzano il 
+comportamento della formica nel processo decisionale. $\Omega_x$ è l'insieme che 
+contiene tutte le scelte possibili al passo corrente $x$. Alla fine di ogni generazione,
+soltanto un certo numero $K$ di formiche, con $K \leq N$, sono considerate per il rinforzo
+dell'euristica globale. Il rinforzo assegnato \`e proporzionale alla qualit\`a della soluzione,
+e la matrice dei feromoni viene aggiornata secondo la formula
+\begin{equation}
+ \tau_{x,y} = (1-\rho)\cdot \tau_{x,y} + \epsilon
+\end{equation}
+dove $\rho$ è il \emph{fattore di evaporazione} del feromone, mentre $\epsilon$ 
+rappresenta il coefficiente correttivo di rinforzo che evita di penalizzare 
+tramite l'evaporazione anche le scelte migliori.
+
 Come accennato nella sezione precedente, l'interfaccia di input è 
 caratterizzata da dati ``statici'', presenti prima dell'invocazione dello 
 scheduler e da dati ``dinamici'', che subiscono modifiche oppure vengono creati 
