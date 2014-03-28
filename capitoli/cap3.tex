@@ -655,55 +655,9 @@ hardware.
 \subsubsection{\acl{ACO}}
 L'ultimo algoritmo euristico presentato in questa disamina dello stato 
 dell'arte è un algoritmo meta-euristico, il cui funzionamento è ispirato alle 
-dinamiche di sistemi naturali, l'\ac{ACO} \cite{AntSystem}. Nella fattispecie, 
-l'algoritmo cerca di riprodurre il procedimento seguito da una colonia di 
-formiche alla ricerca di cibo; la colonia deve poter giungere al cibo seguendo 
-il percorso più breve, che rappresenta una soluzione (subottima) trovata.
+dinamiche di sistemi naturali, l'\ac{ACO} \cite{AntSystem}. 
 
-L'algoritmo \ac{ACO}, una meta-euristica di recente sviluppo, è stato inizialmente 
-utilizzato per risolvere il problema del commesso viaggiatore (\acs{TSP}) 
-\cite{AntSystem} e poi esteso anche ad altri problemi di ottimizzazione 
-combinatoria.
 
-\paragraph{Funzionamento}
-Quando una colonia va alla ricerca di cibo, tutte le formiche partono dalla 
-colonia seguendo direzioni casuali, lasciando una traccia di 
-\emph{feromone}\footnote{Il feromone è una sostanza emessa da alcuni esseri 
-viventi con funzione di segnalare qualcosa agli individui riceventi 
-della stessa specie: una traccia, un pericolo, una modificazione 
-comportamentale per il ricevente.} sul loro cammino. La traccia di feromone 
-evapora con il tempo, ma il percorso più breve dalla colonia al cibo conterrà 
-sempre più feromoni, attirando le altre formiche su quel percorso invece che su 
-cammini più lunghi.
-
-In ottica stocastica, la quantità di feromone rappresenta la probabilità, per 
-ciascuna decisione, di giungere a una buona soluzione. All'inizio 
-dell'algoritmo, la matrice dei feromoni è inizializzata con valori uniformi 
-(tutte le decisioni hanno uguale probabilità). Seguendo il modello naturale, un 
-certo numero di procedure di generazione delle soluzioni (formiche) viene 
-lanciato. Nella fase di decisione, viene assegnata una probabilità ad ogni 
-scelta possibile, funzione della posizione corrente nel processo decisionale, 
-della destinazione da raggiungere, di una euristica locale calcolata ogni volta 
-che la probabilità è generata e di una euristica globale. La formula per il 
-calcolo della probabilità è la seguente:
-\begin{equation}
- p_{x,y} = \frac{[\tau_{x,y}]^{\alpha}\cdot[\eta_{x,y}]^{\beta}}{\sum_{l \in 
-\Omega_{x}}[\tau_{x,l}]^{\alpha}\cdot[\eta_{x,l}]^{\beta}}
-\end{equation}
-dove $x$ è la posizione corrente nel processo decisionale, $y$ è la 
-destinazione della ricerca, $\eta$ è l'euristica locale legata al problema e 
-$\tau$ è l'euristica globale determinata dal feromone. $\alpha$ e $\beta$ 
-rappresentano i pesi che vengono dati alle due euristiche e che influenzano il 
-comportamento della formica nel processo decisionale. $\Omega_x$ è l'insieme che 
-contiene tutte le scelte possibili al passo corrente $x$. Alla fine di ogni 
-processo decisionale, avendo ottenuto diverse soluzioni, la matrice dei 
-feromoni è aggiornata con la formula
-\begin{equation}
- \tau_{x,y} = (1-\rho)\cdot \tau_{x,y} + \epsilon
-\end{equation}
-dove $\rho$ è il \emph{fattore di evaporazione} del feromone, mentre $\epsilon$ 
-rappresenta un coefficiente correttivo di rinforzo che evita di penalizzare 
-tramite l'evaporazione anche le scelte migliori.
 
 
 \paragraph{Applicazioni}
