@@ -56,26 +56,16 @@ anch'esso una interfaccia di input e una di output, contenenti tutte
 le strutture dati necessarie per l'elaborazione e per la memorizzazione delle 
 informazioni calcolate dall'algoritmo, rispettivamente. 
 
-%%% FIXME: color
-\begin{figure}
- \begin{center}
-  \includegraphics[width=0.9\textwidth]{capitoli/figure/cap4/MapperWorkflow.pdf}
-  \caption{Flusso di lavoro dell'algoritmo di esplorazione.}
-  \label{fig:mapperWorkflow}
- \end{center}
-\end{figure}
 
-A livello dell'algoritmo di esplorazione delle soluzioni, dunque, si avrà un 
-flusso di lavoro come rappresentato nella figura \ref{fig:mapperWorkflow}, in 
-cui a titolo esemplificativo sono rappresentate le interfacce di input e output
-dello scheduler.
+%A livello dell'algoritmo di esplorazione delle soluzioni, dunque, si avrà un 
+%flusso di lavoro come rappresentato nella figura \ref{fig:mapperWorkflow}, in 
+%cui a titolo esemplificativo sono rappresentate le interfacce di input e output
+%dello scheduler.
 
-Anche l'algoritmo di esplorazione, che si occupa dell'invocazione del tool che gestisce lo 
-scheduling, è caratterizzato dalle proprie interfacce di input e output. Come 
-si può vedere nella figura \ref{fig:mapperWorkflow}, l'output del mapper e l'interfaccia
-di input dello scheduler avranno alcuni dati 
-in comune, poichè la fase di scheduling è immediatamente successiva a quella di mapping
-nel flusso dell'algoritmo di esplorazione.
+L'algoritmo di esplorazione, che si occupa dell'invocazione del tool che gestisce lo 
+scheduling, è caratterizzato dalle proprie interfacce di input e output. Dato che il componente
+di scheduling \`e invocato successivamente al mapping, l'output del mapper e l'interfaccia
+di input dello scheduler avranno alcuni dati.
 
 Nella prossima sezione verranno descritte le interfacce di input dell'algoritmo di esplorazione
 e della fase di scheduling.
@@ -192,14 +182,32 @@ interfacce vengono utilizzate durante l'elaborazione.
 \begin{figure}[t]
   \begin{center}
     \includegraphics[width=0.5\textwidth]{./capitoli/figure/cap4/Methodology.pdf}
-    \caption{Flusso dettagliato dell'algoritmo di esplorazione.}
-    \label{fig:flussoDettagliatoACO}
+    \caption{Panoramica del flusso dell'algoritmo di esplorazione.}
+    \label{fig:mapperWorkflow}
   \end{center}
 \end{figure}
+
+In figura \ref{fig:mapperWorkflow} \`e rappresentato ad alto livello il workflow
+dell'algoritmo euristico di mapping e scheduling, costituito da un ciclo di:
+\begin{enumerate}
+  \item calcolo di una possibile soluzione in termini di mapping e scheduling;
+  \item calcolo dei valori delle metriche relativi alla soluzione appena calcolata.
+\end{enumerate}
 
 In questa sezione viene descritto il funzionamento dell'algoritmo proposto e le 
 fasi in cui esso si articola, con una spiegazione dettagliata della struttura 
 di ogni fase e del flusso di lavoro completo dell'algoritmo.
+
+
+%%% FIXME: color
+\begin{figure}
+ \begin{center}
+  \includegraphics[width=0.9\textwidth]{capitoli/figure/cap4/MapperWorkflow.pdf}
+  \caption{Fasi dell'algoritmo di esplorazione.}
+  \label{fig:flussoDettagliatoACO}
+ \end{center}
+\end{figure}
+
 
 \subsection{Algoritmo di esplorazione}
 Una rappresentazione dettagliata del flusso di lavoro dell'algoritmo di
