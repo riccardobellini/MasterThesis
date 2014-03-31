@@ -223,7 +223,6 @@ l'esplorazione termina e la soluzione migliore (quella con funzione obiettivo pi
 bassa) viene restituita. In figura \ref{fig:flussoDettagliatoACO} sono rappresentate
 anche le interfacce di input e output della fase di scheduling, descritte in precedenza.
 
-\subsubsection{Euristica utilizzata}
 L'esplorazione dello spazio delle soluzioni, in inglese \ac{DSE},  \`e basata su un algoritmo
 meta-euristico chiamato \acf{ACO}. L'algoritmo \ac{ACO}, di recente sviluppo, è stato inizialmente 
 utilizzato per risolvere il problema del commesso viaggiatore (\acs{TSP}) 
@@ -299,6 +298,163 @@ dove $\rho$ è il \emph{fattore di evaporazione} del feromone, mentre $\epsilon$
 rappresenta il coefficiente correttivo di rinforzo che evita di penalizzare 
 tramite l'evaporazione anche le scelte migliori.
 
+\IncMargin{1em}
+\begin{algorithm}[!htbp]
+\footnotesize
+\SetKwData{readySet}{readySet}\SetKwData{This}{this}
+\SetKwData{pTi}{$p_{T_i}$}
+\SetKwData{pT}{$p_{T}$}
+\SetKwData{Pi}{$P_i$}
+\SetKwData{pSet}{pSet}
+\SetKwData{chosenI}{chosenI}
+\SetKwData{chosenT}{chosenT}
+\SetKwData{chosenP}{chosenP}
+\SetKwData{pIP}{$p_{I,P}$}
+\SetKwData{pIiPi}{$p_{I_i, P_i}$}
+\SetKwData{mappingTrace}{mappingTrace}
+\SetKwData{numGenerations}{numGenerations}
+\SetKwData{antsPerGeneration}{antsPerGeneration}
+\SetKwData{antA}{currentAnt}
+\SetKwData{Ii}{$I_i$}
+\SetKwData{chosenTask}{chosenTask}
+\SetKwData{iSet}{iSet}
+\SetKwData{ant}{ant}
+\SetKwData{chosenTrace}{choice}
+\SetKwData{antMetrics}{ant.metrics}
+\SetKwData{thisGenerationSolutions}{thisGenerationSolutions}
+\SetKwData{bestAnts}{bestAnts}
+\SetKwData{bestAnt}{bestAnt}
+\SetKwData{bestAntTrace}{bestAnt.trace}
+\SetKwData{antMetrics}{ant.Metrics}
+\SetKwData{antObjective}{ant.Objective}
+\SetKwFunction{tasksWithoutPreds}{tasksWithoutPreds}
+\SetKwFunction{resolveDependencies}{resolveDependencies}
+\SetKwFunction{computeMetrics}{computeMetrics}
+\SetKwFunction{computeObjective}{computeObjective}
+\SetKwFunction{processorsPerImpl}{processorsPerImpl}
+\SetKwFunction{implsOfTask}{implsOfTask}
+\SetKwFunction{add}{add}
+\SetKwFunction{rouletteSelection}{roulette}
+\SetKwFunction{taskHeuristic}{taskHeuristic}
+\SetKwFunction{mappingHeuristic}{mappingHeuristic}
+\SetKwFunction{scheduledSet}{scheduledSet}
+\SetKwFunction{updateGlobalPheromones}{updateGlobalPheromones}
+\SetKwFunction{selectBest}{selectBest}
+\SetKwFunction{selectBestAnt}{selectSingleBestAnt}
+\SetKwInOut{Input}{input}
+\SetKwInOut{Output}{output}
+\Input{A task graph, a reconfigurable architecture, a set of implementations}
+\Output{A mapping trace, a schedule}
+\BlankLine
+\ForAll{\numGenerations}{
+
+	\ForAll{\antsPerGeneration}{
+
+		\readySet $\leftarrow$ \tasksWithoutPreds()
+
+		\scheduledSet $\leftarrow \emptyset$
+		
+		\While{\readySet $\neq \emptyset$}{
+			
+			\BlankLine
+			
+			\ForAll{$T_i \in$ \readySet}{
+				\pTi $\leftarrow$ \taskHeuristic($T_i$)
+			}
+			\chosenT $\leftarrow$ \rouletteSelection(\pT)
+
+			\BlankLine
+
+			\iSet $\leftarrow$ \implsOfTask(\chosenTask)
+	
+			\ForAll{\Ii $\in$ \iSet}{
+				\pSet $\leftarrow$ \processorsPerImpl(\Ii)
+				
+				\ForAll{\Pi $\in$ \pSet}{
+					\pIiPi $\leftarrow$ \mappingHeuristic(\Ii, \Pi)
+				}
+			}
+			\chosenI, \chosenP $\leftarrow$ \rouletteSelection(\pIP)
+			
+			\chosenTrace $\leftarrow$ $<$\chosenT, \chosenI, \chosenP$>$
+			
+			\mappingTrace.\add(\chosenTrace)
+			
+			\readySet $\leftarrow$ \resolveDependencies()
+		}
+
+		\antMetrics $\leftarrow$ \computeMetrics(\antA)
+		
+		\antObjective $\leftarrow$ \computeObjective(\antMetrics)
+		
+		\thisGenerationSolutions.\add(\ant)
+	}
+	\bestAnts.\add(\selectBest(\thisGenerationSolutions))
+	
+	\updateGlobalPheromones(\bestAnts)
+}
+
+\bestAnt = \selectBestAnt(\bestAnts)
+		
+\Return \bestAntTrace
+
+\caption{Pseudo-codice dell'algoritmo di esplorazione.}
+\label{alg:aco}
+\end{algorithm}
+
+L'algoritmo \ref{alg:aco} riporta lo pseudo-codice dell'algoritmo di esplorazione.
+Nel prossimo paragrafo si descrivono le euristiche utilizzate nel codice per effettuare
+l'esplorazione dello spazio delle soluzioni, tenendo in considerazione le riconfigurazioni.
+
+
+\subsubsection{Euristica per task e mapping}
+Come si pu\`o vedere nel listato \ref{alg:aco}, ogni formica di ogni generazione (righe 1-2)
+costruisce una soluzione, calcolando un possibile mapping, in maniera iterativa. In particolare,
+i task (riga 8)  e le possibili implementazioni e processing element su cui possono essere eseguiti
+(riga 14), sono scelti tramite \emph{roulette wheel selection}. La \emph{roulette wheel
+selection} \`e un modo di scegliere soluzioni potenzialmente utili da un insieme di soluzioni possibili.
+Viene comunemente utilizzata come operatore all'interno degli algoritmi genetici, e opera una selezione
+sulla base di una probabilit\`a. Ad esempio, dato un insieme $S$ di soluzioni e una funzione che calcola
+la bont\`a -- \emph{fitness} -- di una soluzione, la probabilit\`a di selezione di una soluzione
+$i \in S$ \`e calcolabile come
+\begin{displaymath}
+  p_i = \frac{f_i}{\sum_{j=1}^{N}f_j}
+\end{displaymath}
+dove $N$ \`e il numero di soluzioni della popolazione $S$.
+
+Le probabilit\`a di selezione di un task e del relativo mapping sono calcolate alla riga 7 e alla riga
+13 del listato \ref{alg:aco}, rispettivamente.
+
+\subparagraph{Euristica per i task}
+La funzione per il calcolo della probabilit\`a di scelta associata a ogni task,
+\verb+taskHeuristic(+$T_i$\verb+)+, ordina i task le cui dipendenze sono gi\`a state
+considerate nei passi precedenti cercando di favorire quelli caratterizzati da una bassa
+\emph{mobilit\`a}.\footnote{Nel contesto di questo lavoro, ci si riferisce alla mobilit\`a di un
+  task come a una misura di quanto tale task sia ``vincolato'', ovvero quanto probabilmente
+si colloca sul percorso critico dell'applicazione.}
+Allo stesso tempo, favorisce anche i task che eseguono pi\`u velocemente rispetto agli altri.
+
+\subparagraph{Euristica per i mapping}
+La probabilit\`a di scelta di un determinato mapping \`e calcolata dalla funzione
+\verb+mappingHeuristic(+$I_i, P_i$\verb+)+, che ordina tutte le possibili coppie
+$<$\emph{implementazione, processing element}$>$ tali che l'implementazione sia relativa
+al task scelto in precedenza, e il processing element sia l'elemento di computazione associato
+a tale implementazione. Ad esempio, sia $T_i$ il task scelto alla riga 7; come specificato
+dal designer, il task $T_i$ ha due implementazioni hardware e una software, le prime
+mappabili su core statici o riconfigurabili, l'ultima su un processore general-purpose.
+Quindi, per ogni implementazione e processing element su cui $T_i$ pu\`o essere eseguito,
+la funzione \verb+mappingHeuristic+ restituisce il punteggio relativo a tale scelta,
+basandosi sullo stato corrente del mapping.
+% TODO, FIXME descrivere meglio come viene effettuata tale scelta, dopo aver
+% letto il codice
+
+Al termine della procedura iterativa di costruzione della soluzione, questa viene valutata
+secondo le varie metriche e ne viene calcolata la funzione obiettivo. Le soluzioni migliori
+della generazione vengono salvate e si procede con una nuova generazione di formiche.
+Una volta raggiunto il limite del numero di generazioni, viene selezionata come
+soluzione finale la migliore tra quelle salvate al termine di ogni generazione.
+
+\subsection{Algoritmo di scheduling}
 Come accennato nella sezione precedente, l'interfaccia di input è 
 caratterizzata da dati ``statici'', presenti prima dell'invocazione dello 
 scheduler e da dati ``dinamici'', che subiscono modifiche oppure vengono creati 
@@ -431,7 +587,7 @@ un nuovo task di riconfigurazione deve essere aggiunto al grafo. Nella tabella
 verificano le precedenti condizioni ed è necessario introdurre un nuovo task di 
 riconfigurazione.
 
-\begin{table}
+\begin{table}[h]
 \begin{center}
 \begin{tabular}{| c | c | c |}
  \hline
@@ -544,7 +700,7 @@ $\delta^+(i)$ rappresentano il taglio entrante e il taglio uscente del nodo
 $i$, rispettivamente.
 
 \IncMargin{1em}
-\begin{algorithm}
+\begin{algorithm}[!htbp]
  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
  \SetKwArray{Asap}{asap}\SetKwArray{Alap}{alap}
  \SetKw{KwDownTo}{downto}
@@ -584,7 +740,7 @@ che cerchi di minimizzare il tempo di esecuzione \emph{stimato}, a condizione
 che le stime sulla durata dei task siano il più precise possibile.
 
 \IncMargin{1em}
-\begin{algorithm}
+\begin{algorithm}[!htbp]
  \SetKwInOut{Input}{input}\SetKwInOut{Output}{output}
  \SetKwData{UnscheduledSet}{unscheduledSet}
  \SetKwData{SchedulerOutput}{schedulerOutput }
