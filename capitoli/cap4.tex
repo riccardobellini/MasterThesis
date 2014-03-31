@@ -1341,23 +1341,26 @@ dati da memorizzare.
 \section{Osservazioni conclusive}
 \label{sec:osservazioniConclusive}
 In questa sezione viene fornito un riepilogo dei concetti importanti relativi 
-alla metodologia proposta per risolvere il problema dello scheduling dei task 
+alla metodologia proposta per risolvere i problemi di mapping e scheduling dei task 
 per l'esecuzione di un applicazione su hardware riconfigurabile, considerando 
 le comunicazioni e le riconfigurazioni.
 
 \begin{itemize}
   \item Sono state definite delle interfacce di input e di output per 
-l'algoritmo proposto, per consentire allo scheduler di avere conoscenza dei 
+      l'algoritmo proposto, per consentire alla meta-euristica evolutiva basata su \ac{ACO}
+      e all'algoritmo di scheduling utilizzato come tool per stimare il makespan di avere conoscenza dei 
 dati contenuti nel file XML di \ac{FASTER}, di rielaborarli e modificarli 
-consentendo l'introduzione dei task di comunicazione e riconfigurazione, oltre 
-al calcolo di informazioni rilevanti per l'esecuzione dell'euristica di scelta dei task;
- \item l'obiettivo è fornire un algoritmo di scheduling che sia veloce, per 
+consentendo inoltre, a livello di scheduling, l'introduzione dei task di comunicazione e riconfigurazione;
+\item \`e stata descritta la metodologia utilizzata per realizzare l'algoritmo di esplorazione
+    dello spazio delle soluzioni, spiegando come esso calcoli i mapping oggetto di ottimizzazione
+    multi-obiettivo;
+ \item \`e stato presentato un algoritmo di scheduling che ha come obiettivo l'essere sufficientemente veloce, per 
 consentire alla fase di esplorazione delle soluzioni di terminare in un tempo 
-ragionevolmente breve. Questa necessità ha portato allo sviluppo di un algoritmo euristico
+ragionevolmente breve, fornendo comunque una soluzione di buona qualit\`a. Questa necessità ha portato allo sviluppo di un algoritmo euristico
 che non è basato su tecniche esplorative o evolvibili, ma sulla base di una 
 lista di priorità e una scelta ``greedy'';
  \item sono state introdotte delle regole aggiuntive, oltre al semplice calcolo 
-delle metriche per assegnare le priorità ai task, che tengono conto di 
+delle metriche per assegnare le priorità ai task in fase di scheduling, che tengono conto di 
 possibili colli di bottiglia che possono verificarsi durante l'esecuzione e 
 cercano di ridurre l'impatto di tali fenomeni sulla lunghezza dello schedule;
  \item è stato implementato un gestore della memoria basilare, che assegna gli spazi di
