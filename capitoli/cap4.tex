@@ -27,7 +27,7 @@ con gli altri strumenti utilizzati nella toolchain di \acs{FASTER}; la sezione
 dell'algoritmo di esplorazione delle soluzioni e dell'algoritmo di scheduling
 presente al suo interno, fornendo una panoramica delle fasi in cui questi si dividono;
 % TODO trovare sezioni per ACO
-la sezione \ref{sec:euristicaSceltaTask} contiene una descrizione 
+la sezione \ref{subsec:euristicaSceltaTask} contiene una descrizione 
 dettagliata della fase più delicata del procedimento di scheduling, la scelta 
 del task migliore da considerare ad ogni passo di decisione; nella sezione 
 \ref{sec:elementiComunicazioneGestioneMemoria} vengono introdotti i modelli di 
@@ -535,7 +535,7 @@ illustra il flusso di lavoro dello scheduler, con i relativi dati di input per
 ogni fase. Nelle prossime sezioni ogni fase verrà analizzata nel dettaglio.
 
 
-\subsection{Fase di preprocessing}
+\subsubsection{Fase di preprocessing}
 \label{subsec:fasePreprocessing}
 La fase di preprocessing è la prima ad essere eseguita dopo l'invocazione del 
 tool di scheduling da parte dell'algoritmo di esplorazione; ha come obiettivo 
@@ -544,7 +544,7 @@ devono essere prese in considerazione per la corretta esecuzione
 dell'applicazione sul dispositivo. Un obiettivo secondario è il calcolo di 
 informazioni aggiuntive che verranno poi utilizzate nella fase di scheduling 
 per quanto concerne la scelta del task migliore (vedi sezione 
-\ref{sec:euristicaSceltaTask}).
+\ref{subsec:euristicaSceltaTask}).
 
 Per ottenere questi obiettivi, la fase di preprocessing si divide in tre 
 sotto-fasi eseguite nel seguente ordine:
@@ -558,7 +558,8 @@ task, detti \emph{task di riconfigurazione}, dove necessario;
  \item calcolo delle informazioni sul percorso critico.
 \end{enumerate}
 
-\subsubsection{Aggiunta delle comunicazioni}
+\paragraph{Aggiunta delle comunicazioni}
+\label{par:aggiuntaComunicazioni}
 L'inserimento dei task di comunicazione viene fatto solamente in base 
 all'analisi del task graph dell'applicazione, in quanto indipendente dal 
 mapping: poichè ogni arco in tale grafo rappresenta una relazione 
@@ -614,8 +615,8 @@ task di riconfigurazione, qualora il particolare mapping utilizzato lo
 richieda; nel caso, si procede come descritto nel prossimo paragrafo.
 
 
-\subsubsection{Aggiunta delle riconfigurazioni}
-\label{sec:aggiuntaRiconfigurazioni}
+\paragraph{Aggiunta delle riconfigurazioni}
+\label{par:aggiuntaRiconfigurazioni}
 L'inserimento dei task di riconfigurazione avviene in seguito all'analisi della 
 lista di tuple fornita dal mapper ed è necessario nel caso in cui gli 
 assegnamenti stabiliti dal mapper verifichino le seguenti condizioni:
@@ -713,7 +714,8 @@ preprocessing consiste nel calcolo delle informazioni sul percorso critico del
 task graph.
 
 
-\subsubsection{Calcolo delle informazioni sul percorso critico}
+\paragraph{Calcolo delle informazioni sul percorso critico}
+\label{par:percorsoCritico}
 Le informazioni calcolate durante questa fase vengono utilizzate per stabilire 
 quali task sono sul percorso critico;\footnote{In inglese \emph{critical path}, 
 avendo un grafo che simboleggia un progetto composto da attività (nodi) con 
@@ -775,7 +777,7 @@ critico appena calcolate sono aggiunte all'interfaccia, per essere utilizzate
 nella fase successiva.
 
 
-\subsection{Fase di scheduling}
+\subsubsection{Fase di scheduling}
 \label{subsec:faseScheduling}
 La fase di scheduling effettivo gestisce l'assegnazione di tempi di inizio e 
 fine dell'esecuzione di ogni task, sia esso di computazione, comunicazione o 
@@ -819,7 +821,7 @@ task che non sono ancora stati schedulati (riga 3). A ogni ripetizione del ciclo
 prima aggiornato l'insieme dei task che sono ``pronti'' per l'assegnazione dei 
 tempi (riga 4), ossia i task le cui precedenze sono state tutte già considerate. Tra 
 questi, tramite un'opportuna euristica di scelta (vedi sezione 
-\ref{sec:euristicaSceltaTask}) viene eletto il miglior task da considerare al 
+\ref{subsec:euristicaSceltaTask}) viene eletto il miglior task da considerare al 
 passo corrente (riga 5); a questo vengono poi assegnate le stime dei tempi, 
 successivamente inserite nell'interfaccia di output dello scheduler e nel 
 diagramma di Gantt dei componenti occupati (riga 6-7).
@@ -829,7 +831,7 @@ esplorazione che ha invocato il tool, e possono essere usati per avere una
 stima del tempo totale di esecuzione dell'applicazione.
 
 
-\subsection{Fase di postprocessing}
+\subsubsection{Fase di postprocessing}
 Il postprocessing consiste in una rielaborazione dei dati di output dello 
 scheduler, effettuata separatamente in quanto i dati prodotti in output da 
 questa fase devono essere utilizzati solamente dal runtime manager per gestire 
@@ -936,8 +938,8 @@ di scheduling, ossia la scelta di quale task è meglio considerare ad ogni
 passo.
 
 
-\section{Euristica di scelta dei task}
-\label{sec:euristicaSceltaTask}
+\subsubsection{Euristica di scelta dei task}
+\label{subsec:euristicaSceltaTask}
 In questa sezione viene spiegato come l'algoritmo di scheduling opera ad ogni 
 passo la scelta di quale task è più conveniente considerare per l'assegnazione 
 dei tempi, così da minimizzare la lunghezza totale dello schedule finale.
@@ -980,7 +982,7 @@ nell'ipotesi che le stime dei tempi di esecuzione siano ragionevolmente
 affidabili.
 
 
-\subsection{Funzionamento}
+\paragraph{Funzionamento}
 L'algoritmo per la scelta del task migliore viene invocato a ogni passo di 
 scheduling, e opera su una lista aggiornata di task le cui precedenze sono 
 soddisfatte.
@@ -1001,14 +1003,14 @@ tempi, e l'algoritmo termina.
 
 % TODO scrivere del caching delle priorità
 
-\subsection{Calcolo delle priorità}
+\subsubsection{Calcolo delle priorità}
 Il calcolo della priorità di un task dipende dal suo tipo; diverse regole e 
 modi per assegnare la priorità sono utilizzati a seconda che il task sia di 
 computazione, comunicazione o riconfigurazione. Anche l'implementazione 
 utilizzata per i task di computazione riveste un ruolo importante per definire 
 come calcolarne la priorità.
 
-\subsubsection{Task con implementazione software}
+\paragraph{Task con implementazione software}
 I task con implementazione di tipo software non possono essere eseguiti su 
 scheda, bensì vengono mappati su un processore general-purpose. Partendo da 
 questo presupposto, la metrica utilizzata per calcolare la priorità di un task 
@@ -1026,7 +1028,7 @@ con implementazione software diventa quindi
 dove $C$ rappresenta un parametro costante e $CPInfo$ le informazioni sul 
 percorso critico.
 
-\subsubsection{Task con implementazione hardware}
+\paragraph{Task con implementazione hardware}
 Nel caso di task che devono essere eseguiti su logica riconfigurabile, quindi 
 mappati su implementazioni di tipo hardware, vengono utilizzate tre metriche:
 \begin{enumerate}
@@ -1106,7 +1108,7 @@ Valgono considerazioni analoghe rispetto alla precedente cifra di merito
 per quanto concerne l'uso del logaritmo nel calcolo del valore.
 % TODO spiegare cosa l'eft permette di considerare
 
-\subsection{Regole aggiuntive}
+\subsubsection{Regole aggiuntive}
 Oltre al calcolo delle varie metriche presentato nella precedente sezione, sono 
 state introdotte delle regole aggiuntive che modificano i valori delle cifre di 
 merito e, di conseguenza, della priorità finale dei task. Queste regole non 
@@ -1116,7 +1118,7 @@ altri task. L'aggiunta di queste regole consente quindi all'algoritmo di
 effettuare scelte più ``intelligenti'' nella scelta dei task migliori da 
 schedulare.
 
-\subsubsection{Fattore di degrado}
+\paragraph{Fattore di degrado}
 La prima di queste tecniche è l'introduzione di un \emph{fattore di degrado} 
 (in inglese \emph{decay factor}). Può capitare che, nel corso dell'esecuzione 
 dello scheduler, venga data sempre massima priorità ai task sul percorso 
@@ -1152,10 +1154,10 @@ delineato nella \ref{eq:softwarePriority}, viene sostituito con
 \end{equation}
 dove $df$ rappresenta il fattore di degrado.
 
-\subsubsection{Priorità per task di comunicazione}
+\paragraph{Priorità per task di comunicazione}
 La seconda tecnica utilizzata è una diversa assegnazione di priorità per alcuni 
 task di comunicazione. Come visto nella sezione 
-\ref{sec:aggiuntaRiconfigurazioni}, eventuali task di riconfigurazione vengono 
+\ref{par:aggiuntaRiconfigurazioni}, eventuali task di riconfigurazione vengono 
 inseriti tra i task di comunicazione di tipo \emph{WRITE} e \emph{READ} che 
 leggono e scrivono dati su quell'area, rispettivamente. Poichè il tempo 
 impiegato per la riconfigurazione di un'area in generale introduce un 
