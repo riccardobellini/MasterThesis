@@ -454,9 +454,9 @@ su tutti i task. I valori normalizzati sono basati sul prodotto di due fattori:
   p_i = \frac{localTerm_i \cdot globalTerm_i}{heuristicSum}
 \end{equation}
 dove $localTerm_i$ \`e dato dall'elevamento a potenza del valore dell'euristica locale del
-task per un parametro $\alpha \in (0,1)$, che rappresenta il peso dell'euristica locale
-nella probabilit\`a; in maniera analoga, $globalTerm_i$ \`e dato dalla matrice globale dei feromoni,
-anch'esso elevato a un parametro $\beta \in (0,1)$. Entrambi i parametri sono specificabili
+task per un parametro $\alpha_t \in (0,1)$, che rappresenta il peso dell'euristica locale
+nella probabilit\`a dei task; in maniera analoga, $globalTerm_i$ \`e dato dalla matrice globale dei feromoni,
+anch'esso elevato a un parametro $\beta_t \in (0,1)$. Entrambi i parametri sono specificabili
 dall'utente prima dell'avvio dell'esplorazione.
 
 \subparagraph{Euristica per i mapping}
@@ -470,14 +470,33 @@ mappabili su core statici o riconfigurabili, l'ultima su un processore general-p
 Quindi, per ogni implementazione e processing element su cui $T_i$ pu\`o essere eseguito,
 la funzione \verb+mappingHeuristic+ restituisce il punteggio relativo a tale scelta,
 basandosi sullo stato corrente del mapping.
-% TODO, FIXME descrivere meglio come viene effettuata tale scelta, dopo aver
-% letto il codice
+
+Inizialmente, viene analizzato il tipo di implementazione, unitamente al processing element corrente:
+\begin{itemize}
+  \item nel caso di implementazione software, viene considerata la mobilit\`a media dei task assegnati a un processore,
+    per avere una misura di quanto il processore corrente sia popolato di task sul percorso critico;
+  \item anche nel caso di implementazioni hardware viene considerata la mobilit\`a media, ma in aggiunta
+    si considera l'incremento percentuale di area utilizzata nel caso in cui tale mapping venga scelto:
+    pi\`u tale incremento \`e minore, maggiore \`e il valore dell'euristica.
+\end{itemize}
+Una volta calcolato il valore dell'euristica per ogni coppia
+$<$\emph{implementazione, processing element}$>$, la probabilit\`a per la \emph{roulette wheel selection}
+viene calcolata nello stesso modo usato per i task, utilizzando come pesi i parametri $\alpha_{pi} \in (0,1)$
+e $\beta_{pi} \in (0,1)$, anch'essi parametri specificabili prima dell'avvio dell'esplorazione.
+
+% TODO FIXME parlare dell'aggiornamento della matrice dei feromoni
 
 Al termine della procedura iterativa di costruzione della soluzione, questa viene valutata
 secondo le varie metriche e ne viene calcolata la funzione obiettivo. Le soluzioni migliori
 della generazione vengono salvate e si procede con una nuova generazione di formiche.
 Una volta raggiunto il limite del numero di generazioni, viene selezionata come
 soluzione finale la migliore tra quelle salvate al termine di ogni generazione.
+
+\subparagraph{Invocazione del tool di scheduling}
+Tra le varie metriche possibili, viene invocato il tool di scheduling, che opera sulla
+soluzione calcolata dalla formica corrente e ne restituisce il \emph{makespan} stimato,
+che verr\`a poi usato per il calcolo della funzione obiettivo. Il componente che gestisce lo scheduling
+dei task \`e descritto nella prossima sezione.
 
 \subsection{Algoritmo di scheduling}
 Come accennato nella sezione precedente, l'interfaccia di input è 
