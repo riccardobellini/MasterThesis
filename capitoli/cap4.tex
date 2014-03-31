@@ -434,6 +434,31 @@ considerate nei passi precedenti cercando di favorire quelli caratterizzati da u
 si colloca sul percorso critico dell'applicazione.}
 Allo stesso tempo, favorisce anche i task che eseguono pi\`u velocemente rispetto agli altri.
 
+Il valore dell'euristica locale per un task, prima di essere tradotto in probabilit\`a di
+selezione, \`e calcolato nel seguente modo:
+\begin{equation}
+  h_i = taskSpeed_i \cdot taskMobility_i
+\end{equation}
+I due fattori sono calcolati tramite le formule
+\begin{align*}
+  taskSpeed_i &= \frac{0.5}{avgExTime_i}\\
+  taskMobility_i &= (1 - \frac{1}{m_i})
+\end{align*}
+dove $avgExTime_i$ \`e la media dei tempi di esecuzione di tutte le implementazioni del task
+e $m_i$ \`e la mobilit\`a del task, pi\`u alta se il task \`e poco vincolato e pi\`u bassa se il task
+\`e relativamente pi\`u vicino al percorso critico.
+
+Le probabilit\`a di scelta di ciascun task sono calcolate normalizzando i valori dell'euristica
+su tutti i task. I valori normalizzati sono basati sul prodotto di due fattori:
+\begin{equation}
+  p_i = \frac{localTerm_i \cdot globalTerm_i}{heuristicSum}
+\end{equation}
+dove $localTerm_i$ \`e dato dall'elevamento a potenza del valore dell'euristica locale del
+task per un parametro $\alpha \in (0,1)$, che rappresenta il peso dell'euristica locale
+nella probabilit\`a; in maniera analoga, $globalTerm_i$ \`e dato dalla matrice globale dei feromoni,
+anch'esso elevato a un parametro $\beta \in (0,1)$. Entrambi i parametri sono specificabili
+dall'utente prima dell'avvio dell'esplorazione.
+
 \subparagraph{Euristica per i mapping}
 La probabilit\`a di scelta di un determinato mapping \`e calcolata dalla funzione
 \verb+mappingHeuristic(+$I_i, P_i$\verb+)+, che ordina tutte le possibili coppie
