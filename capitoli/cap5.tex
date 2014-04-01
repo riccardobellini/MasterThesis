@@ -3,16 +3,18 @@
 \vspace{1cm}
 Il capitolo \ref{chap:approccio} è stato interamente dedicato alla descrizione 
 dell'approccio adottato nel lavoro oggetto di questa tesi, al fine di 
-realizzare un baseline scheduler che tenga conto di possibili 
+realizzare un algoritmo evolvibile di esplorazione dello spazio delle soluzioni di mapping,
+con relativo tool di baseline scheduling per una stima del makespan che tenga conto di possibili 
 \emph{riconfigurazioni} e \emph{comunicazioni}, capace di fornire una 
 valutazione quantitativa della bontà di un dato mapping.
 
 Questo capitolo è dedicato alla descrizione dei dettagli implementativi 
-riguardanti la realizzazione dell'algoritmo di scheduling.
+riguardanti la realizzazione dell'algoritmo.
 
 Il capitolo è strutturato nel seguente modo: la sezione 
 \ref{sec:osservazioniGenerali} fornisce alcune osservazioni preliminari 
-riguardo alle scelte implementative del progetto \ac{FASTER}; la sezione 
+riguardo alle scelte implementative del framework implementato per il
+progetto \ac{FASTER}; la sezione 
 \ref{sec:struttureDati} contiene la descrizione delle strutture dati relative 
 all'implementazione dello scheduler; la sezione \ref{sec:classiGerarchie} 
 descrive le classi e le gerarchie che compongono la parte della toolchain 
