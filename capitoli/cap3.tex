@@ -53,16 +53,13 @@ realizzata da Johann Dréo \cite{MetaheuristicsClassifications} e tradotta in in
  \end{center}
 \end{figure}
 
-%%%%%%%%%%
-\acrodef{SCOP}{Stochastic Combinatorial Optimization Problem}
-%%%%%%%%%%
 
 La classificazione dei diversi tipi di algoritmi meta-euristici è illustrata in 
 figura~\ref{fig:metaheuristicsClassification}. Diversi lavori forniscono 
 un'analisi di questo tipo di algoritmi euristici, ad esempio lo studio condotto 
 da Bianchi et al. \cite{SurveyMetaheuristicSCOP} analizza l'impiego delle 
-meta-euristiche per la risoluzione di problemi di ottimizzazione combinatoria stocastica
-(in inglese \aclp{SCOP}) o l'analisi effettuata da Blum 
+meta-euristiche per la risoluzione di problemi di ottimizzazione combinatoria stocastica,
+o l'analisi effettuata da Blum 
 et al. \cite{MetaheuristicCombinatorialOptimization} per problemi di 
 ottimizzazione combinatoria.
 
@@ -197,13 +194,11 @@ controllore di riconfigurazione.
   \includegraphics[width=0.3\textwidth]
 {./capitoli/figure/cap3/InfeasiblePlacement.pdf}
 \caption[Piazzamento ottimo non implementabile]{Esempio di piazzamento ottimo 
-ma non implementabile.\footnotemark}
+  ma non implementabile \cite{BanerjeePhysicalConstraints}.}
 \label{fig:infeasiblePlacement}
  \end{center}
 \end{figure}
 
-\footnotetext{Immagine tratta da 
-\cite{BanerjeePhysicalConstraints}.}
 
 Un esempio di piazzamento di una soluzione ricavata tramite un algoritmo esatto 
 per il partizionamento e lo scheduling di task nel caso di 
@@ -360,7 +355,7 @@ comunicazioni nel tempo di esecuzione dei task.
   \includegraphics[width=0.5\textwidth]
 {capitoli/figure/cap3/BoxModules.pdf}
 \caption[Piazzamento dei moduli con rappresentazione tridimensionale]{Esempio 
-di piazzamento dei moduli con rappresentazione tridimensionale.\footnotemark}
+di piazzamento dei moduli con rappresentazione tridimensionale \cite{FeketeOptimal}.}
 \label{fig:boxModules}
  \end{center}
 \end{figure}
@@ -379,7 +374,6 @@ L'idea alla base del metodo è di trattare i task come scatole tridimensionali e
 i possibili mapping e schedule \emph{feasible} come disposizioni di tali scatole che 
 soddisfano i vincoli di precedenza.
 
-\footnotetext{Immagine tratta da \cite{FeketeOptimal}.}
 
 \paragraph{Limitazioni}
 La principale limitazione del modello proposto in \cite{FeketeOptimal} è 
@@ -574,7 +568,7 @@ requisito di area maggiore.
 \end{minipage}
 \caption[Applicazione della tecnica exploiting slack in reconfiguration 
 controller]{Applicazione della tecnica \emph{exploiting slack in reconfiguration 
-controller}.\footnotemark}
+controller} \cite{BanerjeePARLGRAN}.}
 \label{fig:slackRecController}
 \end{figure}
 
@@ -590,8 +584,6 @@ $T3$ può quindi essere piazzato in una diversa posizione, come raffigurato in
 figura~\ref{fig:slackRecController2}, consentendo alla riconfigurazione del task 
 $T4$ di partire anticipatamente, senza che l'istante di fine esecuzione di $T3$ 
 sia influenzato dallo spostamento.
-
-\footnotetext{Immagine tratta da \cite{BanerjeePARLGRAN}.}
 
 
 L'utilizzo congiunto delle due tecniche sopra descritte permette di guadagnare 
@@ -638,7 +630,7 @@ laddove l'architettura obiettivo possegga queste caratteristiche. Dai risultati
 dei test sperimentali risulta che nel caso vengano utilizzati due 
 riconfiguratori, l'algoritmo ha calcolato la soluzione ottima in $7$ istanze su 
 $10$ benchmark diversi. In generale, ad un aumento del numero di 
-riconfiguratori disponibili corrisponde un aumento della qualità della 
+riconfiguratori disponibili corrisponde un miglioramento del makespan della 
 soluzione generata, in quanto è possibile sfruttare maggiormente tecniche di 
 ottimizzazione quali ad esempio il configuration prefetching.
 
@@ -718,3 +710,35 @@ si riassumono nei seguenti punti:
   \item capacit\`a di integrare in fase di scheduling della conoscenza generale riguardante
     il problema, in fase di calcolo delle priorit\`a.
 \end{itemize}
+
+\begin{table}[tb]
+  \begin{center}
+    \begin{tabular}{|c|c|c|c|c|}
+      \hline
+      \textbf{Approccio} & \textbf{Soluzione} & \textbf{1D/2D} & \textbf{Prefetching} & \textbf{Riutilizzo mod.}\\
+      \hline
+      \ac{ILP} \cite{BanerjeePhysicalConstraints} & Ottima & 1D & X & -\\
+      \hline
+      \ac{ILP} \cite{BanerjeePhysicalConstraints} & Ottima & 1D & X & X\\
+      \hline
+      \ac{ILP} \cite{Redaelli1DILP} & Ottima & 2D & X & X \\
+      \hline
+      Fekete \cite{FeketeOptimal} & Ottima & - & - & - \\
+      \hline
+      KLFM \cite{BanerjeePhysicalConstraints} & Sub-ottima & 1D & X & -\\
+      \hline
+      PARLGRAN \cite{BanerjeePARLGRAN} & Sub-ottima & 1D & X & -\\
+      \hline
+      Napoleon \cite{Redaelli2DILP} & Sub-ottima & 2D & X & X\\
+      \hline
+      Soluzione proposta & Sub-ottima & 2D & X & X\\
+      \hline
+    \end{tabular}
+    \caption{Tabella comparativa degli approcci esaminati.}
+    \label{tab:approcci}
+  \end{center}
+\end{table}
+
+
+La tabella \ref{tab:approcci} compara il lavoro proposto nella tesi con gli approcci
+presentati in questo capitolo.
