@@ -571,6 +571,8 @@ Stanti queste premesse, ogni arco nel task graph implica l'inserimento di
 entrambi i tipi di task di comunicazione. L'arco originale viene rimosso e 
 sostituito con nuovi archi che collegano i task di computazione con i task di 
 comunicazione appena inseriti, rispettando i criteri precedentemente stabiliti.
+Nel modello architetturale considerato nel contesto di questo lavoro, ogni core
+comunica con una porta dedicata alla memoria centrale.
 
 
 \begin{figure}
@@ -599,6 +601,8 @@ per un esempio di come viene modificato il task graph della figura
 comunicazione.\footnote{Gli archi del grafo originale sono stati 
 tratteggiati per evidenziare come la struttura generale non sia cambiata ma 
 siano stati soltanto introdotti nuovi nodi e archi nel grafo.}
+Ogni task di tipo \emph{READ} e \emph{WRITE} rappresenta una fase astratta che pu\`o
+essere implementata a piacere.
 
 Dopo l'inserimento dei task di comunicazione, viene eseguito l'inserimento dei 
 task di riconfigurazione, qualora il particolare mapping utilizzato lo 
@@ -722,7 +726,9 @@ preprocessato:
  \item scarto \emph{(slack)}: differenza tra istante al più tardi e istante al 
 più presto.
 \end{itemize}
-I task con scarto pari a $0$ fanno parte del percorso critico.
+I task con scarto pari a $0$ fanno parte del percorso critico; ci\`o \`e dovuto
+all'uguaglianza tra l'istante al pi\`u presto e quello al pi\`u tardi, che implica che
+il task non possa subire ritardi nell'esecuzione senza penalizzare il makespan totale.
 
 Il calcolo delle tre informazioni sopra elencate viene effettuato tramite un 
 semplice algoritmo comunemente utilizzato in ricerca operativa: il \emph{metodo
@@ -943,7 +949,7 @@ giungere a risultati accettabili e rischia di generare molte soluzioni non
 applicabili. Allo stesso tempo, il procedimento di scegliere un task ad ogni 
 passo sulla base di una determinata priorità, pur essendo molto veloce 
 rappresenta una scelta \emph{greedy}, che in generale non garantisce il 
-raggiungimento di obiettivi accettabili.
+raggiungimento di soluzioni ottime.
 
 Per questo è importante considerare diversi fattori e combinarli; sulla 
 base di conoscenze pregresse è possibile identificare comportamenti 
@@ -955,22 +961,6 @@ funzione di priorità ``pesata'' rispetto alle possibili cifre di merito. Questo
 è l'approccio alla base dell'euristica utilizzata per la scelta dei task che 
 viene illustrata in questa sezione.
 
-\paragraph{Garanzia di applicabilità delle soluzioni generate}
-L'algoritmo di scheduling proposto permette di evitare che vengano generate 
-delle soluzioni \emph{infeasible}, soluzioni che violino i vincoli sul tempo di 
-esecuzione (per esempio nel caso di tempi di esecuzione sovrapposti per task 
-mappati sullo stesso componente), oppure che siano caratterizzate da un mancato 
-rispetto delle precedenze tra i task del grafo.
-
-Si assiste quindi alla generazione di una soluzione sempre valida per 
-costruzione, poichè i task presi in esame ad ogni passo dall'euristica di 
-scelta sono soltanto quelli le cui precedenze siano già state considerate. 
-Questa caratteristica dell'algoritmo, combinata a una veloce euristica di scelta 
-dei task, permette di ottenere in un tempo molto breve una soluzione che non 
-viola nessun vincolo e che fornisce una stima del tempo di esecuzione fedele, 
-nell'ipotesi che le stime dei tempi di esecuzione siano ragionevolmente 
-affidabili.
-
 
 \paragraph{Funzionamento}
 L'algoritmo per la scelta del task migliore viene invocato a ogni passo di 
@@ -980,16 +970,17 @@ soddisfatte.
 Appena inizia l'esecuzione dell'algoritmo viene effettuata un'analisi 
 preliminare della lista dei task per determinare se la lista contiene un solo 
 elemento, ad esempio nel caso in cui si stia esaminando il primo nodo del 
-grafo. Se si verifica questa situazione, allora l'unico elemento della lista è 
+grafo; se si verifica questa situazione, allora l'unico elemento della lista è 
 selezionato come task migliore. Nel caso in cui la lista contenga più di un 
 elemento, è necessario procedere al calcolo delle priorità.
 
-Viene eseguito un ciclo su tutta la lunghezza della lista, ad ogni passo del 
-ciclo si calcola la priorità del task secondo il procedimento descritto nella 
-prossima sezione; la priorità viene confrontata con la massima priorità trovata 
+Viene eseguito un ciclo su tutta la lunghezza della lista, ad ogni passo 
+si calcola la priorità del task, che viene confrontata con il massimo trovato
 fino a quel momento. Dopo che tutti i task sono stati presi in esame, il task 
 con la massima priorità in assoluto viene selezionato per l'assegnazione dei 
 tempi, e l'algoritmo termina.
+
+La prossima sezione descrive nel dettaglio il calcolo delle priorit\`a.
 
 % TODO scrivere del caching delle priorità
 
@@ -1121,8 +1112,8 @@ percorso critico, mentre altri task non possono essere eseguiti per la continua
 occupazione delle risorse su cui questi sono mappati e la loro esecuzione viene
 ritardata.
 
-Per scongiurare il verificarsi di questa situazione, si è deciso di introdurre 
-un fattore di degrado, che riduca progressivamente il massimo valore della 
+Per scongiurare il verificarsi di questa situazione, si è introdotto 
+un fattore di degrado, che riduce progressivamente il massimo valore della 
 cifra di merito corrispondente alle informazioni sul percorso critico; in 
 questo modo viene data una sempre minore priorità ai task sul percorso critico,
 se schedulati in sequenza. 
