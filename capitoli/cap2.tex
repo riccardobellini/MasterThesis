@@ -3,7 +3,8 @@
 \vspace{1cm}
 Questo capitolo spiega pi\`u dettagliatamente la fase di
 riconfigurazione, introdotta nel capitolo \ref{chap:intro}, e presenta il
-framework \acs{FASTER}.
+framework sviluppato presso il Politecnico di Milano per il progetto
+europeo \acs{FASTER}, nel quale trova collocamento questo lavoro di tesi.
 
 La sezione \ref{sec:recComputingDettagli} descrive i vari tipi di
 riconfigurazione e il processo di riconfigurazione dei chip \ac{FPGA}.
@@ -31,15 +32,18 @@ riconfigurazione sono passate dal poter riconfigurare un dispositivo solamente u
 prima di eseguire l'applicazione, al poter riconfigurare in maniera trasparente alcune porzioni
 della logica, consentendo ad altri moduli di proseguire la loro esecuzione in parallelo.
 I vari tipi di riconfigurazione sono i seguenti:
-\begin{enumerate}
- \item \emph{riconfigurazione totale}: il dispositivo è configurato soltanto
-dopo la fase di design, prima dell'esecuzione dell'applicazione;
- \item \emph{riconfigurazione parziale statica}: il dispositivo può essere riconfigurato
+\begin{itemize}
+ \item \emph{riconfigurazione totale}: il dispositivo viene riconfigurato e durante
+   il processo tutti i dati presenti vengono cancellati;
+ \item \emph{riconfigurazione parziale}, che a sua volta si divide in:
+     \begin{enumerate}
+        \item \emph{statica}: il dispositivo può essere riconfigurato
 interrompendo temporaneamente l'esecuzione dell'applicazione;
- \item \emph{riconfigurazione parziale dinamica}, in inglese \acf{DPR}: parte della logica
+        \item \emph{dinamica}, in inglese \acf{DPR}: parte della logica
 può essere riconfigurata tramite un bitstream parziale, senza interrompere i task in
 esecuzione su altre regioni del dispositivo.
-\end{enumerate}
+    \end{enumerate}
+\end{itemize}
 L'utilizzo della riconfigurazione parziale dinamica rappresenta il motivo per cui le
 architetture riconfigurabili possono adattarsi in maniera dinamica al carico di lavoro richiesto,
 oppure a sopperire a eventuali guasti o ancora a poter eseguire applicazioni pi\`u complesse
@@ -65,9 +69,8 @@ senza che il requisito in termini di area del \emph{die} aumenti.
 
 
 \subsubsection{Riconfigurazione a due dimensioni}
-Le schede \ac{FPGA} moderne riescono a sfruttare, oltre alla riconfigurazione parziale
-dinamica, la riconfigurazione bidimensionale, che permette di aumentare il grado di
-libertà del designer.
+Le schede \ac{FPGA} moderne supportano la riconfigurazione parziale dinamica a due dimensioni,
+che permette di aumentare il grado di libertà del designer.
 
 La differenza tra la riconfigurazione a singola dimensione (per colonne) e la
 riconfigurazione a due dimensioni è mostrata in figura~\ref{fig:riconfigurazione1D2D}.
@@ -150,11 +153,7 @@ Sfruttando le potenzialità delle promettenti architetture hardware basate sulla
 logica riconfigurabile, introdotte nel capitolo~\ref{chap:intro}, si possono 
 infatti estendere le funzionalità (e quindi la durata utile della vita) di 
 un'applicazione senza dover riprogettare interamente l'hardware necessario per 
-eseguirla, consentendo allo stesso tempo di raggiungere performance
-% TODO chiedere a Gian
-equiparabili
-% END TODO
-a quelle di un'esecuzione su hardware dedicato.
+eseguirla.
 
 Nonostante il vantaggio di utilizzare architetture riconfigurabili rispetto 
 all'eseguire le applicazioni puramente in software, il design e 
@@ -162,8 +161,7 @@ l'implementazione di un sistema basato su logica riconfigurabile hanno delle
 limitazioni rispetto alla più facile estensione delle funzionalità di 
 un'applicazione software, per le seguenti ragioni:
 \begin{itemize}
- \item il supporto di tool esterni per il design del sistema è ancora 
-``elementare'';
+ \item il supporto di tool esterni per il design del sistema è ancora limitato;
  \item le riconfigurazioni hanno un considerevole impatto in termini di overhead sul 
 tempo di esecuzione dell'applicazione, pertanto devono essere utilizzate con 
 attenzione;
@@ -186,7 +184,7 @@ sia dell'applicazione che dell'architettura, di sfruttare al massimo le
 possibilità offerte dalla riconfigurazione parziale dinamica.
 
 \paragraph{Lavori precedenti}
-Tra i lavori di ricerca e progetti europei più relativi a \ac{FASTER} si 
+Tra i lavori di ricerca e progetti europei più vicini a \ac{FASTER} si 
 annoverano \emph{hArtes} \cite{HArtes}, \emph{Morpheus}, \emph{ACOTES} 
 \cite{AcotesUrl, ACOTES}, \emph{Andres} e \emph{Reflect} \cite{Reflect}.
 % FIXME citazioni mancanti perchè i siti sono offline
@@ -194,7 +192,7 @@ Questi lavori hanno obiettivi simili a quelli di \ac{FASTER}, tuttavia si
 concentrano più sugli aspetti architetturali della riconfigurazione; in questi 
 lavori non si accenna esplicitamente al design della riconfigurazione parziale 
 dinamica, nè si considera quale granularità sia meglio utilizzare per la 
-riconfigurazione: 
+riconfigurazione. 
 %\emph{region-based}\footnote{Nella riconfigurazione di tipo 
 %region-based, sono riconfigurati interi moduli che occupano arbitrarie porzioni 
 %della scheda.} oppure \emph{micro-riconfigurazione}\footnote{Nella 
@@ -215,7 +213,7 @@ supportare la riconfigurazione a run-time nell'intera metodologia di design.
 Il progetto \ac{FASTER} quindi, possiede le seguenti caratteristiche:
 \begin{enumerate}
  \item fornisce supporto per la riconfigurazione parziale 
-dinamica, sia region-based che micro-riconfigurazione, in maniera trasparente 
+dinamica, in maniera trasparente 
 all'utente;
  \item fornisce un framework per il design di un sistema su logica 
 riconfigurabile, gestendo l'analisi, la sintesi e la verifica delle soluzioni 
@@ -250,42 +248,12 @@ manutenzione richiesta. Come scritto dagli autori nel factsheet di \ac{FASTER}
 
 \selectlanguage{italian}
 
-Nella prossima sezione verranno illustrate le piattaforme hardware supportate 
-da \ac{FASTER} e la metodologia proposta per il framework. 
+Nella prossima sezione verr\`a illustrata la metodologia proposta per il framework. 
 
 
-\subsection{Metodologia utilizzata}
+\subsection{Descrizione del framework}
 \label{sec:fasterMetodologia}
 
-\subsubsection{Piattaforme supportate e applicazioni}
-L'obiettivo di \ac{FASTER} è sfruttare le opportunità offerte dalle 
-architetture riconfigurabili, sia nel campo dei sistemi \ac{HPC} sia nei 
-sistemi embedded. Pertanto, \ac{FASTER} supporta due tipi di piattaforme 
-hardware:
-\begin{enumerate}
- \item sistemi \ac{HPC} desktop, ad esempio \emph{Maxeler MaxWorkstation};% TODO
- \item sistemi embedded basati su \ac{FPGA}, ad esempio la 
-scheda \emph{University Program XUPV5-LX110T} di \emph{Xilinx} o la scheda 
-\emph{ZedBoard} di \emph{AVNET}.
-\end{enumerate}
-
-Oltre a supportare queste differenti piattaforme, \ac{FASTER} ha come obiettivo 
-l'aumento delle performance di tre applicazioni provenienti da diversi ambiti:
-\begin{itemize}
- \item \acf{RTM} \cite{RTMArticle}, un algoritmo applicato nella tomografia sismica per 
-fornire una rappresentazione più realistica del sottosuolo in aree 
-geologicamente complesse e caratterizzate da differenti velocità di 
-propagazione delle onde sismiche;
- \item sistemi di riconoscimento di intrusione in una rete, descritti in 
-precedenza;
- \item Global Illumination and Image Analysis, un insieme di algoritmi 
-utilizzati per rendere più realistici oggetti e scene rappresentati in grafica 
-computerizzata tridimensionale; un esempio è l'algoritmo di \emph{ray tracing}.
-\end{itemize}
-
-\subsubsection{Descrizione del framework}
-In questa sezione viene descritto il framework e il flusso del progetto ad  
-alto livello.
 
 \begin{figure}
  \begin{center}  
@@ -343,7 +311,7 @@ I core possono essere di due tipi:
   \begin{itemize}
    \item \emph{region-based}, in cui l'intero modulo viene riconfigurato;
    \item \emph{micro-riconfigurabili}, in cui solo piccole parti del modulo 
-sono riconfigurate e il resto viene riutilizzato.
+     sono riconfigurate e il resto viene riutilizzato \cite{FPGAReconfigurationGhent}.
   \end{itemize}
 \end{enumerate}
 
