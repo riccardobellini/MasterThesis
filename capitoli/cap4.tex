@@ -40,17 +40,10 @@ riepilogo dei concetti importanti presentati in questo capitolo.
 \section{Integrazione nella toolchain di \acs{FASTER}}
 \label{sec:integrazioneToolchainFASTER}
 
-Come descritto nel precedente capitolo, l'obiettivo del progetto europeo 
-\ac{FASTER} è fornire un framework per la sintesi ad alto livello di 
-applicazioni, scritte in linguaggio di programmazione C, su vari dispositivi 
-riconfigurabili; la toolchain che permette di realizzare questa sintesi è 
-composta da varie fasi eseguite in sequenza. Ogni fase deve essere il più 
-possibile self-contained, ovvero deve poter essere invocata separatamente e non 
-deve avere nozioni sul funzionamento interno delle altre fasi.
-
-Condizione necessaria perchè ciò accada è la definizione di specifiche 
-interfacce per ogni strumento che deve essere invocato. Ad esempio, la fase di 
-mapping ha la propria interfaccia di input e di output; lo scheduler 
+Ogni componente che deve essere invocato all'interno del framework sviluppato
+per il progetto \ac{FASTER} \`e dotato di interfacce di input e output, il cui
+scopo \`e isolarlo logicamente rispetto agli altri tool.
+Ad esempio, la fase di mapping ha la propria interfaccia di input e di output; lo scheduler 
 (invocato dall'algoritmo di esplorazione dello spazio delle soluzioni) ha 
 anch'esso una interfaccia di input e una di output, contenenti tutte 
 le strutture dati necessarie per l'elaborazione e per la memorizzazione delle 
@@ -65,7 +58,7 @@ informazioni calcolate dall'algoritmo, rispettivamente.
 L'algoritmo di esplorazione, che si occupa dell'invocazione del tool che gestisce lo 
 scheduling, è caratterizzato dalle proprie interfacce di input e output. Dato che il componente
 di scheduling \`e invocato successivamente al mapping, l'output del mapper e l'interfaccia
-di input dello scheduler avranno alcuni dati.
+di input dello scheduler avranno alcuni dati in comune.
 
 Nella prossima sezione verranno descritte le interfacce di input dell'algoritmo di esplorazione
 e della fase di scheduling.
@@ -131,13 +124,10 @@ task, processing element, implementazione$>$} calcolata dal mapper, che
 specifica per ogni task:
 \begin{enumerate}
  \item l'elemento di computazione che dovrà eseguire il task, può essere un 
-core hardware su scheda oppure un core software (processore);\footnote{Il termine
-\emph{core software} non deve essere confuso con il termine \emph{softcore} introdotto
-nella sezione \ref{sec:algoritmiEuristici}, che rappresenta un core implementato su
-logica riconfigurabile invece che un processore.}
- \item l'implementazione da utilizzare per l'esecuzione del task, si può 
+core hardware su scheda oppure un processore general purpose;
+ \item l'implementazione da utilizzare per l'esecuzione del task: si può 
 dividere in implementazione software o hardware a seconda che il task debba 
-essere eseguito su scheda o su un processore.
+essere eseguito su logica riprogrammabile o su un processore general purpose.
 \end{enumerate}
 Nella figura \ref{fig:taskGraphAndMapping} sono rappresentati un esempio di 
 task graph e di un possibile output della fase di mapping basato su quel task graph.
@@ -152,7 +142,7 @@ vari componenti del dispositivo.
 L'interfaccia di output dell'algoritmo di esplorazione \`e costituita dalla
 migliore soluzione trovata nel corso dell'esplorazione dello spazio delle soluzioni
 possibili, e include l'output dello scheduler (descritto nel prossimo paragrafo),
-il valore della funzione obiettivo, il numero di processing element utilizzati e
+il valore della funzione obiettivo, il numero di processing element e
 la dimensione dell'area utilizzata.
 
 %Il compito dello scheduler è assegnare delle stime di tempo di inizio e di fine 
