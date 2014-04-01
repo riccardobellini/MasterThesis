@@ -26,7 +26,7 @@ e tuttora oggetto di ricerca non solamente in ambito informatico.
 \label{sec:introSoC}
 Il continuo aumento delle performance richieste ai sistemi informatici ha portato alla necessit\`a
 di trovare nuove soluzioni per aumentare le prestazioni dei processori. Negli ultimi anni si \`e
-assistito a un drastico cambiamento di paradigma di computazione, segnato dal progressivo passaggio
+assistito a un drastico cambiamento del paradigma di computazione, segnato dal progressivo passaggio
 dalle architetture single-core a quelle multi-core.
 
 La versione semplificata della famosa osservazione empirica enunciata da Gordon Moore, secondo la quale
@@ -94,8 +94,8 @@ tra loro tramite BUS. Le architetture \ac{MPSoC} si dividono in due categorie:
 \label{sec:reconfComp}
 L'integrazione introdotta nella precedente sezione tuttavia apre una serie di problemi nella progettazione
 di un \ac{MPSoC}, tra cui elevato costo di progettazione dei sistemi, bassa affidabilità e, ultimo
-ma non meno importante, necessità di controllare il consumo di energia; i problemi sopra citati possono
-essere risolti grazie all'impiego del \emph{reconfigurable computing}.
+ma non meno importante, necessità di controllare il consumo di energia; uno dei metodi che 
+permette di risolvere i problemi sopra citati  \`e il \emph{reconfigurable computing}.
 
 Con il termine \emph{reconfigurable computing} si intendono delle architetture hardware che 
 offrono la possibilità di essere riconfigurate per implementare qualsiasi funzionalità 
@@ -108,7 +108,7 @@ oltre ai vantaggi che conseguono dal loro utilizzo sono descritte nelle prossime
 In questa sezione vengono illustrati i due principali modelli concettuali di architettura
 informatica convenzionalmente trattati: il modello \emph{general-purpose} e il modello
 \emph{application-specific}. Vengono presentati pregi e difetti di ciascuna architettura
-e viene spiegato come il reconfigurable computing cerca di combinare i vantaggi di
+e viene spiegato come il reconfigurable computing cerchi di combinare i vantaggi di
 entrambe.
 
 \subsubsection{Il modello general-purpose}
@@ -134,9 +134,6 @@ computazionale viene realizzato mediante l'impiego di componenti chiamati \acp{A
 dei circuiti integrati progettati per svolgere un'unica funzionalità. Questo guadagno
 in prestazioni comporta tuttavia uno svantaggio in termini di costi di produzione e,
 naturalmente, una minore flessibilità.
-
-Nella prossima sezione viene spiegato come il reconfigurable computing cerca di combinare
-i vantaggi di entrambi gli approcci.
 
 
 \subsubsection{I due approcci combinati}
@@ -290,9 +287,10 @@ su MPSoC riconfigurabili.
 \end{figure}
 
 Come rappresentato in figura \ref{fig:strutturaFlusso}, un flusso generico ha come dati di input la descrizione
-dell'architettura target e dell'applicazione, scritta in un linguaggio di alto livello.
-Al termine dell'elaborazione, l'output restituito \`e l'insieme di direttive di configurazione sotto forma
-di bitstream, o serie di bitstream. Nei prossimi paragrafi i componenti della struttura verranno descritti
+dell'architettura target e dell'applicazione, scritta in un linguaggio di alto livello;
+al termine dell'elaborazione, l'output restituito \`e l'insieme di direttive di configurazione sotto forma
+di bitstream, o serie di bitstream. Le fasi del flusso possono essere effettuate manualmente
+oppure automatizzate del tutto o in parte. Nei prossimi paragrafi i componenti della struttura verranno descritti
 maggiormente nel dettaglio.
 
 \subsubsection{Input}
@@ -309,9 +307,17 @@ maggiormente nel dettaglio.
     in linguaggio ad alto livello (ad esempio C, C++ o altro).
 \end{enumerate}
 
-\subsubsection{Fasi del flusso} L'applicazione viene dapprima codificata in una
+\subsubsection{Fasi del flusso}
+\begin{itemize}
+  \item Codifica dell'applicazione nella rappresentazione interna del tool di sviluppo;
+  \item \emph{partizionamento HW/SW}, \emph{mapping} e \emph{scheduling};
+  \item generazione dei sorgenti software e core hardware;
+  \item generazione delle interfacce di comunicazione;
+  \item gestione a runtime dell'applicazione.
+\end{itemize}
+L'applicazione viene dapprima codificata in una
 rappresentazione interna al flusso, che ne consente la manipolazione e
-l'elaborazione da parte del framework. Esistono diverse possibili
+l'elaborazione da parte del tool di sviluppo. Esistono diverse possibili
 rappresentazioni possibili, nel contesto di questo lavoro ci riferiremo alla
 rappresentazione tramite \emph{task graph}, descritta nella sezione
 \ref{subsec:mappingScheduling}. L'applicazione viene quindi suddivisa in un
@@ -350,6 +356,9 @@ il bitstream finale viene solitamente generato utilizzando strumenti proprietari
 L'obiettivo di questa sezione \`e descrivere nel dettaglio le fasi di \emph{mapping} e \emph{scheduling}
 dei task, introdotte nella precedente sezione, e le problematiche che emergono in questa fase con riferimento
 specifico al caso di design di un sistema riconfigurabile.
+Mapping e scheduling sono l'oggetto di questo lavoro di tesi, che come obiettivo principale si prefigge di
+automatizzare queste fasi, determinando inoltre quando e se utilizzare la riconfigurazione parziale dinamica
+sia vantaggioso per l'esecuzione dell'applicazione, considerando diverse possibili metriche per l'ottimizzazione.
 
 La sezione \ref{subsec:modello} fornisce il modello del problema, tramite una formulazione matematica tratta
 da \cite{ModelloRedaelli,ReconfigurableSystemDesignVerification}.
@@ -438,8 +447,8 @@ In maniera formale:
  \sigma : S \rightarrow E \times 2^{U} \times T \times T
 \end{equation}
 
-Data la formulazione appena introdotta, si possono identificare diverse fasi nel
-design di sistemi riconfigurabili:
+Data la formulazione appena introdotta, le fasi nel design di sistemi riconfigurabili
+oggetto di questo lavoro si possono definire nel modo seguente:
 \begin{enumerate}
  \item \emph{partitioning}: in questa fase viene stabilito quali task devono essere
  eseguiti in software e quali in hardware;
@@ -452,13 +461,10 @@ design di sistemi riconfigurabili:
  con cui realizzare la funzionalità di ogni task;
  \item \emph{scheduling}: assegnazione dei tempi di inizio/fine esecuzione dei task,
  rispettando le precedenze;
- \item \emph{floorplacement} o \emph{floorplanning}: in questa fase si identificano i 
-task che idealmente dovrebbero essere posti fisicamente ``vicini'' sulla scheda, ad 
-esempio per minimizzare la latenza della comunicazione, e ne si determina il piazzamento
-fisico finale su scheda, rispettando i vincoli di area riconfigurabile a disposizione.
 \end{enumerate}
 Il lavoro descritto in questa tesi si concentra su una possibile soluzione per il 
-problema di scheduling dei task.
+problema di mapping\footnote{Nel contesto di questo lavoro, il termine \emph{mapping}
+comprende anche la fase di partizionamento.} e scheduling dei task.
 
 
 \subsection{Le fasi di mapping e scheduling}
@@ -544,7 +550,7 @@ capitolo~\ref{chap:SOA}, in particolare nella
 sezione~\ref{sec:algoritmiProposti}.  Lo svantaggio a livello pratico degli
 algoritmi esatti è l'eccessivo tempo impiegato per trovare una soluzione nel caso di
 applicazioni non banali, limitazione che tende a far preferire l'uso di metodi
-non esatti ma più veloci quali le euristiche, per ottenere risultati buoni in
+non esatti, ma più veloci quali le euristiche, per ottenere risultati buoni in
 tempi accettabili; in questo lavoro gli algoritmi proposti per le fasi di
 mapping e scheduling sono di tipo euristico, le motivazioni per questa scelta verranno
 illustrate nel capitolo~\ref{chap:approccio}.
