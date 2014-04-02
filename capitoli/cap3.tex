@@ -666,10 +666,14 @@ Grazie a questa formulazione l'algoritmo si adatta a diversi tipi di
 architetture; inoltre, la differenza tra risorse rinnovabili e non modellizza 
 sia processori general purpose, risorse rinnovabili per definizione, sia core 
 implementati su logica riconfigurabile, rinnovabili tramite la riconfigurazione.
+Tuttavia, l'approccio proposto non considera gli overhead introdotti dalle riconfigurazioni.
 
 Gli stessi autori estendono il modello in un lavoro successivo
 \cite{AntColonyOptimizationPlacing}, considerando anche la fase di piazzamento
 fisico dei moduli nell'area riconfigurabile (floorplacing).
+La limitazione di questo lavoro \`e il mancato supporto esplicito ai task di comunicazione.
+Il tempo di comunicazione viene infatti incorporato nel tempo di esecuzione dei task,
+in questo modo architetture con diversi canali di comunicazione non sono considerate.
 
 \section{Osservazioni conclusive}
 \label{sec:osservazioniConclusiveSoA}
