@@ -17,7 +17,7 @@ la struttura di un generico flusso di sviluppo per \acs{MPSoC}.
 La sezione \ref{sec:definizioneProblema} descrive il problema del \emph{mapping} e dello
 \emph{scheduling} di un'applicazione su architetture riconfigurabili; particolare
 enfasi viene posta sull'importanza che queste fasi rivestono all'interno del
-flusso di sviluppo e sul perchè questo problema sia impegnativo da risolvere
+flusso di sviluppo e sul perch\'e questo problema sia impegnativo da risolvere
 e tuttora oggetto di ricerca non solamente in ambito informatico.
 
 \newpage
@@ -144,18 +144,18 @@ una nuova metodologia di design per lo sviluppo rapido di \ac{ASIC} ad alte pres
 partendo da specifiche di algoritmi ad alto livello \cite{HartensteinNovelASICDesign};
 questa metodologia è basata su un nuovo paradigma di macchina sequenziale, chiamata da
 Hartenstein \emph{anti macchina}\footnote{Così definita per le sue differenze rispetto al
-più convenzionale modello di von Neumann.} o \emph{Xputer}\footnote{Il termine
+più convenzionale modello di von Neumann.} o \emph{Xputer}.\footnote{Il termine
 \emph{Xputer} ha origine dalla necessità dei suoi ideatori di rimpiazzare le prime tre
 lettere della parola ``computer'' con un altro prefisso. Non trovandone uno, è stato
-deciso che queste lettere fossero rimpiazzate dalla lettera ``x''.}.
+deciso che queste lettere fossero rimpiazzate dalla lettera ``x''.}
 
 La principale caratteristica che la differenzia rispetto all'architettura di von Neumann è
 l'essere guidata da flussi di dati (data-streams) piuttosto che da flussi di istruzioni
-(instruction-streams), idea alla base degli \emph{array sistolici}\footnote{Negli array
+(instruction-streams), idea alla base degli \emph{array sistolici}.\footnote{Negli array
 sistolici la computazione è affidata a una matrice di \acp{DPU} invece che a \acsp{CPU}
 (dalle quali si differenziano per la mancanza di un program counter). La computazione
 avviene tramite il trasporto dei dati, che vengono scritti nelle \emph{triggering ports}
-delle \acp{DPU}.}.
+delle \acp{DPU}.}
 
 
 
@@ -258,9 +258,6 @@ Il reconfigurable computing permette di adattare facilmente i sistemi di sicurez
 all'impiego dei diversi standard utilizzati per la cifratura e decifratura dei dati, in
 maniera dinamica.
 
-Nella prossima sezione vengono descritte le motivazioni e la problematica oggetto del
-lavoro.
-
 
 \subsection{Introduzione ai flussi di sviluppo}
 \label{subsec:introFlussi}
@@ -318,17 +315,17 @@ maggiormente nel dettaglio.
 L'applicazione viene dapprima codificata in una
 rappresentazione interna al flusso, che ne consente la manipolazione e
 l'elaborazione da parte del tool di sviluppo. Esistono diverse possibili
-rappresentazioni possibili, nel contesto di questo lavoro ci riferiremo alla
+rappresentazioni, nel contesto di questo lavoro ci riferiremo alla
 rappresentazione tramite \emph{task graph}, descritta nella sezione
-\ref{subsec:mappingScheduling}. L'applicazione viene quindi suddivisa in un
+\ref{subsec:modello}. L'applicazione viene quindi suddivisa in un
 insieme di task caratterizzati da dipendenze.\footnote{Nel contesto di questo
 lavoro, i task sono collegati da relazioni produttore-consumatore; pertanto, un arco $(i,j)$ nel task graph implica che
 l'output del task $i$ sia l'input del task $j$.}
 
 Nella fase di \emph{partizionamento HW/SW} viene stabilito quali task verranno
-eseguiti in hardware e quali su un processore general-purpose (fase di
-\emph{mapping}), oltre ad assegnare le risorse computazionali ai vari task in
-base al partizionamento calcolato; in questa fase si effettua anche lo
+eseguiti in hardware e quali su un processore general-purpose, oltre ad assegnare le risorse computazionali ai vari task in
+base al partizionamento calcolato (fase di
+\emph{mapping}); in questa fase si effettua anche lo
 \emph{scheduling}.  Mapping e scheduling, oggetto del lavoro, verranno
 descritti nella prossima sezione.
 
@@ -469,7 +466,7 @@ comprende anche la fase di partizionamento.} e scheduling dei task.
 
 \subsection{Le fasi di mapping e scheduling}
 \label{subsec:mappingScheduling}
-La fase di mapping, che spesso incorpora il partizionamento hardware/software, ha il
+La fase di mapping ha il
 compito di determinare dove i task dell'applicazione debbano essere eseguiti
 (su quale processing element) e in quale modo (con quale tra le possibili implementazioni).
 
@@ -525,7 +522,7 @@ banali.
 
 Il problema di fissare un mapping e uno schedule per i task di un'applicazione
 tale da minimizzare una determinata metrica, o un insieme di metriche nel caso
-di ottimizzazione multiobiettivo) è un classico esempio di \ac{RCSP}; tale
+di ottimizzazione multi-obiettivo) è un classico esempio di \ac{RCSP}; tale
 problema appartiene alla classe di complessità computazionale dei problemi
 NP-difficili (si veda l'appendice~\ref{chap:appA} per un riepilogo delle classi
 di complessità computazionale); per questo tipo di problemi non si è ancora
