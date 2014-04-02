@@ -25,8 +25,8 @@ nel dettaglio (sezione \ref{subsec:algoritmoScheduling}).
 \section{Osservazioni generali}
 \label{sec:osservazioniGenerali}
 La maggior parte della toolchain di \ac{FASTER} è sviluppata in C++, 
-linguaggio di programmazione a oggetti sviluppato da Bjarne Stroustrup 
-\cite{CppStroustrup} come miglioramento del C, creato invece da Dennis Ritchie 
+linguaggio di programmazione a oggetti creato da Bjarne Stroustrup 
+\cite{CppStroustrup} come miglioramento del C, realizzato invece da Dennis Ritchie 
 \cite{CKernighanRitchie}. La parte di interfaccia grafica, chiamata \emph{ASAP 
 GUI} è sviluppata in C\#, linguaggio di programmazione ad oggetti sviluppato da 
 Microsoft nell'ambito del \emph{framework .NET} \cite{ProCSharp}. ASAP GUI 
@@ -100,16 +100,41 @@ pointer \verb+FasterTaskPtr+.
 \label{sec:struttureDati}
 In questa sezione vengono presentate alcune strutture dati della toolchain. La 
 sezione si divide in due sotto-sezioni: la sezione 
-\ref{subsec:struttureDatiFaster} presenta le strutture dati generali della 
-toolchain, non relative allo scheduler; la sezione 
+\ref{subsec:struttureDatiMapper} presenta le strutture dati dell'algoritmo
+evolvibile di esplorazione dello spazio delle soluzioni, non relative allo scheduler; la sezione 
 \ref{subsec:struttureDatiScheduler} presenta invece le strutture utilizzate 
 dall'algoritmo di scheduling.
 
 
-\subsection{\acs{FASTER}}
-\label{subsec:struttureDatiFaster}
-% TODO
+\subsection{Algoritmo di esplorazione}
+\label{subsec:struttureDatiMapper}
+Questa sezione presenta le strutture dati di input e di output dell'algoritmo
+di esplorazione, che si trovano nella cartella
+\emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/explorer}
+e appartengono al namespace \verb+faster::applications::explorer+.
 
+\subsubsection{Input}
+La \verb+struct+ che contiene i dati di input dell'algoritmo di esplorazione
+\`e dichiarata e definita nei file \emph{explorerInput.hpp} e \emph{explorerInput.cpp},
+rispettivamente.
+
+La struttura \verb+ExplorerInput+ contiene il puntatore a una classe che incapsula i dati relativi al
+progetto correntemente aperto in \ac{FASTER}, l'insieme dei parametri dell'algoritmo di
+iterazione e l'insieme delle metriche e delle funzioni per valutarle.
+
+\subsubsection{Lista dei mapping}
+La struct \verb+ExplorerTrace+, dichiarata e definita nei file \emph{explorerTrace.hpp}
+e \emph{explorerTrace.cpp}, contiene la lista delle triple
+$<$\emph{task, processing element, implementazione}$>$ che viene calcolata da ogni
+formica durante l'esplorazione, con i metodi per aggiungere un record
+alla lista.
+
+\subsubsection{Output}
+La struct \verb+ExplorerOutput+, dichiarata e definita nei file \emph{explorerOutput.hpp}
+e \emph{explorerOutput.cpp} contiene i valori associati a ciascuna metrica, il valore della funzione
+obiettivo per la soluzione corrente, l'output dello scheduler (descritto in seguito) relativo
+al mapping e le informazioni sull'evoluzione dell'area e del numero di processing element
+utilizzati.
 
 \subsection{Scheduler}
 \label{subsec:struttureDatiScheduler}
@@ -124,39 +149,34 @@ I file \emph{schedulerInput.hpp} e \emph{schedulerInput.cpp} contengono la
 dichiarazione e l'implementazione della struttura \verb+SchedulerInput+, 
 rispettivamente.
 
-Il seguente frammento di codice mostra le parti rilevanti della 
-dichiarazione della struttura.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct SchedulerInput {
-  private:
-      FasterProjectPtr m_fasterProject;
-      explorer::ExplorerTrace m_explorerTrace;
-      std::vector<FasterTaskPtr> m_topologicalSorting;
-      CriticalPathInfoMap_t m_criticalPathInfo;
-      std::vector<ProcessingTaskPair_t> m_reconfigurationsList;
-      bool m_busAvailable;
-      FasterTaskGraphPtr m_taskGraph;
-      FasterReconfigurationElementPtr m_reconfigurationController;
-      FasterMemoryElementPtr m_ramElement;
-      FasterCommunicationElementPtr m_busElement;
-      SchedulerMemoryManagerPtr m_memoryManager;
-      int m_readPortsNum;
-      int m_writePortsNum;
-      // code...
-  };
-\end{minted}
+% Il seguente frammento di codice mostra le parti rilevanti della 
+% dichiarazione della struttura.
+% \newline
+% \begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+% mathescape]{c}
+%   struct SchedulerInput {
+%   private:
+%       FasterProjectPtr m_fasterProject;
+%       explorer::ExplorerTrace m_explorerTrace;
+%       std::vector<FasterTaskPtr> m_topologicalSorting;
+%       CriticalPathInfoMap_t m_criticalPathInfo;
+%       std::vector<ProcessingTaskPair_t> m_reconfigurationsList;
+%       bool m_busAvailable;
+%       FasterTaskGraphPtr m_taskGraph;
+%       FasterReconfigurationElementPtr m_reconfigurationController;
+%       FasterMemoryElementPtr m_ramElement;
+%       FasterCommunicationElementPtr m_busElement;
+%       SchedulerMemoryManagerPtr m_memoryManager;
+%       int m_readPortsNum;
+%       int m_writePortsNum;
+%       // code...
+%   };
+% \end{minted}
 La struttura \verb+SchedulerInput+ contiene i dati principali che vengono usati 
 dallo scheduler nel corso dell'elaborazione, dal preprocessing allo scheduling 
-effettivo. In particolare, si notano il puntatore alla struttura 
-\verb+FasterProject+, che è necessaria per accedere alle informazioni 
-sull'architettura e sull'applicazione, come spiegato nella sezione precedente.
-Il dato membro \verb+m_taskGraph+ viene impostato in seguito alla fase di 
-preprocessing, e contiene il task graph arricchito delle comunicazioni e 
-riconfigurazioni da considerare nella fase di scheduling vera e propria.
-Il dato membro \verb+m_explorerTrace+ contiene la lista di triple calcolata dal
-mapper per l'iterazione corrente dell'esplorazione.
+effettivo. In particolare, la struttura contiene il task graph dell'applicazione,
+che viene arricchito durante la fase di scheduling, e la lista di triple calcolata
+dal mapper per l'iterazione corrente dell'esplorazione.
 
 Oltre a questi, vi sono anche dei puntatori al gestore della memoria e ai 
 componenti di riconfigurazione e di comunicazione (\acs{RAM} e BUS, se 
@@ -173,18 +193,7 @@ struttura a sé stante perchè figurino come logicamente separati dai dati che
 invece fanno parte dell'input dell'algoritmo. La dichiarazione della struttura è
 inclusa nel namespace \verb+faster::applications::scheduler::data+.
 
-Viene ora presentato un frammento di codice rilevante per la dichiarazione 
-della struttura.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct SchedulerData {
-      TaskSet_t unscheduledTasksSet;
-      std::vector<FasterTaskPtr> scheduledTasksList;
-      std::vector<FasterTaskPtr> readyTasksList;
-  };
-\end{minted}
-Come si può vedere, la struttura contiene l'insieme dei task non ancora 
+La struttura contiene l'insieme dei task non ancora 
 selezionati per lo scheduling e i vettori dei task già schedulati e pronti per 
 essere schedulati. Si è deciso di incapsulare questi dati in una struttura 
 modificabile da tutti i componenti dell'algoritmo perchè alcuni componenti 
@@ -201,51 +210,6 @@ calcolata. All'inizio dell'elaborazione il diagramma è vuoto, viene
 progressivamente riempito con le informazioni di scheduling calcolate ad ogni 
 passo.
 
-Vengono inizialmente ridefiniti alcuni tipi di dato, per semplificare la lettura
-del codice.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  typedef std::set<ScheduledTaskInfo> BusyInfoSeries_t;
-  typedef std::unordered_map<std::string, BusyInfoSeries_t> GanttMap_t;
-\end{minted}
-
-Nel seguente frammento di codice sono illustrate le parti rilevanti della 
-dichiarazione della struttura.
-\newline
-% FIXME aggiustare indentazione codice
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct SchedulerGantt {
-      private:
-          GanttMap_t m_gantt;
-          // code...
-      public:
-          // code...
-          void addBusyInfo(const ScheduledTaskInfo & timeInfo);
-          bool isOverlapping(
-               const FasterComponentPtr & elem,
-               const ScheduledTaskInfo & timeInfo
-          ) const;
-          bool isComponentBusy(
-               const FasterComponentPtr & elem,
-               long int timestamp) const;
-          std::unordered_map<std::string, BusyInfoSeries_t> 
-              getBusyComponentsGivenTime(long int timestamp) const;
-          BusyInfoSeries_t getBusyInfoGivenComponentAndTime(
-                           const FasterComponentPtr & elem,
-                           long int timestamp) const;
-          long int getFirstAvailableTime(
-                   const FasterComponentPtr & elem, 
-                   long int timestamp, long int execTime) const;
-          // code...
-  };
-\end{minted}
-Il diagramma di Gantt è quindi rappresentato tramite una mappa non ordinata 
-che ha per chiavi delle stringhe, gli id dei componenti, e per valori un 
-insieme di \verb+ScheduledTaskInfo+, struttura che contiene le informazioni di 
-scheduling di un task.
-
 Sono a disposizione dei metodi pubblici per aggiungere le informazioni di 
 scheduling relative a un task, per verificare se un determinato componente è 
 occupato in un determinato istante di tempo e per ottenere il primo istante di 
@@ -258,58 +222,16 @@ struttura contiene i dati di output dello scheduler, che vengono
 progressivamente aggiornati man mano che l'esecuzione dell'algoritmo avanza, e 
 alla fine sono utilizzati per il calcolo della metrica \emph{makespan}.
 
-
-Nel seguente frammento di codice sono presentate le ridefinizioni di tipo di 
-dato utilizzate in \emph{schedulerOutput.hpp}.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  typedef std::tr1::tuple<FasterTaskPtr,
-                          FasterComponentPtr, 
-                          FasterImplementationPtr> MappingStep_t;
-  typedef std::unordered_map<FasterTaskPtr,
-                             ScheduledTaskInfo, 
-                             utilities::HashUtility<FasterTaskPtr>, 
-                             utilities::EqualUtility<FasterTaskPtr> > 
-                             ScheduledTaskInfoMap_t;
-\end{minted}
-
-Il seguente frammento illustra la dichiarazione della struttura \verb+SchedulerOutput+.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  struct SchedulerOutput {
-      private:
-          SchedulerGantt m_schedulingGantt;
-          ScheduledTaskInfoMap_t m_scheduledTaskInfo;
-          std::set<MappingStep_t> m_schedulerMapping;
-
-      public:
-          // code...
-          void addSchedulingTimeInfo(const ScheduledTaskInfo & timeInfo);
-          void addScheduledTaskInfo(
-               const FasterTaskPtr & task,
-               const ScheduledTaskInfo & info);
-          long int computeMakespan() const;
-  };
-\end{minted}
-Come si può vedere dal codice, la struttura agisce come wrapper attorno ai 
+La struttura agisce come wrapper attorno ai 
 metodi della struttura \verb+SchedulerGantt+ vista in precedenza, ed espone dei 
 metodi che permettono di aggiungere all'output le informazioni appena calcolate.
 Il metodo \verb+computeMakespan()+ permette di calcolare la metrica di valutazione
-dello scheduling. Nella struttura sono presenti dati membro aggiuntivi che rendono
-meglio accessibili le informazioni di scheduling già ricavabili dal diagramma di Gantt.
-Da queste variabili aggiuntive è possibile ricavare in maniera semplice le informazioni
-per ogni task tramite la mappa \verb+m_scheduledTaskInfo+ e il mapping assegnato dallo
-scheduler tramite la variabile \verb+m_schedulerMapping+.\footnote{Mentre il mapping
-determinato dal mapper è specificato solamente per processing task (relativi al task 
-graph originale), il mapping presente nell'output dello scheduler è relativo ai 
-task del task graph preprocessato.}
+dello scheduling.
 
 \subsubsection{Scheduler Utility}
 I file \emph{schedulerUtility.hpp} e \emph{schedulerUtility.cpp}, infine, 
 contengono la definizione di alcune strutture comunemente utilizzate dallo 
-scheduler e viste anche nei precedenti frammenti di codice sorgente.
+scheduler.
 
 La struttura \verb+TaskTimes+ incapsula gli istanti di inizio e fine di un task.
 \newline
@@ -362,21 +284,20 @@ mathescape]{c}
   };
 \end{minted}
 
-Infine, all'interno del file \emph{schedulerUtility.cpp} è presente un 
-namespace \verb+utilities+, che contiene due strutture che hanno l'operatore 
-\verb+()+ ridefinito. Queste strutture vengono utilizzate per testare 
-l'equivalenza o per calcolare l'hash di un oggetto del tipo specificato tramite 
-template. Vengono utilizzate nelle mappe e negli insiemi non ordinati mostrati 
-nelle strutture precedenti, e operano sul dato membro ``\verb+id+'' 
-dell'oggetto passato come parametro.
+% Infine, all'interno del file \emph{schedulerUtility.cpp} è presente un 
+% namespace \verb+utilities+, che contiene due strutture che hanno l'operatore 
+% \verb+()+ ridefinito. Queste strutture vengono utilizzate per testare 
+% l'equivalenza o per calcolare l'hash di un oggetto del tipo specificato tramite 
+% template. Vengono utilizzate nelle mappe e negli insiemi non ordinati mostrati 
+% nelle strutture precedenti, e operano sul dato membro ``\verb+id+'' 
+% dell'oggetto passato come parametro.
 
 
 \section{Classi e gerarchie principali}
 \label{sec:classiGerarchie}
 In questa sezione vengono presentate le classi principali della toolchain 
-relativa all'algoritmo di esplorazione (mapper) e in particolare 
-dell'algoritmo di scheduling utilizzato per la valutazione quantitativa della 
-soluzione proposta dal mapper.
+relativa all'algoritmo di esplorazione (mapper) e dell'algoritmo di scheduling
+utilizzato per la valutazione quantitativa della soluzione proposta dal mapper.
 
 \subsection{Algoritmo di esplorazione}
 \label{subsec:algoritmoEsplorazione}
@@ -395,18 +316,13 @@ fino alla terminazione. Il codice di questo componente è contenuto nei file
 \emph{explore.hpp} ed \emph{explore.cpp}, presenti nella sottocartella 
 \emph{explore}.
 
+
 Poichè il componente di esplorazione rappresenta un oggetto contenente un 
 algoritmo invocabile, secondo la convenzione definita nella sezione
 \ref{sec:osservazioniGenerali}, è implementato come \verb+class+ e 
 inserito nel namespace \verb+faster::applications::explorer+, come tutti i 
 componenti che vedremo di seguito relativi all'algoritmo di esplorazione.
 
-Il componente di esplorazione ha una propria interfaccia di input, definita 
-nella struttura \verb+ExplorerInput+, contenuta nella cartella 
-\emph{toolchain/sources/common/datastructures/cpp/fasterInterfaces/explorer}. 
-Al suo interno presenta dei riferimenti ai componenti di iterazione e di 
-terminazione. Entrambi questi componenti verranno descritti nelle prossime 
-sezioni, e si trovano nella sottocartella \emph{explore/exploreComponents}.
 
 \subsubsection{Componente di iterazione}
 Data l'ampia modularità decisa in fase di progettazione, il componente di 
@@ -436,6 +352,45 @@ mathescape]{c}
   };
 \end{minted}
 
+La sottoclasse \verb+ExploreIterationACO+, dichiarata e definita nei file
+\emph{exploreIterationACO.hpp} e \emph{exploreIterationACO.cpp} implementa
+l'iterazione della metodologia descritta nel capitolo \ref{chap:approccio}.
+\newline
+\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
+mathescape]{c}
+  for (unsigned long int antNumber=0; antNumber<m_antsPerGeneration; antNumber++)
+  {
+      // code...
+      std::map<FasterProcessingTaskPtr, double> tasksProbabilityMap;
+      std::map<FasterProcessingTaskPtr, double> localHeuristicPerTaskMap;
+      for (const FasterProcessingTaskPtr &taskIter : readyTasksSet)
+      {
+          tasksProbabilityMap = m_computeProbabilityNextTask(m_alphaTask,
+              m_betaTask, localHeuristicPerTaskMap);
+          FasterProcessingTaskPtr theOneTask =
+              m_rouletteWheelSelection(tasksProbabilityMap);
+          // code...
+          for (const FasterImplementationPtr &i :
+               m_fasterProject->getImplementationPtrsSetGivenProcessingTask
+               (theOneTask))
+          {
+              // compute local heuristics for processing elements
+          }
+          std::pair<FasterProcessorPtr, FasterImplementationPtr>
+              theOneProcessorAndImplementation =
+              m_rouletteWheelSelection(processorAndImplementationProbabilityMap);
+      }
+      // construct mapping and invoke scheduler to obtain makespan
+      // metric value
+  }
+  m_thisGenerationBestSolutionsSet =
+      m_selectBestSolutions(m_thisGenerationSolutionsSet);
+  m_updateGlobalPheromoneMatrix(m_thisGenerationSolutionsSet,
+      m_thisGenerationBestSolutionsSet);
+  // return this generation's best solutions
+  return m_thisGenerationBestSolutionsSet;
+\end{minted}
+
 
 \subsubsection{Componente di terminazione}
 La terminazione dell'algoritmo di esplorazione viene decisa dal componente di 
@@ -445,7 +400,7 @@ reimplementato dalle sottoclassi, \verb+isTerminated()+.
 
 Come nel caso del componente di iterazione, è presente un'implementazione della 
 classe astratta, che termina quando il numero di iterazioni raggiunge il limite 
-specificato nel file di configurazione dell'explorer.
+specificato nel file di configurazione dell'algoritmo.
 \newline
 \begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
 mathescape]{c}
