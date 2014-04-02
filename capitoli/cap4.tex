@@ -210,64 +210,70 @@ utilizzato per risolvere il problema del commesso viaggiatore (\acs{TSP})
 combinatoria.
 
 Nella fattispecie, l'algoritmo cerca di riprodurre il procedimento seguito da una colonia di 
-formiche alla ricerca di cibo; la colonia deve poter giungere al cibo seguendo 
-il percorso più breve, che rappresenta una soluzione (subottima) trovata.
-Quando una colonia va alla ricerca di cibo, tutte le formiche partono dalla 
-colonia seguendo direzioni casuali, lasciando una traccia di 
+formiche alla ricerca di cibo; ogni percorso dalla colonia al cibo rappresenta una possibile soluzione,
+la cui qualit\`a \`e determinata dalla lunghezza del percorso. L'obiettivo
+\`e trovare il percorso pi\`u breve.
+Quando una colonia va alla ricerca di cibo, tutte le formiche partono
+seguendo direzioni casuali, lasciando una traccia di 
 \emph{feromone}\footnote{Il feromone è una sostanza emessa da alcuni esseri 
-viventi con funzione di segnalare qualcosa agli individui riceventi 
-della stessa specie: una traccia, un pericolo, una modificazione 
-comportamentale per il ricevente.} sul loro cammino. La traccia di feromone 
-evapora con il tempo, ma il percorso più breve dalla colonia al cibo (la soluzione ottima) conterrà 
+viventi, utilizzata come segnalatore per gli individui riceventi 
+della stessa specie.} sul loro cammino. Tale traccia evapora con il tempo,
+ma il percorso più breve dalla colonia al cibo (la soluzione ottima) conterrà 
 sempre una quantit\`a maggiore di feromone, perch\`e il tempo richiesto dalle formiche
 per percorrerlo \`e minore. Questo implica che pi\`u formiche saranno attratte da
 quel percorso invece che da altri, rilasciando a loro volta feromoni che
-``rinforzeranno'' il percorso. In un certo senso, l'ammontare di feromoni su un cammino
-indica \emph{globalmente} quanto quel cammino sia buono per raggiungere l'obiettivo.
+``rinforzeranno'' il percorso. In breve, l'ammontare di feromoni su un cammino
+indica quanto tale cammino sia buono per raggiungere l'obiettivo.
 
 L'euristica si basa sull'astrazione di un agente, la ``formica'', che esplora
 in maniera stocastica lo spazio delle soluzioni, descritto come una sequenza di possibili scelte.
-A ogni iterazione dell'algoritmo, un certo numero di agenti viene istanziato;
-a ogni passo di scelta, ogni agente calcola tutte le possibili scelte e le ordina secondo un
-criterio che guida l'algoritmo nella ricerca della soluzione, man mano che si procede con
-le iterazioni. La regola per l'ordinamento della soluzione si basa su due euristiche:
+L'esplorazione viene eseguita in forma iterativa e si basa su una serie di
+``generazioni di formiche''. Una \emph{generazione} \`e composta da un
+numero $N$ di formiche, ognuna di esse esplora lo spazio di design e costruisce una soluzione.
+A ogni iterazione dell'algoritmo (corrispondente a una nuova generazione), un certo numero di agenti viene istanziato;
+ogni agente costruisce incrementalmente la soluzione, calcolando tutte le possibili scelte a ogni passo, e ordinandole secondo un
+criterio determinato da due euristiche:
 \begin{itemize}
   \item un'euristica \emph{locale}, che assegna un punteggio a una scelta dato
     lo stato corrente dell'esplorazione;
   \item un'euristica \emph{globale}, che realizza un modello per rappresentare il concetto
     di ``feromone'', applicato al problema corrente.
 \end{itemize}
-L'euristica locale permette all'agente, durante la costruzione della soluzione,
-di compiere una decisione informata riguardo alla scelta successiva, e integra conoscenze
-sul problema.
+L'euristica locale permette all'agente di compiere una decisione informata riguardo
+alla scelta successiva, e integra conoscenze sul problema.
 
-L'euristica globale, invece, permette di aggiornare la quantit\`a di feromoni
-ad ogni iterazione dell'algoritmo.
-In ottica stocastica, la quantità di feromone rappresenta la probabilità, per 
-ciascuna decisione, di giungere a una buona soluzione.
+L'euristica globale, invece, rappresenta l'astrazione del concetto di feromone,
+e determina quanto una scelta possa portare a una buona soluzione.
+Nell'algoritmo \ac{ACO} la quantità di feromone \`e rappresentata da una probabilità,
+associata a ciascuna decisione, che rappresenta quanto tale scelta permetta di giungere a una buona soluzione.
 All'inizio dell'algoritmo, la matrice dei feromoni è inizializzata con valori uniformi 
 (tutte le decisioni hanno uguale probabilità), e viene aggiornata dopo ogni
-iterazione esplorativa.
+iterazione esplorativa, reinforzando le scelte che hanno portato a buone soluzioni
+e penalizzando le altre.
 
-L'algoritmo \ac{ACO} implementa l'esplorazione in forma iterativa, sfruttando una
-serie di ``generazioni di formiche''. Una \emph{generazione} \`e composta da un
-numero $N$ di formiche, ognuna di esse esplora lo spazio di design e costruisce una soluzione
-utilizzando i medesimi valori della matrice dei feromoni. 
-Il criterio che stabilisce l'ordinamento delle scelte possibili, ad ogni passo decisionale,
-\`e rappresentato da una probabilit\`a, funzione della posizione corrente nel processo decisionale, 
-della destinazione da raggiungere, dell'euristica locale calcolata ogni volta 
-che la probabilità è generata e dell'euristica globale. La formula per il 
-calcolo della probabilità è la seguente:
+%L'algoritmo \ac{ACO} implementa l'esplorazione in forma iterativa, sfruttando una
+%serie di ``generazioni di formiche''. Una \emph{generazione} \`e composta da un
+%numero $N$ di formiche, ognuna di esse esplora lo spazio di design e costruisce una soluzione
+%utilizzando i medesimi valori della matrice dei feromoni. 
+%Il criterio che stabilisce l'ordinamento delle scelte possibili, ad ogni passo decisionale,
+%\`e rappresentato da una probabilit\`a, funzione della posizione corrente nel processo decisionale, 
+%della destinazione da raggiungere, dell'euristica locale calcolata ogni volta 
+%che la probabilità è generata e dell'euristica globale. La formula per il 
+%calcolo della probabilità è la seguente:
+Il criterio funzione dell'euristica locale e globale che permette all'agente di ordinare le possibili scelte
+\`e rappresentato da una probabilit\`a, calcolata nel seguente modo:
 \begin{equation}
  p_{x,y} = \frac{[\tau_{x,y}]^{\alpha}\cdot[\eta_{x,y}]^{\beta}}{\sum_{l \in 
 \Omega_{x}}[\tau_{x,l}]^{\alpha}\cdot[\eta_{x,l}]^{\beta}}
 \end{equation}
-dove $x$ è la posizione corrente nel processo decisionale, $y$ è la 
-destinazione della ricerca, $\eta$ è l'euristica locale legata al problema e 
+dove $x$ è il passo corrente nel processo decisionale, $y$ è la scelta candidata,
+$\eta$ è l'euristica locale legata al problema e 
 $\tau$ è l'euristica globale determinata dal feromone. $\alpha$ e $\beta$ 
 rappresentano i pesi che vengono dati alle due euristiche e che influenzano il 
 comportamento della formica nel processo decisionale. $\Omega_x$ è l'insieme che 
-contiene tutte le scelte possibili al passo corrente $x$. Alla fine di ogni generazione,
+contiene tutte le scelte possibili al passo corrente $x$.
+
+Alla fine di ogni generazione,
 soltanto un certo numero $K$ di formiche, con $K \leq N$, sono considerate per il rinforzo
 dell'euristica globale. Il rinforzo assegnato \`e proporzionale alla qualit\`a della soluzione,
 e la matrice dei feromoni viene aggiornata secondo la formula
@@ -382,7 +388,8 @@ tramite l'evaporazione anche le scelte migliori.
 \label{alg:aco}
 \end{algorithm}
 
-L'algoritmo \ref{alg:aco} riporta lo pseudo-codice dell'algoritmo di esplorazione.
+L'algoritmo \ref{alg:aco} riporta lo pseudo-codice dell'algoritmo di esplorazione
+realizzato in questo lavoro.
 Nel prossimo paragrafo si descrivono le euristiche utilizzate nel codice per effettuare
 l'esplorazione dello spazio delle soluzioni, tenendo in considerazione le riconfigurazioni.
 
@@ -402,6 +409,9 @@ $i \in S$ \`e calcolabile come
 \end{displaymath}
 dove $N$ \`e il numero di soluzioni della popolazione $S$.
 
+\`E importante notare che la scelta dei task \`e separata rispetto alla scelta del processing element e
+dell'implementazione; questo permette di ridurre la dimensione dello spazio delle scelte possibili,
+che esploderebbe nel caso si considerassero contemporaneamente le tre componenti in fase di scelta.
 Le probabilit\`a di selezione di un task e del relativo mapping sono calcolate alla riga 7 e alla riga
 13 del listato \ref{alg:aco}, rispettivamente.
 
@@ -410,32 +420,32 @@ La funzione per il calcolo della probabilit\`a di scelta associata a ogni task,
 \verb+taskHeuristic(+$T_i$\verb+)+, ordina i task le cui dipendenze sono gi\`a state
 considerate nei passi precedenti cercando di favorire quelli caratterizzati da una bassa
 \emph{mobilit\`a}.\footnote{Nel contesto di questo lavoro, ci si riferisce alla mobilit\`a di un
-  task come a una misura di quanto tale task sia ``vincolato'', ovvero quanto probabilmente
+  task come a una misura di quanto tale task sia ``vincolato'', ovvero quanto esso
 si colloca sul percorso critico dell'applicazione.}
 Allo stesso tempo, favorisce anche i task che eseguono pi\`u velocemente rispetto agli altri.
 
 Il valore dell'euristica locale per un task, prima di essere tradotto in probabilit\`a di
 selezione, \`e calcolato nel seguente modo:
 \begin{equation}
-  h_i = taskSpeed_i \cdot taskMobility_i
+  h_i = \text{taskSpeed}_i \cdot \text{taskMobility}_i
 \end{equation}
 I due fattori sono calcolati tramite le formule
 \begin{align*}
-  taskSpeed_i &= \frac{0.5}{avgExTime_i}\\
-  taskMobility_i &= (1 - \frac{1}{m_i})
+  \text{taskSpeed}_i &= \frac{0.5}{\text{avgExTime}_i}\\
+  \text{taskMobility}_i &= (1 - \frac{1}{m_i})
 \end{align*}
-dove $avgExTime_i$ \`e la media dei tempi di esecuzione di tutte le implementazioni del task
+dove $\text{avgExTime}_i$ \`e la media dei tempi di esecuzione di tutte le implementazioni del task
 e $m_i$ \`e la mobilit\`a del task, pi\`u alta se il task \`e poco vincolato e pi\`u bassa se il task
 \`e relativamente pi\`u vicino al percorso critico.
 
 Le probabilit\`a di scelta di ciascun task sono calcolate normalizzando i valori dell'euristica
 su tutti i task. I valori normalizzati sono basati sul prodotto di due fattori:
 \begin{equation}
-  p_i = \frac{localTerm_i \cdot globalTerm_i}{heuristicSum}
+  p_i = \frac{\text{localTerm}_i \cdot \text{globalTerm}_i}{\text{heuristicSum}}
 \end{equation}
-dove $localTerm_i$ \`e dato dall'elevamento a potenza del valore dell'euristica locale del
+dove $\text{localTerm}_i$ \`e dato dall'elevamento a potenza del valore dell'euristica locale del
 task per un parametro $\alpha_t \in (0,1)$, che rappresenta il peso dell'euristica locale
-nella probabilit\`a dei task; in maniera analoga, $globalTerm_i$ \`e dato dalla matrice globale dei feromoni,
+nella probabilit\`a dei task; in maniera analoga, $\text{globalTerm}_i$ \`e dato dalla matrice globale dei feromoni,
 anch'esso elevato a un parametro $\beta_t \in (0,1)$. Entrambi i parametri sono specificabili
 dall'utente prima dell'avvio dell'esplorazione.
 
@@ -473,9 +483,11 @@ Una volta raggiunto il limite del numero di generazioni, viene selezionata come
 soluzione finale la migliore tra quelle salvate al termine di ogni generazione.
 
 \subparagraph{Invocazione del tool di scheduling}
-Tra le varie metriche possibili, viene invocato il tool di scheduling, che opera sulla
-soluzione calcolata dalla formica corrente e ne restituisce il \emph{makespan} stimato,
-che verr\`a poi usato per il calcolo della funzione obiettivo. Il componente che gestisce lo scheduling
+L'algoritmo di esplorazione ammette diverse possibili metriche di valutazione
+di un mapping, che vengono utilizzate per il calcolo della funzione obiettivo
+oggetto dell'ottimizzazione. Il tool di scheduling, invocato a valle della fase di mapping, opera sulla
+soluzione calcolata dalla formica corrente e ne restituisce il \emph{makespan} stimato, per
+il calcolo della metrica corrispondente. Il componente che gestisce lo scheduling
 dei task \`e descritto nella prossima sezione.
 
 \subsection{Algoritmo di scheduling}
@@ -994,9 +1006,9 @@ base all'eventuale scarto se così non è, viene calcolata la priorità del task
 di computazione. La funzione di calcolo della priorità dei task di computazione 
 con implementazione software diventa quindi
 \begin{equation} \label{eq:softwarePriority}
- f=C*CPInfo
+  f=C*\text{CPInfo}
 \end{equation}
-dove $C$ rappresenta un parametro costante e $CPInfo$ le informazioni sul 
+dove $C$ rappresenta un parametro costante e $\text{CPInfo}$ le informazioni sul 
 percorso critico.
 
 \paragraph{Task con implementazione hardware}
@@ -1012,9 +1024,9 @@ l'istante al più presto nel quale il task può iniziare l'esecuzione;
 La funzione di calcolo della priorità risulta quindi diversa rispetto alla 
 \ref{eq:softwarePriority}, assumendo la forma
 \begin{equation} \label{eq:hardwarePriority}
- f=-A*EST - B*EFT + C*CPInfo
+  f=-A*\text{EST} - B*\text{EFT} + C*\text{CPInfo}
 \end{equation}
-dove $A$, $B$ e $C$ sono parametri fissati e $CPInfo$, $EST$ e $EFT$ sono le 
+dove $A$, $B$ e $C$ sono parametri fissati e $\text{CPInfo}$, $\text{EST}$ e $\text{EFT}$ sono le 
 tre metriche sopra elencate.
 
 Nei prossimi paragrafi viene descritto come si calcolano le tre metriche 
@@ -1037,9 +1049,9 @@ solamente task con scarto esattamente pari a $0$.
 Se, invece, lo scarto del task supera la soglia, si considera il logaritmo di 
 tale scarto. Il valore della cifra di merito è così calcolato:
 \begin{equation}
- CPInfo = \begin{cases}
-           MAX & \mbox{se } 0 \leq s \leq THRESHOLD\\
-           \frac{1}{log_2\left(s\right)} & \mbox{se } s > THRESHOLD
+  \text{CPInfo} = \begin{cases}
+    \text{MAX} & \mbox{se } 0 \leq s \leq \text{THRESHOLD}\\
+    \frac{1}{log_2\left(s\right)} & \mbox{se } s > \text{THRESHOLD}
           \end{cases}
 \end{equation}
 dove $s$ è lo scarto del task.
@@ -1050,9 +1062,9 @@ contare possibili conflitti nell'utilizzo dei componenti, è concettualmente
 uguale al tempo \emph{asap}, anch'esso calcolato nella fase di preprocessing 
 come lo scarto. Il valore della cifra di merito è così calcolato:
 \begin{equation}
- EST = \begin{cases}
-        0 & \mbox{se } asap = 0\\
-        log_2\left(asap\right) & \mbox{se } asap > 0
+  \text{EST} = \begin{cases}
+    0 & \mbox{se } \text{asap} = 0\\
+    log_2\left(\text{asap}\right) & \mbox{se } \text{asap} > 0
        \end{cases}
 \end{equation}
 Si è deciso di utilizzare il logaritmo in modo da non penalizzare 
@@ -1067,7 +1079,7 @@ stima asap del task, a cui viene sommato il tempo di esecuzione stimato.
 
 Il valore di questa metrica è così calcolato:
 \begin{equation}
- EFT = log_2\left(asap + eTime\right)
+  \text{EFT} = log_2\left(\text{asap} + \text{eTime}\right)
 \end{equation}
 Si noti che il caso in cui l'argomento del logaritmo abbia valore $0$ non è 
 gestito, poichè il tempo di esecuzione di un task di computazione è supposto 
@@ -1118,12 +1130,12 @@ maggiore priorità ai task critici.
 L'assegnamento del valore alla cifra di merito relativa al task critico, 
 delineato nella \ref{eq:softwarePriority}, viene sostituito con
 \begin{equation} \label{eq:newSoftwarePriority}
- CPInfo = \begin{cases}
-           MAX*df & \mbox{se } 0 \leq s \leq THRESHOLD\\
-           \frac{1}{log_2\left(s\right)} & \mbox{se } s > THRESHOLD
+  \text{CPInfo} = \begin{cases}
+    \text{MAX}*\text{df} & \mbox{se } 0 \leq s \leq \text{THRESHOLD}\\
+    \frac{1}{log_2\left(s\right)} & \mbox{se } s > \text{THRESHOLD}
            \end{cases}
 \end{equation}
-dove $df$ rappresenta il fattore di degrado.
+dove $\text{df}$ rappresenta il fattore di degrado.
 
 \paragraph{Priorità per task di comunicazione}
 La seconda tecnica utilizzata è una diversa assegnazione di priorità per alcuni 
@@ -1147,9 +1159,9 @@ regola speciale per il calcolo della priorità dei task di comunicazione di tipo
 \emph{WRITE} che precedono una riconfigurazione; per questi tipi di task, la 
 priorità è calcolata nel seguente modo:
 \begin{equation} \label{eq:writeBeforeRecPriority}
- f=-A*EST - B*EFT + C*CPInfo + EP
+  f=-A*\text{EST} - B*\text{EFT} + C*\text{CPInfo} + \text{EP}
 \end{equation}
-dove il termine aggiuntivo $EP$ rappresenta la priorità extra che viene 
+dove il termine aggiuntivo $\text{EP}$ rappresenta la priorità extra che viene 
 assegnata ai task. La formula \ref{eq:writeBeforeRecPriority} sostituisce la 
 \ref{eq:hardwarePriority} in questi casi.
 
