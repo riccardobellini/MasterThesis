@@ -1,4 +1,19 @@
 \chapter{Conclusioni}
 \label{chap:conclusioni}
 \vspace{1cm}
-Conclusioni e sviluppi futuri...
+In questo lavoro \`e stato proposto \emph{MapR}, una metodologia
+altamente automatizzata per la progettazione di \acs{MPSoC} riconfigurabili, che permette
+al progettista di valutare l'impatto della riconfigurazione durante la fase di design.
+Il lavoro oggetto della tesi combina euristiche sia per il design dell'architettura, che per
+le fasi di mapping e scheduling dell'applicazione da eseguire.
+
+Sono stati presentati i risultati relativi all'esecuzione degli algoritmi descritti
+nel capitolo \ref{chap:approccio}, che mostrano come la meta-euristica evolutiva basata
+su \ac{ACO} permetta di esplorare efficacemente lo spazio delle soluzioni,
+per fornire al designer una stima dell'impatto della riconfigurazione sul sistema finale.
+
+In questo lavoro \`e stata presentata soltanto la metrica relativa al makespan,
+calcolata da uno scheduler list-based che cerchi di sfruttare tecniche quali
+\emph{configuration prefetching} per mascherare l'overhead introdotto dalle
+riconfigurazioni e che consideri esplicitamente le comunicazioni da eseguire.
+
