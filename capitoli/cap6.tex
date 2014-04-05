@@ -44,6 +44,7 @@ La seconda \`e caratterizzata anche da processing element hardware \emph{statici
 sfruttare le potenzialit\`a della riconfigurazione, tuttavia \`e possibile mappare task in hardware.
 L'ultima architettura \`e caratterizzata dalla presenza di una o pi\`u aree riconfigurabili, in questo
 caso la riconfigurazione parziale dinamica pu\`o essere sfruttata da MapR.
+% TODO descrivere il numero di core delle architetture utilizzate
 
 
 \section{Risultati dell'esplorazione}
@@ -54,6 +55,7 @@ trovata nell'esplorazione corrente sono stati salvati per tutte le architetture.
 La funzione obiettivo dell'algoritmo di esplorazione utilizzata per questi esperimenti
 \`e basata solamente sulla stima del makespan calcolata dallo scheduler descritta nel
 capitolo \ref{chap:approccio}.
+% TODO descrivere i parametri di task graph for free utilizzati
 
 \begin{figure}[t]
  \begin{center}
@@ -64,7 +66,7 @@ capitolo \ref{chap:approccio}.
  \end{center}
 \end{figure}
 
-\subsection{Speedup rispetto a baseline software}
+\subsubsection{Speedup rispetto a baseline software}
 La figura \ref{fig:speedupBaseline} rappresenta lo speedup ottenuto utilizzando
 le architetture hardware statica e riconfigurabile rispetto alla baseline
 con implementazioni esclusivamente software, per tutti i task graph oggetto
@@ -78,6 +80,33 @@ al termine dell'esplorazione.
 Inoltre, si pu\`o vedere dalla figura che, con il crescere della dimensione dei task graph e
 conseguente scarsit\`a di risorse hardware, MapR riesce a sfruttare efficacemente la riconfigurazione
 parziale dinamica e a ottenere risultati migliori impiegando l'architettura riconfigurabile.
+
+\begin{figure}[t]
+ \begin{center}
+  \includegraphics[width=\textwidth]{./capitoli/figure/cap6/FPL_HWtasks.pdf}
+  \caption[Numero di task implementati in hardware.]{Numero di task implementati in hardware; dati relativi ai due template architetturali
+  che possono utilizzare la logica riconfigurabile.}
+  \label{fig:hardwareTask}
+ \end{center}
+\end{figure}
+
+\subsubsection{Mapping dei task}
+La figura \ref{fig:hardwareTask} rappresenta il numero di task che sono stati mappati
+dall'algoritmo di esplorazione su logica riconfigurabile.
+In questo caso sono stati considerati i due template architetturali che permettono
+l'utilizzo della logica riconfigurabile, dando piena libert\`a
+a MapR di decidere quanti e quali task mappare su core statici o regioni riconfigurabili del dispositivo.
+I risultati confermano quanto anticipato nel paragrafo precedente: al crescere del numero di
+task quando le risorse hardware sono scarse, in ottica di minimizzazione del makespan, la possibilit\`a di sfruttare
+la riconfigurazione parziale permette a MapR di spostare
+in hardware un maggior numero di task, sfruttando meglio l'area a disposizione; 
+
+Ad esempio, considerando l'ultimo task graph (50-4), MapR \`e riuscito ad ottenere uno speedup di
+$1,2\text{x}$ nel caso statico implementando 5 task in hardware; avendo a disposizione l'architettura
+riconfigurabile, lo speedup ottenuto \`e stato di $2\text{x}$ rispetto alla baseline software,
+spostando 21 task in hardware.
+
+
 \begin{figure}[t]
  \begin{center}
   \includegraphics[width=\textwidth]{./capitoli/figure/cap6/FPL_HWcores.pdf}
@@ -85,6 +114,8 @@ parziale dinamica e a ottenere risultati migliori impiegando l'architettura rico
   \label{fig:coreUtilizzati}
  \end{center}
 \end{figure}
+
+
 
 \begin{figure}[t]
  \begin{center}
@@ -94,15 +125,6 @@ parziale dinamica e a ottenere risultati migliori impiegando l'architettura rico
  \end{center}
 \end{figure}
 
-
-
-\begin{figure}[t]
- \begin{center}
-  \includegraphics[width=\textwidth]{./capitoli/figure/cap6/FPL_HWtasks.pdf}
-  \caption{Numero di task mappati su processing element statici e riconfigurabili.}
-  \label{fig:hardwareTask}
- \end{center}
-\end{figure}
 
 
 \begin{figure}[t]
