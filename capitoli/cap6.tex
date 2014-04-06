@@ -56,6 +56,7 @@ La funzione obiettivo dell'algoritmo di esplorazione utilizzata per questi esper
 \`e basata solamente sulla stima del makespan calcolata dallo scheduler descritta nel
 capitolo \ref{chap:approccio}.
 % TODO descrivere i parametri di task graph for free utilizzati
+% TODO descrivere i parametri dell'algoritmo di esplorazione utilizzati
 
 \begin{figure}[t]
  \begin{center}
@@ -117,6 +118,14 @@ spostando 21 task in hardware.
 La figura \ref{fig:coreUtilizzati} rappresenta invece il numero di core che caratterizzano
 l'architettura finale, per i due template con risorse hardware.
 
+\paragraph{Riconfigurazioni}
+La figura \ref{fig:numeroRiconfigurazioni} illustra il numero di riconfigurazioni
+eseguite per ciascun task graph. Come si pu\`o vedere dall'immagine, il numero
+di riconfigurazioni cresce al crescere della dimensione del task graph,
+fino a 16 (task graph 50-0); tuttavia, tali riconfigurazioni sono mascherate in maniera
+efficace dallo scheduler, e non portano a slowdown rispetto al template statico,
+come si pu\`o vedere in figura \ref{fig:speedupBaseline}.
+
 \begin{figure}[t]
  \begin{center}
   \includegraphics[width=\textwidth]{./capitoli/figure/cap6/FPL_Reconfs.pdf}
@@ -135,9 +144,58 @@ l'architettura finale, per i due template con risorse hardware.
  \end{center}
 \end{figure}
 
+\paragraph{Area Utilizzata}
+La figura \ref{fig:usoArea} rappresenta l'utilizzo dell'area
+riconfigurabile da parte di MapR, relativo al mapping migliore trovato durante
+l'esplorazione. L'area occupata dai mapping \`e normalizzata rispetto all'area totale.
+Si pu\`o vedere dalla figura come in quasi tutti i casi l'area occupata sia
+circa uguale all'area disponibile sul dispositivo, senza che si verifichino
+violazioni di vincoli.
 
 
-\begin{figure}[t]
+
+\subsection{Confronto a runtime}
+Per ciascun task graph utilizzato negli esperimenti sullo speedup rispetto alla baseline software
+e sul mapping dei task, \`e stato generato un runtime manager che gestisca lo scheduling dei task,
+seguendo le indicazioni dello scheduler, in particolare la fase di postprocessing, vista nella sezione
+\ref{subsec:fasePostprocessing}, in cui viene esplicitato l'ordine di scheduling dei task.
+
+Per la validazione del runtime manager e l'analisi degli overhead introdotti, rispetto alle stime
+illustrate nelle precedenti sezioni, sono stati realizzati dei core che implementano un contatore
+configurabile (per modellizzare il tempo di esecuzione dei task). I core sono stati creati utilizzando
+\emph{Vivado HLS} \cite{VivadoHLS}, i loro requisiti in termini di risorse riflettono quanto
+specificato dai task graph creati tramite \ac{TGFF}.
+
+Il sistema finale \`e stato realizzato connettendo manualmente i core generati con Vivado HLS,
+l'architettura target \`e una scheda ZedBoard con chip xc7z020-clg484, prodotto da Xilinx
+\cite{XilinxZC702}. Il chip sopraccitato \`e composto da un processore general-purpose dual-core
+ARM Cortex A9, e da una porzione di logica riconfigurabile collegata al processore.
+Il processore, che esegue il kernel di \emph{PetaLinux},\footnote{PetaLinux \`e una distribuzione
+Linux specifica per lo sviluppo e la progettazione di sistemi embedded.} gestisce
+sia il runtime-manager che i task dell'applicazione mappati su implementazioni software;
+la logica riconfigurabile \`e invece dedicata ai task con implementazioni hardware.
+
+\paragraph{Risultati ottenuti}
+I tempi di esecuzione relativi a ciascuna istanza di task graph sono stati raccolti e confrontati
+con le stime fornite al termine dell'esplorazione da MapR, allo scopo di rilevare l'overhead
+introdotto dalla gestione a runtime dell'applicazione; i risultati del confronto sono
+rappresentati in figura \ref{fig:speedupBaselineRuntime}.
+Come si pu\`o vedere dalla figura, gli speedup ottenuti sono diversi rispetto alle stime
+illustrate in figura \ref{fig:speedupBaseline}, tuttavia la distribuzione seguita \`e la stessa;
+questo perch\`e in fase di esplorazione MapR ha a disposizione le stime dei tempi di esecuzione
+dei task e delle riconfigurazioni, ma non \`e fornita nessuna informazione riguardo gli overhead
+introdotti dal meccanismo che gestisce l'esecuzione dell'applicazione sul dispositivo, a runtime.
+La soluzione ottenuta con il template riconfigurabile \`e comunque migliore, ma per istanze
+con un elevato numero di nodi gli speedup decrescono da $2\text{x}$ a $1,25\text{x}$ rispetto alla
+baseline software.
+
+In generale, pur migliorando la gestione a runtime e riducendo gli overhead introdotti da questa,
+non ci si pu\`o aspettare che i risultati stimati in fase di esplorazione siano uguali a quelli ottenuti
+dall'effettiva esecuzione sul dispositivo; i risultati ottenuti in fase di esplorazione rappresentano quindi
+un limite superiore al miglioramento delle performance che si pu\`o ottenere, il designer ha comunque il compito
+di valutare l'effettivo speedup introdotto.
+
+\begin{figure}[b]
  \begin{center}
   \includegraphics[width=\textwidth]{./capitoli/figure/cap6/FPL_Runtime.pdf}
   \caption{Speedup dell'architettura statica e riconfigurabile rispetto alla
@@ -145,3 +203,4 @@ l'architettura finale, per i due template con risorse hardware.
   \label{fig:speedupBaselineRuntime}
  \end{center}
 \end{figure}
+
