@@ -527,12 +527,14 @@ Il problema di fissare un mapping e uno schedule per i task di un'applicazione
 tale da minimizzare una determinata metrica, o un insieme di metriche nel caso
 di ottimizzazione multi-obiettivo) è un classico esempio di \ac{RCSP}; tale
 problema appartiene alla classe di complessità computazionale dei problemi
-NP-difficili (si veda l'appendice~\ref{chap:appA} per un riepilogo delle classi
-di complessità computazionale); per questo tipo di problemi non si è ancora
+$\mathcal{NP}$-difficili;\footnote{Un problema \`e $\mathcal{NP}$-difficile se la sua \emph{versione
+di riconoscimento} \`e $\mathcal{NP}$-completa. Il primo problema ad essere dimostrato
+$\mathcal{NP}$-completo \`e il problema di soddisfacibilit\`a booleana \cite{CookSAT}.} per questo tipo di problemi non si è ancora
 trovato un algoritmo \emph{esatto} che riesca a risolvere questo problema in
-tempo polinomiale, e si pensa che non ne esistano.\footnote{Si veda la
-  sezione~\ref{sec:complessitaProblemi} per una sintesi sulla congettura
-  $\mathcal{P} = \mathcal{NP}$.}
+tempo polinomiale, e si pensa che non ne esistano.\footnote{Se esistesse,
+varrebbe l'equivalenza $\mathcal{P} = \mathcal{NP}$. Questa congettura, non ancora
+dimostrata, \`e uno dei principali problemi non ancora risolti della teoria sulla
+complessit\`a computazionale \cite{GasarchPoll}.}
 
 Oltre a questo, un'altra difficoltà che si incontra è che il problema dello
 scheduling dei task non è indipendente dalla fase di partitioning/mapping; le
