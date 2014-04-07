@@ -394,7 +394,7 @@ Nel prossimo paragrafo si descrivono le euristiche utilizzate nel codice per eff
 l'esplorazione dello spazio delle soluzioni, tenendo in considerazione le riconfigurazioni.
 
 
-\subsubsection{Euristica per task e mapping}
+\subsubsection{Euristica per selezione di task e mapping}
 Come si pu\`o vedere nel listato \ref{alg:aco}, ogni formica di ogni generazione (righe 1-2)
 costruisce una soluzione, calcolando un possibile mapping, in maniera iterativa. In particolare,
 i task (riga 8)  e le possibili implementazioni e processing element su cui possono essere eseguiti
@@ -415,7 +415,7 @@ che esploderebbe nel caso si considerassero contemporaneamente le tre componenti
 Le probabilit\`a di selezione di un task e del relativo mapping sono calcolate alla riga 7 e alla riga
 13 del listato \ref{alg:aco}, rispettivamente.
 
-\subparagraph{Euristica per i task}
+\subparagraph{Euristica per la selezione del task}
 La funzione per il calcolo della probabilit\`a di scelta associata a ogni task,
 \verb+taskHeuristic(+$T_i$\verb+)+, ordina i task le cui dipendenze sono gi\`a state
 considerate nei passi precedenti cercando di favorire quelli caratterizzati da una bassa
@@ -449,7 +449,7 @@ nella probabilit\`a dei task; in maniera analoga, $\text{globalTerm}_i$ \`e dato
 anch'esso elevato a un parametro $\beta_t \in (0,1)$. Entrambi i parametri sono specificabili
 dall'utente prima dell'avvio dell'esplorazione.
 
-\subparagraph{Euristica per i mapping}
+\subparagraph{Euristica per la selezione del mapping}
 La probabilit\`a di scelta di un determinato mapping \`e calcolata dalla funzione
 \verb+mappingHeuristic(+$I_i, P_i$\verb+)+, che ordina tutte le possibili coppie
 $<$\emph{implementazione, processing element}$>$ tali che l'implementazione sia relativa
