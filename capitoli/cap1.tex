@@ -90,7 +90,7 @@ tra loro tramite BUS. Le architetture \ac{MPSoC} si dividono in due categorie:
 
 
 
-\section{Reconfigurable computing e introduzione ai flussi di sviluppo}
+\section{Sistemi riconfigurabili e introduzione ai flussi di sviluppo}
 \label{sec:reconfComp}
 L'integrazione introdotta nella precedente sezione tuttavia apre una serie di problemi nella progettazione
 di un \ac{MPSoC}, tra cui elevato costo di progettazione dei sistemi, bassa affidabilità e, ultimo
@@ -190,7 +190,7 @@ osservare che le architetture riconfigurabili offrono la possibilità di configu
 risorse per la computazione (\emph{configware}) sia gli algoritmi da eseguire
 (\emph{flowware}). 
 
-\subsubsection{Vantaggi del reconfigurable computing}
+\subsubsection{Vantaggi dei sistemi di calcolo riconfigurabili}
 L'utilizzo di architetture riconfigurabili garantisce un ciclo di sviluppo pi\`u rapido;
 \`e infatti possibile testare continuamente i componenti del sistema man mano che questo viene
 progettato. Questo consente di rilevare in anticipo eventuali errori o incongruenze rispetto alle
@@ -259,10 +259,8 @@ all'impiego dei diversi standard utilizzati per la cifratura e decifratura dei d
 maniera dinamica.
 
 
-\subsection{Introduzione ai flussi di sviluppo}
+\subsection{Introduzione ai flussi di sviluppo per sistemi riconfigurabili}
 \label{subsec:introFlussi}
-
-
 Nonostante gli indubbi vantaggi derivanti dall'utilizzo delle architetture riconfigurabili,
 allo stato attuale l'operazione di riconfigurazione di tutto o di parte del dispositivo \`e
 un'operazione onerosa e pu\`o introdurre un overhead nel tempo di esecuzione dell'applicazione;
@@ -326,8 +324,13 @@ Nella fase di \emph{partizionamento HW/SW} viene stabilito quali task verranno
 eseguiti in hardware e quali su un processore general-purpose, oltre ad assegnare le risorse computazionali ai vari task in
 base al partizionamento calcolato (fase di
 \emph{mapping}); in questa fase si effettua anche lo
-\emph{scheduling}.  Mapping e scheduling, oggetto del lavoro, verranno
-descritti nella prossima sezione.
+\emph{scheduling}. Le fasi di mapping e scheduling assumono particolare
+importanza nello sviluppo di \ac{MPSoC} riconfigurabili. Durante la fase di mapping,
+infatti, possono essere sfruttate le potenzialit\`a offerte dalla riconfigurazione,
+per eseguire diverse parti dell'applicazione sulla stessa porzione di logica riconfigurabile.
+La possibilit\`a di sfruttare la riconfigurazione fornisce quindi un grado di libert\`a aggiuntivo
+al designer, e allo stesso tempo, aumenta la complessit\`a dei problemi di mapping e scheduling.
+Queste fasi, oggetto del lavoro, verranno descritte nella prossima sezione.
 
 Dopo il partizionamento delle risorse vengono generati i sorgenti software per
 eseguire i task assegnati al processore general-purpose e i core hardware per i
