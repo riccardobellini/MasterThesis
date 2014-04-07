@@ -21,13 +21,6 @@ La metodologia proposta \`e stata valutata mediante l'esecuzione
 dell'algoritmo di esplorazione su un insieme di task graph,
 con diverse architetture di riferimento.
 
-I task graph usati come benchmark per la validazione del funzionamento di
-MapR sono stati generati utilizzando \ac{TGFF} \cite{tgff}, uno strumento per
-la generazione di task graph pseudo-casuali ampiamente utilizzato.
-I task graph cos\`i generati differiscono nel numero di nodi (task) e di implementazioni
-disponibili per ciascun task. Ogni implementazione \`e caratterizzata dai propri requisiti
-di area e tempo di esecuzione. Per effettuare i test sui benchmark \`e stato generato un insieme di 25 task graph da
-10, 20, 30, 40, 50 nodi (5 istanze per ogni numero di nodi).
 
 \begin{figure}[t]
   \begin{center}
@@ -41,10 +34,42 @@ Le architetture utilizzate
 sono rappresentate in figura \ref{fig:architettureTestSintetici}. La prima \`e un'architettura puramente
 software che serve da baseline; in questo caso il tool non pu\`o utilizzare risorse hardware.
 La seconda \`e caratterizzata anche da processing element hardware \emph{statici}, quindi MapR non pu\`o
-sfruttare le potenzialit\`a della riconfigurazione, tuttavia \`e possibile mappare task in hardware.
+sfruttare le potenzialit\`a della riconfigurazione, tuttavia \`e possibile mappare task in hardware;
+il numero massimo di core utilizzabili \`e specificabile dal designer, in questi test
+\`e stato impostato al numero massimo di task usati negli esperimenti.
 L'ultima architettura \`e caratterizzata dalla presenza di una o pi\`u aree riconfigurabili, in questo
 caso la riconfigurazione parziale dinamica pu\`o essere sfruttata da MapR.
-% TODO descrivere il numero di core delle architetture utilizzate
+
+
+I task graph usati come benchmark per la validazione del funzionamento di
+\mbox{MapR} sono stati generati utilizzando \ac{TGFF} \cite{tgff}, uno strumento per
+la generazione di task graph pseudo-casuali ampiamente utilizzato.
+I task graph cos\`i generati differiscono nel numero di nodi (task) e di implementazioni
+disponibili per ciascun task. Ogni implementazione \`e caratterizzata dai propri requisiti
+di area e tempo di esecuzione. Per effettuare i test sui benchmark \`e stato generato un insieme di 25 task graph da
+10, 20, 30, 40, 50 nodi (5 istanze per ogni numero di nodi). I parametri pi\`u importanti specificati
+nel file di configurazione di \ac{TGFF} per la generazione dei task graph sono indicati nella tabella
+\ref{tab:parametriTGFF}.
+
+\begin{table}[t]
+  \begin{center}
+  \begin{tabular}{|c|c|c|}
+    \hline
+    Nome & Descrizione & Valore\\
+    \hline
+    \emph{task\_cnt} & Numero task & Da 10 a 50\\
+    \hline
+    \emph{task\_degree} & Massimo numero di archi per task & 4\\
+    \hline
+    \emph{tg\_cnt} & Numero di TG da generare & 1\\
+    \hline
+  \end{tabular}
+  \caption{Parametri usati per la generazione di task graph con \acs{TGFF}.}
+  \label{tab:parametriTGFF}
+\end{center}
+\end{table}
+
+
 
 
 \section{Risultati dell'esplorazione}
@@ -55,7 +80,7 @@ trovata nell'esplorazione corrente sono stati salvati per tutte le architetture.
 La funzione obiettivo dell'algoritmo di esplorazione utilizzata per questi esperimenti
 \`e basata solamente sulla stima del makespan calcolata dallo scheduler descritta nel
 capitolo \ref{chap:approccio}.
-% TODO descrivere i parametri di task graph for free utilizzati
+
 % TODO descrivere i parametri dell'algoritmo di esplorazione utilizzati
 
 \begin{figure}[t]
