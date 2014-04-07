@@ -6,3 +6,10 @@ Generali: Attenzione, tradurre l'inglese in italiano per quanto possibile!!
 - Metodologia:
 - Implementazione:
 - Risultati:
+    o Esempio di run completo dell'algoritmo, con evoluzione dell'area e dei processing element
+    o Esempio di scheduling, con preprocessing e postprocessing
+- Sviluppi futuri:
+    o Possibilità di avere floorplanning con feedback, alla fine del run completo oppure
+    dopo una singola formichina, se esistesse un algoritmo veloce di floorplanning
+    o Più metriche!
+    o Generazione automatica dell'architettura target
