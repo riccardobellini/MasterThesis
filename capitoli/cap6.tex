@@ -55,7 +55,7 @@ nel file di configurazione di \ac{TGFF} per la generazione dei task graph sono i
   \begin{center}
   \begin{tabular}{|c|c|c|}
     \hline
-    Nome & Descrizione & Valore\\
+    \textbf{Nome} & \textbf{Descrizione} & \textbf{Valore}\\
     \hline
     \emph{task\_cnt} & Numero task & Da 10 a 50\\
     \hline
@@ -70,8 +70,6 @@ nel file di configurazione di \ac{TGFF} per la generazione dei task graph sono i
 \end{table}
 
 
-
-
 \section{Risultati dell'esplorazione}
 \label{sec:risultatiEsplorazione}
 Dopo aver generato i task graph con le modalit\`a descritte nella precedente
@@ -81,7 +79,39 @@ La funzione obiettivo dell'algoritmo di esplorazione utilizzata per questi esper
 \`e basata solamente sulla stima del makespan calcolata dallo scheduler descritta nel
 capitolo \ref{chap:approccio}.
 
-% TODO descrivere i parametri dell'algoritmo di esplorazione utilizzati
+I parametri relativi all'algoritmo di esplorazione sono indicati nella tabella \ref{tab:parametriACO}.
+Il numero di formiche sopravvissute si riferisce a quante soluzioni tra quelle calcolate dalla generazione
+vengono utilizzate per il rinforzo della matrice dei feromoni. I parametri $\alpha$ e $\beta$
+rappresentano i pesi dati alle euristiche locali e globali dei task e dei possibili mapping.
+
+
+\begin{table}[t]
+  \begin{center}
+    \begin{tabular}{|c|c|}
+      \hline
+      \textbf{Nome} & \textbf{Valore}\\
+      \hline
+      Numero iterazioni & 100\\
+      \hline
+      Formiche per generazione & 20\\
+      \hline
+      Formiche sopravvissute & 2\\
+      \hline
+      Massimo incremento area \% & $25\%$\\
+      \hline
+      $\alpha_t$ & $0,9$\\
+      \hline
+      $\beta_t$ & $0,1$\\
+      \hline
+      $\alpha_{pi}$ & $0,9$\\
+      \hline
+      $\beta_{pi}$ & $0,1$\\
+      \hline
+    \end{tabular}
+    \caption{Parametri usati per l'algoritmo di esplorazione.}
+    \label{tab:parametriACO}
+  \end{center}
+\end{table}
 
 \begin{figure}[t]
  \begin{center}
