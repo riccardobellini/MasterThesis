@@ -65,9 +65,9 @@ e sono rilevanti per il lavoro oggetto della tesi.
 È stata scelta la seguente convenzione per nominare i dati membro o i metodi 
 delle strutture/classi:
 \begin{itemize}
- \item nomi di dati membro o metodi aventi specificatore di accesso 
+ \item dati membro o metodi aventi specificatore di accesso 
 \verb+public+ o \verb+protected+ sono scritti normalmente;
- \item nomi di dati membro o metodi aventi specificatore di accesso 
+ \item dati membro o metodi aventi specificatore di accesso 
 \verb+private+ sono scritti aggiungendo la stringa ``\verb+m_+'' come prefisso.
 \end{itemize}
 
@@ -230,7 +230,7 @@ dello scheduling.
 
 \subsubsection{Scheduler Utility}
 I file \emph{schedulerUtility.hpp} e \emph{schedulerUtility.cpp}, infine, 
-contengono la definizione di alcune strutture comunemente utilizzate dallo 
+contengono la definizione di alcune strutture utilizzate dallo 
 scheduler.
 
 La struttura \verb+TaskTimes+ incapsula gli istanti di inizio e fine di un task.
@@ -424,20 +424,20 @@ L'obiettivo di questa sezione è presentare le porzioni più importanti del
 codice dell'algoritmo di scheduling. Le interfacce di input/output e le 
 strutture dati utilizzate sono già state descritte nella sezione 
 \ref{subsec:struttureDatiScheduler}, mentre in questa sezione verranno esaminati i 
-vari componenti dello scheduler che gestiscono l'elaborazione.
+componenti dello scheduler che gestiscono l'elaborazione.
 
 Il codice sorgente dell'algoritmo di scheduling è contenuto nella cartella 
 \emph{toolchain/sources/scheduler}; la sua struttura rispecchia quella 
-dell'algoritmo di esplorazione, come verrà spiegato nelle prossime sezioni per 
-l'esame dei componenti dello scheduler. Tutte le classi che compongono 
-sono incluse nel namespace \verb+faster::applications::scheduler+.
+dell'algoritmo di esplorazione, e le classi che ne implementano
+le funzionalit\`a sono incluse nel namespace \verb+scheduler+,
+contenuto in \verb+faster::applications+.
 
 \subsubsection{Componente di scheduling}
 La sottocartella \emph{schedule} contiene la dichiarazione e definizione di
 \verb+Schedule+, una classe astratta che espone un metodo virtuale puro per il 
 calcolo dello scheduling. In questo modo è possibile utilizzare algoritmi 
-completamente differenti semplicemente creando una nuova sottoclasse di 
-\verb+Schedule+ che implementa il metodo \verb+computeSchedule()+.
+alternativi semplicemente creando una nuova sottoclasse di 
+\verb+Schedule+ che implementi il metodo \verb+computeSchedule()+.
 \newline
 % FIXME perchè c'è m_explorerInput dentro???
 \begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
@@ -455,25 +455,7 @@ mathescape]{c}
 
 La sottoclasse che implementa lo scheduler seguendo l'approccio descritto nel capitolo 
 \ref{chap:approccio}, è chiamata \verb+ScheduleRB+ ed è contenuta nella 
-sottocartella \emph{schedule/scheduleComponents}. Nel seguente frammento 
-vengono riportate le parti rilevanti della dichiarazione della classe, con 
-l'inclusione dei vari componenti.
-\newline
-\begin{minted}[baselinestretch=1,frame=single,fontsize=\footnotesize,gobble=2,
-mathescape]{c}
-  class ScheduleRB : public Schedule {
-    private:
-      SchedulerInput m_schedulerInput;
-      SchedulerBestSchedulableTaskAlgorithmPtr m_bestSchedulableAlgorithm;
-      SchedulerTimeAssignmentAlgorithmPtr m_timeAssignmentAlgorithm;
-      data::SchedulerData m_schedulerData;
-      // code...
-    public:
-      // code...
-      virtual SchedulerOutput computeSchedule(
-              const explorer::ExplorerTrace & trace);
-  };
-\end{minted}
+sottocartella \emph{schedule/scheduleComponents}.
 
 Viene di seguito presentato il core loop dell'algoritmo di scheduling.
 \newline
@@ -602,9 +584,8 @@ struttura \verb+PriorityMetrics+, che contiene le tre metriche utilizzate per
 il calcolo della priorità di un task.
 
 All'interno della classe che implementa l'euristica si trovano invece i 
-parametri (pesi) assegnati alle varie metriche e il boost di priorità assegnato 
-ai task di comunicazione di tipo \emph{WRITE} che precedono una 
-riconfigurazione, nella enum \verb+PriorityFunctionParameters+. Il dato membro 
+parametri (pesi) assegnati alle varie metrichee, nella enum \verb+PriorityFunctionParameters+.
+Il dato membro 
 \verb+m_decayFactor+ rappresenta il fattore di degrado che riduce la cifra di 
 merito corrispondente alle informazioni sul percorso critico.
 
