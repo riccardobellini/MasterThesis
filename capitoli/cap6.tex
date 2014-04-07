@@ -69,7 +69,7 @@ nel file di configurazione di \ac{TGFF} per la generazione dei task graph sono i
     \hline
     \emph{task\_degree} & Massimo numero di archi per task & 4\\
     \hline
-    \emph{tg\_cnt} & Numero di TG da generare & 1\\
+    \emph{tg\_cnt} & Numero di task graph da generare & 1\\
     \hline
   \end{tabular}
   \caption{Parametri usati per la generazione di task graph con \acs{TGFF}.}
@@ -154,7 +154,7 @@ parziale dinamica e a ottenere risultati migliori impiegando l'architettura rico
  \end{center}
 \end{figure}
 
-\subsection{Mapping dei task}
+\subsection{Dati relativi al mapping dei task}
 La figura \ref{fig:hardwareTask} rappresenta il numero di task che sono stati mappati
 dall'algoritmo di esplorazione su logica riconfigurabile.
 In questo caso sono stati considerati i due template architetturali che permettono
@@ -207,7 +207,7 @@ come si pu\`o vedere in figura \ref{fig:speedupBaseline}.
  \end{center}
 \end{figure}
 
-\paragraph{Area Utilizzata}
+\paragraph{Area utilizzata}
 La figura \ref{fig:usoArea} rappresenta l'utilizzo dell'area
 riconfigurabile da parte di MapR, relativo al mapping migliore trovato durante
 l'esplorazione. L'area occupata dai mapping \`e normalizzata rispetto all'area totale.
@@ -235,7 +235,7 @@ l'architettura target \`e una scheda ZedBoard con chip xc7z020-clg484, prodotto 
 ARM Cortex A9, e da una porzione di logica riconfigurabile collegata al processore.
 Il processore, che esegue il kernel di \emph{PetaLinux},\footnote{PetaLinux \`e una distribuzione
 Linux specifica per lo sviluppo e la progettazione di sistemi embedded.} gestisce
-sia il runtime-manager che i task dell'applicazione mappati su implementazioni software;
+sia il runtime manager che i task dell'applicazione mappati su implementazioni software;
 la logica riconfigurabile \`e invece dedicata ai task con implementazioni hardware.
 
 \paragraph{Risultati ottenuti}
