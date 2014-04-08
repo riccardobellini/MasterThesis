@@ -24,7 +24,7 @@ In questa sezione vengono descritti i tipi di riconfigurazione e viene introdott
 la nozione di \emph{dimensione} della riconfigurazione. L'ultima parte della sezione
 spiega brevemente come avviene il processo di riconfigurazione di un chip \ac{FPGA}.
 \subsubsection{Tipi di riconfigurazione}
-Inizialmente, il reconfigurable computing veniva utilizzato per realizzare prototipi
+Inizialmente, i sistemi riconfigurabili venivano utilizzati per realizzare prototipi
 economici di soluzioni hardware, mentre oggigiorno non \`e raro trovare in commercio
 controllori basati su \ac{FPGA}. I continui progressi tecnologici hanno portato infatti
 a un'evoluzione della fase di riconfigurazione: le possibilit\`a di usufruire della
@@ -41,13 +41,14 @@ I vari tipi di riconfigurazione sono i seguenti:
 interrompendo temporaneamente l'esecuzione dell'applicazione;
         \item \emph{dinamica}, in inglese \acf{DPR}: parte della logica
 può essere riconfigurata tramite un bitstream parziale, senza interrompere i task in
-esecuzione su altre regioni del dispositivo.
+esecuzione su altre regioni del dispositivo \cite{DPRInFPGA}.
     \end{enumerate}
 \end{itemize}
 L'utilizzo della riconfigurazione parziale dinamica rappresenta il motivo per cui le
 architetture riconfigurabili possono adattarsi in maniera dinamica al carico di lavoro richiesto,
 oppure a sopperire a eventuali guasti o ancora a poter eseguire applicazioni pi\`u complesse
-senza che il requisito in termini di area del \emph{die} aumenti.
+senza che il requisito in termini di area del \emph{die} aumenti. Tutti i chip \ac{FPGA} moderni
+offrono la possibilit\`a di essere riconfigurati dinamicamente.
 
 \begin{figure}[t]
  \begin{minipage}[b]{0.4\textwidth}
@@ -100,7 +101,8 @@ riconfigurazione parziale dinamica, il bitstream può essere di due tipi:
 
 La configurazione avviene per mezzo di interfacce, che variano a seconda dell'\ac{FPGA}
 che si utilizza: un'interfaccia può essere basata su microcontrollori, sul caricamento
-della configurazione da schede compact flash, su un \ac{ICAP}, etc.
+della configurazione da schede compact flash, su un \ac{ICAP}
+\cite{ReconfigurableSystemDesignVerification}, etc.
 
 A prescindere dal tipo di interfaccia utilizzato, il dispositivo possiede una
 \emph{logica di configurazione}, che interpreta il bitstream per poter configurare
@@ -132,7 +134,7 @@ raggiungere gli obiettivi prefissati.
 
 \subsection{Introduzione}
 \label{subsec:fasterIntro}
-\acs{FASTER} è l'acronimo di \emph{\acl{FASTER}}, un progetto\footnote{Sito del 
+\acs{FASTER} \cite{FasterFactsheet} è l'acronimo di \emph{\acl{FASTER}}, un progetto\footnote{Sito del 
 progetto: \url{http://www.fp7-faster.eu/}.} organizzato dalla comunità europea 
 che coinvolge diverse aziende e atenei,\footnote{I collaboratori del progetto 
 sono: l'\ac{ICS} di \ac{FORTH} in Grecia, Chalmers University of Technology in 
@@ -271,7 +273,7 @@ L'approccio adottato da \ac{FASTER} prevede che i vari componenti del framework
 si interfaccino tra loro mediante l'uso di file XML. L'input di un progetto
 \ac{FASTER} è costituito dall'applicazione da sintetizzare, che può essere
 scritta in un linguaggio ad alto livello (ad esempio il linguaggio C) e
-provvista di annotazioni, ad esempio in formato OpenMP,\footnote{OpenMP è un
+provvista di annotazioni, ad esempio in formato OpenMP \cite{UsingOpenMP},\footnote{OpenMP è un
   formato standard per la specifica di applicazioni parallele, che permette di
   specificare quali funzioni di un'applicazione sono parallelizzabili e di
 suddividere l'applicazione nei vari task.} che ne consentono la suddivisione
