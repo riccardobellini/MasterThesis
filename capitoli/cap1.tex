@@ -9,10 +9,10 @@ La sezione \ref{sec:introSoC} fornisce una panoramica introduttiva del contesto 
 inquadra l'argomento della tesi, illustrando i concetti di \emph{\acl{SoC}} e
 \emph{\acl{MPSoC}} e il vantaggio che deriva in termini di rapporto prestazioni/costi.
 
-La sezione \ref{sec:reconfComp} introduce il concetto di \emph{reconfigurable computing},
+La sezione \ref{sec:reconfComp} introduce il concetto di \emph{sistemi riconfigurabili},
 e mostra come le architetture hardware possono effettivamente beneficiare dell'impiego
 di questa tecnica per soddisfare i requisiti di performance; viene inoltre presentata
-la struttura di un generico flusso di sviluppo per \acs{MPSoC}.
+la struttura di un generico flusso di sviluppo per \acs{MPSoC} riconfigurabili.
 
 La sezione \ref{sec:definizioneProblema} descrive il problema del \emph{mapping} e dello
 \emph{scheduling} di un'applicazione su architetture riconfigurabili; particolare
@@ -27,18 +27,18 @@ e tuttora oggetto di ricerca non solamente in ambito informatico.
 Il continuo aumento delle performance richieste ai sistemi informatici ha portato alla necessit\`a
 di trovare nuove soluzioni per aumentare le prestazioni dei processori. Negli ultimi anni si \`e
 assistito a un drastico cambiamento del paradigma di computazione, segnato dal progressivo passaggio
-dalle architetture single-core a quelle multi-core.
+dalle architetture single-core a quelle multi-core \cite{SingleCoreToMultiCore}.
 
 La versione semplificata della famosa osservazione empirica enunciata da Gordon Moore, secondo la quale
 si assiste a un raddoppio della velocit\`a e delle prestazioni dei processori ogni due anni, non \`e
-pi\`u valida: mentre negli anni '70 la frequenza di clock di un processore \`e passata da 740 KHz a
-8 MHz, nella prima decade del nuovo millennio essa \`e poco pi\`u che raddoppiata, passando da 1.3 GHz
-a 2.8 GHz. Dal 2006 Intel, AMD, IBM e altri produttori hardware non sono riusciti a produrre
+pi\`u valida: mentre negli anni '70 la frequenza di clock di un processore Intel \`e passata da 108 KHz a
+5 MHz, nella prima decade del nuovo millennio essa \`e passata da 1.5 GHz
+a 3.8 GHz \cite{IntelTimeline}. Dal 2006 Intel, AMD, IBM e altri produttori hardware non sono riusciti a produrre
 processori pi\`u veloci perch\'e il chip subiva un eccessivo surriscaldamento.
 
 Malgrado ci\`o, la versione originale dell'enunciato di Moore \`e ancora valida, e il numero di transistor
 all'interno di un processore effettivamente continua a raddoppiare circa ogni due anni, grazie ai continui progressi
-nel loro processo di fabbrica. Ad esempio, nel decennio 2000-2009, il numero di transistor all'interno di
+nel loro processo di fabbrica \cite{MooreLawPastPresentFuture}. Ad esempio, nel decennio 2000-2009, il numero di transistor all'interno di
 un processore \`e passato da 37,5 milioni a 904 milioni, e Haswell, l'ultima microarchitettura Intel
 rilasciata nel 2013, \`e ottenuta mediante processo produttivo a 22 nm.
 A titolo esemplificativo, la tabella \ref{tab:processoProduttivo} illustra il processo produttivo utilizzato per
@@ -54,7 +54,7 @@ Particolare importanza alla luce di questi progressi tecnologici assumono i \ac{
 caratterizzati non soltanto da un microprocessore (multi-core, contrariamente ai \ac{SoC} \cite{SoCBook}, caratterizzati
 da un processore single-core), ma anche da varie unit\`a funzionali quali
 blocchi di memoria, connettori per interfacce USB, FireWire, Ethernet e altre periferiche, collegati
-tra loro tramite BUS. Le architetture \ac{MPSoC} si dividono in due categorie:
+tra loro tramite BUS. Le architetture \ac{MPSoC} si dividono in due categorie \cite{IntroMPSoCTrendsChallenges}:
 \begin{itemize}
   \item omogenee, quando gli elementi processanti sono tutti di un unico tipo, ad esempio un processore
     multi-core;
@@ -95,12 +95,13 @@ tra loro tramite BUS. Le architetture \ac{MPSoC} si dividono in due categorie:
 L'integrazione introdotta nella precedente sezione tuttavia apre una serie di problemi nella progettazione
 di un \ac{MPSoC}, tra cui elevato costo di progettazione dei sistemi, bassa affidabilità e, ultimo
 ma non meno importante, necessità di controllare il consumo di energia; uno dei metodi che 
-permette di risolvere i problemi sopra citati  \`e il \emph{reconfigurable computing}.
+permette di risolvere i problemi sopra citati  \`e l'utilizzo dei \emph{sistemi riconfigurabili}.
 
-Con il termine \emph{reconfigurable computing} si intendono delle architetture hardware che 
+Con il termine \emph{sistemi riconfigurabili} si intendono delle architetture hardware che 
 offrono la possibilità di essere riconfigurate per implementare qualsiasi funzionalità 
 l'utente desideri. Elementi computazionali composti da logica riconfigurabile possono essere integrati in un
-\ac{MPSoC}. Le caratteristiche e il fondamento logico alla base delle architetture riconfigurabili,
+\ac{MPSoC} \cite{EmbeddedReconfigurableArchitectures}. Le caratteristiche e il fondamento logico alla
+base delle architetture riconfigurabili,
 oltre ai vantaggi che conseguono dal loro utilizzo sono descritte nelle prossime sezioni.
 
 \subsection{Da von Neumann alle architetture riconfigurabili}
@@ -108,7 +109,7 @@ oltre ai vantaggi che conseguono dal loro utilizzo sono descritte nelle prossime
 In questa sezione vengono illustrati i due principali modelli concettuali di architettura
 informatica convenzionalmente trattati: il modello \emph{general-purpose} e il modello
 \emph{application-specific}. Vengono presentati pregi e difetti di ciascuna architettura
-e viene spiegato come il reconfigurable computing cerchi di combinare i vantaggi di
+e viene spiegato come i sistemi riconfigurabili cerchino di combinare i vantaggi di
 entrambe.
 
 \subsubsection{Il modello general-purpose}
@@ -130,7 +131,8 @@ Mentre il modello visto nella sezione precedente consente di avere una maggiore
 flessibilità a discapito però delle prestazioni che può fornire, il modello
 application-specific si posiziona all'estremo opposto rispetto al primo: è infatti
 caratterizzato da elevate prestazioni e da un basso consumo di potenza. Questo modello
-computazionale viene realizzato mediante l'impiego di componenti chiamati \acp{ASIC},
+computazionale viene realizzato mediante l'impiego di componenti chiamati \acp{ASIC}
+\cite{ASICMicroprocessors},
 dei circuiti integrati progettati per svolgere un'unica funzionalità. Questo guadagno
 in prestazioni comporta tuttavia uno svantaggio in termini di costi di produzione e,
 naturalmente, una minore flessibilità.
@@ -144,14 +146,15 @@ una nuova metodologia di design per lo sviluppo rapido di \ac{ASIC} ad alte pres
 partendo da specifiche di algoritmi ad alto livello \cite{HartensteinNovelASICDesign};
 questa metodologia è basata su un nuovo paradigma di macchina sequenziale, chiamata da
 Hartenstein \emph{anti macchina}\footnote{Così definita per le sue differenze rispetto al
-più convenzionale modello di von Neumann.} o \emph{Xputer}.\footnote{Il termine
+più convenzionale modello di von Neumann.} o \emph{Xputer} \cite{HartensteinNovelASICDesign}.\footnote{Il termine
 \emph{Xputer} ha origine dalla necessità dei suoi ideatori di rimpiazzare le prime tre
 lettere della parola ``computer'' con un altro prefisso. Non trovandone uno, è stato
 deciso che queste lettere fossero rimpiazzate dalla lettera ``x''.}
 
 La principale caratteristica che la differenzia rispetto all'architettura di von Neumann è
 l'essere guidata da flussi di dati (data-streams) piuttosto che da flussi di istruzioni
-(instruction-streams), idea alla base degli \emph{array sistolici}.\footnote{Negli array
+(instruction-streams), idea alla base degli \emph{array sistolici}
+\cite{SystolicArraysConceptImplementation}.\footnote{Negli array
 sistolici la computazione è affidata a una matrice di \acp{DPU} invece che a \acsp{CPU}
 (dalle quali si differenziano per la mancanza di un program counter). La computazione
 avviene tramite il trasporto dei dati, che vengono scritti nelle \emph{triggering ports}
@@ -183,7 +186,7 @@ delle \acp{DPU}.}
  \end{center}
 \end{table}
 
-Le differenze tra il paradigma del reconfigurable computing e gli altri paradigmi di
+Le differenze tra il paradigma dei sistemi riconfigurabili e gli altri paradigmi di
 computazione sono illustrati da Nick Tredennick nella
 tabella~\ref{tab:TredennickClassificationScheme} \cite{TredennickClassification}: si può
 osservare che le architetture riconfigurabili offrono la possibilità di configurare sia le
