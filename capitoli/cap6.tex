@@ -20,6 +20,10 @@ tempo di esecuzione dell'applicazione. Vengono descritti grafici relativi
 al mapping dei task, numero di core e area utilizzata, oltre a un confronto
 dell'applicazione dopo l'esecuzione effettiva su un dispositivo.
 
+Infine, la sezione \ref{sec:statisticheEsplorazione} mostra i grafici relativi
+alle statistiche ottenute al termine dell'esecuzione dell'algoritmo di esplorazione,
+oltre alle modifiche al task graph introdotte dallo scheduler.
+
 \newpage
 
 \section{Ambiente di test}
@@ -258,7 +262,7 @@ dall'effettiva esecuzione sul dispositivo; i risultati ottenuti in fase di esplo
 un limite superiore al miglioramento delle performance che si pu\`o ottenere, il designer ha comunque il compito
 di valutare l'effettivo speedup introdotto.
 
-\begin{figure}[b]
+\begin{figure}[t]
  \begin{center}
   \includegraphics[width=\textwidth]{./capitoli/figure/cap6/FPL_Runtime.pdf}
   \caption{Speedup dell'architettura statica e riconfigurabile rispetto alla
@@ -267,3 +271,118 @@ di valutare l'effettivo speedup introdotto.
  \end{center}
 \end{figure}
 
+
+\section{Statistiche dell'esplorazione e task graph}
+\label{sec:statisticheEsplorazione}
+Questa sezione mostra i grafici relativi alle statistiche dell'esecuzione dell'algoritmo
+di esplorazione e come un task graph viene modificato
+in fase di scheduling. Durante l'esecuzione, l'algoritmo colleziona dati rilevanti, tra cui i valori della
+funzione obiettivo e i makespan calcolati dallo scheduler per la rispettiva metrica. I grafici sull'andamento
+delle statistiche sono descritti nella sezione \ref{subsec:graficiStatistiche},
+l'esempio di task graph modificato \`e descritto nella sezione \ref{subsec:modificheTaskGraph}.
+
+\subsection{Grafici delle statistiche}
+\label{subsec:graficiStatistiche}
+L'algoritmo di esplorazione \`e stato eseguito su un'istanza di un task graph
+con 10 nodi. I dati relativi all'andamento della migliore funzione obiettivo trovata
+nel corso delle 100 iterazioni sono illustrati in figura \ref{fig:andamentoMiglioreObiettivo}.
+Come si pu\`o vedere dalla figura, il valore della funzione obiettivo migliore segue un andamento crescente,
+perch\`e l'algoritmo tende alla massimizzazione dell'obiettivo.
+
+\begin{figure}[tb]
+ \begin{center}
+  \includegraphics[width=\textwidth]{./capitoli/figure/cap6/bestObjective.pdf}
+  \caption{Andamento della migliore funzione obiettivo, in funzione del numero
+  di iterazioni.}
+  \label{fig:andamentoMiglioreObiettivo}
+ \end{center}
+\end{figure}
+
+Il grafico che illustra l'andamento del miglior makespan trovato, in funzione del numero
+di iterazioni, \`e rappresentato in figura \ref{fig:andamentoMigliorMakespan}.
+Poich\'e la funzione obiettivo \`e calcolata in base al makespan, secondo la formula
+\begin{displaymath}
+ z = \frac{1}{\text{makespan}}
+\end{displaymath}
+a un miglioramento del makespan corrisponde una crescita del valore della funzione obiettivo.
+\`E possibile notare questa corrispondenza confrontando i due grafici \ref{fig:andamentoMiglioreObiettivo}
+e \ref{fig:andamentoMigliorMakespan}.
+
+\begin{figure}[tb]
+ \begin{center}
+  \includegraphics[width=\textwidth]{./capitoli/figure/cap6/bestClock.pdf}
+  \caption{Andamento del miglior makespan, in funzione del numero
+  di iterazioni.}
+  \label{fig:andamentoMigliorMakespan}
+ \end{center}
+\end{figure}
+
+\subsection{Modifiche al task graph}
+\label{subsec:modificheTaskGraph}
+L'algoritmo di esplorazione \`e stato eseguito con una semplice istanza
+di task graph da 5 nodi, rappresentato in figura \ref{fig:originalTG}.
+Al termine dell'esplorazione, sono stati salvati il mapping corrispondente alla soluzione
+migliore e i task graph modificati dall'algoritmo di scheduling, come descritto nella
+fase di preprocessing e postprocessing nel capitolo \ref{chap:approccio}.
+Il mapping corrispondente alla soluzione migliore \`e rappresentato nella tabella
+\ref{tab:bestMapping}.
+
+\begin{table}[tb]
+ \begin{center}
+  \begin{tabular}{|c|c|c|}
+   \hline
+   \textbf{Task} & \textbf{Processing element} & \textbf{Implementazione}\\
+   \hline
+   t0\_0 & r\_18 & FPGA\_47\\
+   \hline
+   t0\_1 & arm0 & ARM\_19\\
+   \hline
+   t0\_2 & r\_41 & FPGA\_20\\
+   \hline
+   t0\_3 & r\_33 & FPGA\_49\\
+   \hline
+   t0\_4 & r\_29 & FPGA\_46\\
+   \hline
+  \end{tabular}
+  \caption{Mapping corrispondente alla miglior soluzione.}
+  \label{tab:bestMapping}
+ \end{center}
+\end{table}
+
+In figura \ref{fig:processedTG} \`e rappresentato il task graph modificato dalla fase
+di preprocessing dell'algoritmo di scheduling, secondo il mapping definito nella tabella
+\ref{tab:bestMapping}. Non essendoci bisogno di eseguire riconfigurazioni,\footnote{Difatti
+dal mapping si pu\`o vedere che ogni task \`e mappato su un diverso processing element.}
+il task graph preprocessato contiene soltanto i task di comunicazione.
+
+Una volta eseguito lo scheduling dei task, l'ordine viene esplicitato
+e il task graph viene modificato, come illustrato in figura \ref{fig:finalTG}.
+Questo task graph contiene anche le precedenze che definiscono l'ordine di scheduling;
+ad esempio, il task \emph{WRITE\_t0\_0\_t0\_2} viene selezionato per lo scheduling prima del task
+\emph{READ\_t0\_0\_t0\_1}. Il task graph cos\`i modificato pu\`o essere elaborato da un runtime
+manager che gestisca l'avvio dei task rispettando l'ordine definito in fase di scheduling.
+
+\begin{figure}[t]
+ \begin{center}
+  \includegraphics[height=0.4\textheight]{./capitoli/figure/cap6/TaskGraph.pdf}
+  \caption{Task graph originale dell'applicazione.}
+  \label{fig:originalTG}
+ \end{center}
+\end{figure}
+
+
+\begin{figure}[t]
+ \begin{center}
+  \includegraphics[height=0.85\textheight]{./capitoli/figure/cap6/ProcessedTaskGraph.pdf}
+  \caption{Task graph dopo la fase di preprocessing.}
+  \label{fig:processedTG}
+ \end{center}
+\end{figure}
+
+\begin{figure}[t]
+ \begin{center}
+  \includegraphics[height=\textheight]{./capitoli/figure/cap6/FinalTaskGraph.pdf}
+  \caption{Task graph dopo l'esplicitazione dell'ordine di scheduling.}
+  \label{fig:finalTG}
+ \end{center}
+\end{figure}
