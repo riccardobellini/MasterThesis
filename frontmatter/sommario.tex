@@ -3,7 +3,7 @@
 \vspace{0.5cm}
 Sfruttare efficacemente le potenzialit\`a offerte dall'utilizzo di hardware riconfigurabile
 \`e tuttora un compito impegnativo, a causa del lungo processo di design di questi sistemi,
-con un alto rischio di errori: la mancanza di metodologie che facilitino il design e
+caratterizzato da un alto rischio di errori: la mancanza di metodologie che facilitino il design e
 la difficolt\`a di queste ad adattarsi all'applicazione da eseguire costituiscono
 un ostacolo all'adozione di questa tecnologia.
 Inoltre, gli approcci esistenti non sono in grado di sfruttare in maniera efficace
@@ -18,7 +18,7 @@ le fasi di mapping e scheduling dell'applicazione da eseguire.
 Nello specifico:
 \begin{itemize}
   \item l'algoritmo di mapping \`e costituito da una meta-euristica evolvibile basata su un
-    algoritmo meta-euristico noto come \emph{\ac{ACO}}, che permette di esplorare lo spazio delle
+    algoritmo noto come \emph{\ac{ACO}}, che permette di esplorare lo spazio delle
     soluzioni possibili effettuando ottimizzazione multiobiettivo;
   \item l'algoritmo di scheduling fornisce una valutazione quantitativa del mapping calcolato,
     fornendo cos\`i una possibile metrica per l'ottimizzazione.
@@ -26,5 +26,9 @@ Nello specifico:
 L'algoritmo di scheduling del framework \`e esteso per tenere in considerazione
 le riconfigurazioni e mascherarle automaticamente quando possibile, per migliorare le
 performance complessive.
-% TODO sommario dei risultati
 
+La metodologia proposta \`e stata validata tramite l'esecuzione dell'algoritmo
+su un insieme di task graph sintetici; i risultati ottenuti da questi test confermano
+l'efficacia di MapR nell'analizzare i miglioramenti introdotti dall'utilizzo della riconfigurazione
+parziale dinamica, ottenendo speedup rispetto all'esecuzione puramente software dell'applicazione
+e all'esecuzione su hardware senza poter sfruttare la riconfigurazione.
