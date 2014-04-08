@@ -301,10 +301,11 @@ perch\`e l'algoritmo tende alla massimizzazione dell'obiettivo.
 Il grafico che illustra l'andamento del miglior makespan trovato, in funzione del numero
 di iterazioni, \`e rappresentato in figura \ref{fig:andamentoMigliorMakespan}.
 Poich\'e la funzione obiettivo \`e calcolata in base al makespan, secondo la formula
-\begin{displaymath}
+\begin{equation} \label{eq:funzioneObiettivo}
  z = \frac{1}{\text{makespan}}
-\end{displaymath}
-a un miglioramento del makespan corrisponde una crescita del valore della funzione obiettivo.
+\end{equation}
+Come si pu\`o vedere dalla formula \ref{eq:funzioneObiettivo}, a un miglioramento del makespan
+corrisponde una crescita del valore della funzione obiettivo.
 \`E possibile notare questa corrispondenza confrontando i due grafici \ref{fig:andamentoMiglioreObiettivo}
 e \ref{fig:andamentoMigliorMakespan}.
 
@@ -319,7 +320,8 @@ e \ref{fig:andamentoMigliorMakespan}.
 
 \subsection{Modifiche al task graph}
 \label{subsec:modificheTaskGraph}
-L'algoritmo di esplorazione \`e stato eseguito con una semplice istanza
+Al fine di illustrare le modifiche apportate al task graph dell'applicazione
+da parte dello scheduler, l'algoritmo di esplorazione \`e stato eseguito con una semplice istanza
 di task graph da 5 nodi, rappresentato in figura \ref{fig:originalTG}.
 Al termine dell'esplorazione, sono stati salvati il mapping corrispondente alla soluzione
 migliore e i task graph modificati dall'algoritmo di scheduling, come descritto nella
@@ -361,6 +363,8 @@ Questo task graph contiene anche le precedenze che definiscono l'ordine di sched
 ad esempio, il task \emph{WRITE\_t0\_0\_t0\_2} viene selezionato per lo scheduling prima del task
 \emph{READ\_t0\_0\_t0\_1}. Il task graph cos\`i modificato pu\`o essere elaborato da un runtime
 manager che gestisca l'avvio dei task rispettando l'ordine definito in fase di scheduling.
+Per la generazione di questi risultati \`e stato utilizzato il template di comunicazione
+in cui tutti i task di tipo \emph{WRITE} o \emph{READ} vengono mappati su BUS e serializzati.
 
 \begin{figure}[t]
  \begin{center}
