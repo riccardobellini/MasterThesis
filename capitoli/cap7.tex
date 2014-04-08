@@ -37,25 +37,41 @@ sia implementato; ci\`o consente di determinare quando utilizzando la riconfigur
 ottenere uno speedup rispetto a un'esecuzione su un processore general-purpose oppure
 su core statici implementati su logica riconfigurabile.
 Per la realizzazione di MapR sono state impiegate euristiche sia per il design dell'architettura, che per
-le fasi di mapping e scheduling dell'applicazione da eseguire; la soluzione cos\`i ottenuta \`e
-subottimale, tuttavia \`e possibile avere comunque una stima dello speedup ottenibile
-facendo uso di riconfigurazioni. La metodologia utilizza una fase di scheduling
-per il calcolo della metrica relativa al \mbox{makespan}; 
-tale metrica \`e calcolata da uno scheduler list-based che cerchi di sfruttare tecniche quali
-\emph{configuration prefetching} per mascherare l'overhead introdotto dalle
-riconfigurazioni e che consideri esplicitamente le comunicazioni da eseguire, oltre
+le fasi di mapping e scheduling dell'applicazione da eseguire; la soluzione cos\`i ottenuta non \`e
+in generale ottima, tuttavia \`e possibile avere comunque una stima dello speedup ottenibile
+facendo uso di riconfigurazioni.
+
+La metodologia effettua un'esplorazione dello spazio delle soluzioni di mapping, basandosi
+sulla massimizzazione di una funzione multi-obiettivo. Le varie metriche e la funzione per calcolare
+il valore dell'obiettivo possono essere estese scrivendo classi che implementano specifiche interfacce, in maniera facilmente
+estendibile. In questo modo \`e possibile personalizzare anche la fase di iterazione e il criterio di terminazione
+dell'esplorazione, che pu\`o essere esteso per considerare, ad esempio, l'efficienza
+paretiana invece che il semplice raggiungimento del limite delle iterazioni.
+
+Il calcolo della metrica relativa al \mbox{makespan} \`e svolto da uno scheduler list-based che cerca
+di sfruttare tecniche quali \emph{configuration prefetching} per mascherare l'overhead introdotto dalle
+riconfigurazioni e che considera esplicitamente le comunicazioni da eseguire, oltre
 alla possibilit\`a di riutilizzare i moduli per ridurre il numero di riconfigurazioni.
+Anche in fase di progettazione dell'algoritmo di scheduling si \`e deciso di adottare
+un approccio estendibile, allo scopo di poter implementare potenzialmente pi\`u algoritmi diversi.
+Le possibilit\`a offerte variano dall'opportunit\`a di implementare un algoritmo di scheduling
+totalmente differente rispetto a quello proposto, all'implementazione di un'euristica per la scelta dei
+task o per l'assegnazione dei tempi personalizzate.
 
 Sono stati presentati i risultati relativi all'esecuzione degli algoritmi descritti
 nel capitolo \ref{chap:approccio}, che mostrano come la meta-euristica evolutiva basata
 su \acl{ACO} permetta di esplorare efficacemente lo spazio delle soluzioni,
 per fornire al designer una stima dell'impatto della riconfigurazione sul sistema finale.
+Inoltre, \`e stato presentato un esempio delle statistiche relative all'esplorazione
+e alle modifiche che vengono effettuate al task graph dall'algoritmo di scheduling proposto,
+sia in fase di pre-elaborazione che in post-elaborazione, per esplicitare l'ordine di scheduling
+scelto.
 
 Pur permettendo di stimare lo speedup derivante dall'esecuzione di un'applicazione su hardware riconfigurabile,
 la metodologia proposta presenta alcune limitazioni. In primo luogo,
-la mancanza di una fase di \emph{floorplanning}, che assicuri
+la mancanza di una fase di \emph{floorplanning} che assicuri
 l'effettiva fattibilit\`a del piazzamento dei moduli calcolati durante il mapping.
-La terza limitazione deriva dal fatto che, una volta calcolate le informazioni di mapping
+La seconda limitazione deriva dal fatto che, una volta calcolate le informazioni di mapping
 tramite l'algoritmo di esplorazione, la generazione e connessione dei core \`e lasciata
 al designer, che deve creare manualmente l'architettura target.
 
@@ -63,11 +79,15 @@ al designer, che deve creare manualmente l'architettura target.
 \label{sec:sviluppiFuturi}
 Il primo sviluppo futuro consiste nell'estensione della metodologia per considerare una fase di
 \emph{floorplanning} che fornisca un feedback per la fattibilit\`a del piazzamento, dato
-il mapping calcolato dall'algoritmo. In caso di feedback negativo l'esplorazione pu\`o essere rieseguita
-riducendo l'area a disposizione, per calcolare un nuovo mapping; alternativamente, nell'eventualit\`a
-di poter disporre di un algoritmo euristico molto veloce per il floorplanning, si pu\`o
-controllare la fattibilit\`a del piazzamento di ogni soluzione calcolata, generando in questa maniera
-solamente mapping fisicamente piazzabili.
+il mapping calcolato dall'algoritmo. Tale feedback potrebbe essere dato una sola volta al termine
+dell'esplorazione, sulla soluzione migliore calcolata, ipotizzando di avere un algoritmo
+computazionalmente costoso per il floorplanning (ad esempio, formulazioni \ac{ILP}). In caso di feedback negativo l'esplorazione pu\`o essere rieseguita
+riducendo l'area a disposizione dell'algoritmo di esplorazione; questo consentirebbe di avere pi\`u area libera
+per il piazzamento fisico dei moduli.
+
+Alternativamente, nell'eventualit\`a di poter disporre di un algoritmo euristico per il floorplanning molto veloce, si pu\`o
+controllare la fattibilit\`a del piazzamento di ogni soluzione calcolata durante tutte le iterazioni, generando in
+questa maniera solamente mapping fisicamente piazzabili.
 
 Oltre alla fase di floorplanning, possibili lavori futuri riguardano l'implementazione di
 algoritmi per valutare metriche aggiuntive, oltre al makespan, come quelle descritte
@@ -81,4 +101,4 @@ nella sezione \ref{subsec:mappingScheduling}:
 Infine, per automatizzare ulteriormente il procedimento, sarebbe utile estendere la metodologia
 proposta per generare automaticamente l'architettura target definita in fase di esplorazione; invece
 che lasciare al designer il compito di creare i core e connetterli manualmente, tale procedimento
-potrebbe essere svolto in automatico dal sistema.
+potrebbe essere svolto dal sistema, rendendo maggiormente automatizzato il processo di design.

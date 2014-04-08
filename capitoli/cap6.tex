@@ -219,8 +219,6 @@ Si pu\`o vedere dalla figura come in quasi tutti i casi l'area occupata sia
 circa uguale all'area disponibile sul dispositivo, senza che si verifichino
 violazioni di vincoli.
 
-
-
 \subsection{Confronto a runtime}
 Per ciascun task graph utilizzato negli esperimenti sullo speedup rispetto alla baseline software
 e sul mapping dei task, \`e stato generato un runtime manager che gestisca lo scheduling dei task \cite{DurelliRuntimeManager},
@@ -235,7 +233,7 @@ specificato dai task graph creati tramite \ac{TGFF}.
 
 Il sistema finale \`e stato realizzato connettendo manualmente i core generati con Vivado HLS,
 l'architettura target \`e una scheda ZedBoard con chip xc7z020-clg484, prodotto da Xilinx
-\cite{XilinxZC702}. Il chip sopraccitato \`e composto da un processore general-purpose dual-core
+\cite{XilinxZC702}. Il chip sopracitato \`e composto da un processore general-purpose dual-core
 ARM Cortex A9, e da una porzione di logica riconfigurabile collegata al processore.
 Il processore, che esegue il kernel di \emph{PetaLinux},\footnote{PetaLinux \`e una distribuzione
 Linux specifica per lo sviluppo e la progettazione di sistemi embedded.} gestisce
@@ -333,7 +331,7 @@ Il mapping corrispondente alla soluzione migliore \`e rappresentato nella tabell
  \begin{center}
   \begin{tabular}{|c|c|c|}
    \hline
-   \textbf{Task} & \textbf{Processing element} & \textbf{Implementazione}\\
+   \textbf{Task} & \textbf{Componente} & \textbf{Implementazione}\\
    \hline
    t0\_0 & r\_18 & FPGA\_47\\
    \hline

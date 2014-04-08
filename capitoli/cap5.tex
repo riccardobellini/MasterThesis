@@ -18,7 +18,7 @@ progetto \ac{FASTER}; la sezione
 \ref{sec:struttureDati} contiene la descrizione delle strutture dati relative 
 all'implementazione dello scheduler; la sezione \ref{sec:classiGerarchie} 
 descrive le classi e le gerarchie che compongono la parte della toolchain 
-relativa alla parte di mapping/scheduling (sezione 
+relativa alla parte di mapping (sezione 
 \ref{subsec:algoritmoEsplorazione}) e i componenti dell'algoritmo di scheduling 
 nel dettaglio (sezione \ref{subsec:algoritmoScheduling}).
 
@@ -188,7 +188,7 @@ task, l'ordinamento topologico dei task e la lista delle riconfigurazioni.
 I file \emph{schedulerData.hpp} e \emph{schedulerData.cpp} contengono il codice 
 sorgente della struttura \verb+SchedulerData+, che memorizza dati continuamente 
 aggiornati durante l'esecuzione dell'algoritmo di scheduling. A differenza dei 
-dati contenuti in \verb+SchedulerInput+, questi dati sono racchiusi in una 
+dati presenti in \verb+SchedulerInput+, questi dati sono racchiusi in una 
 struttura a sé stante perchè figurino come logicamente separati dai dati che 
 invece fanno parte dell'input dell'algoritmo. La dichiarazione della struttura è
 inclusa nel namespace \verb+faster::applications::scheduler::data+.
@@ -203,7 +203,7 @@ mezzo di comunicazione, il task \emph{READ} corrispondente dev'essere
 eliminato dalla lista dei task rimanenti.}
 
 \subsubsection{Scheduler Gantt}
-La struttura \verb+SchedulerGantt+ è definita nei file 
+La struttura \verb+SchedulerGantt+ è dichiarata e definita nei file 
 \emph{schedulerGantt.hpp} e \emph{schedulerGantt.cpp}; la struttura contiene il 
 diagramma di Gantt utilizzato dall'algoritmo per visualizzare la soluzione 
 calcolata. All'inizio dell'elaborazione il diagramma è vuoto, viene 
@@ -223,7 +223,7 @@ progressivamente aggiornati man mano che l'esecuzione dell'algoritmo avanza, e
 alla fine sono utilizzati per il calcolo della metrica \emph{makespan}.
 
 La struttura agisce come wrapper attorno ai 
-metodi della struttura \verb+SchedulerGantt+ vista in precedenza, ed espone dei 
+metodi di \verb+SchedulerGantt+ vista in precedenza, ed espone dei 
 metodi che permettono di aggiungere all'output le informazioni appena calcolate.
 Il metodo \verb+computeMakespan()+ permette di calcolare la metrica di valutazione
 dello scheduling.
@@ -496,7 +496,7 @@ ripetuto fino a che vi sono task non schedulati.
 
 \subsubsection{Componente di preprocessing}
 Il codice del componente dedicato al preprocessing è contenuto nella 
-sottocartella \emph{schedule/scheduleComponents/preprocessing}; la classe 
+sottocartella \emph{schedule/scheduleComponents/preprocessing}; 
 \verb+ScheduleRBPreprocessingAlgorithm+ è una classe astratta che espone un 
 metodo virtuale puro da reimplementare per poter personalizzare la fase di 
 preprocessing. La sottoclasse \verb+ScheduleRBAnalyzeTrace+ ne fornisce 
@@ -579,8 +579,8 @@ mathescape]{c}
   };
 \end{minted}
 
-Nel frammento di codice è inclusa la dichiarazione della 
-struttura \verb+PriorityMetrics+, che contiene le tre metriche utilizzate per 
+Nel frammento di codice è inclusa la dichiarazione di
+\verb+PriorityMetrics+, una struttura che contiene le tre metriche utilizzate per 
 il calcolo della priorità di un task.
 
 All'interno della classe che implementa l'euristica si trovano invece i 
@@ -682,9 +682,11 @@ mathescape]{c}
       ScheduledTaskInfo m_calculateSchedulingInfoReconfigurationTask(
                         const FasterTaskPtr & reconfTask) const;
       ScheduledTaskInfo m_calculateSchedulingInfoCommWriteTask(
-                        const FasterCommunicationWriteTaskPtr & commWriteTask) const;
+                        const FasterCommunicationWriteTaskPtr &
+                        commWriteTask) const;
       ScheduledTaskInfo m_calculateSchedulingInfoCommReadTask(
-                        const FasterCommunicationReadTaskPtr & commReadTask) const;
+                        const FasterCommunicationReadTaskPtr &
+                        commReadTask) const;
       void m_allocateMemoryForTask(const FasterTaskPtr & task) const;
       // code...
     public:
@@ -703,7 +705,7 @@ Il metodo \verb+m_allocateMemoryForTask()+ gestisce l'allocazione della memoria
 per i task di computazione chiamando i metodi del gestore della memoria.
 
 \paragraph{Policy di scheduling delle comunicazioni}
-La classe \verb+ScheduleRBCommunicationPolicy+ gestisce lo scheduling dei task 
+\verb+ScheduleRBCommunicationPolicy+ \`e la classe che gestisce lo scheduling dei task 
 di comunicazione e implementa la policy spiegata nella sezione 
 \ref{subsec:policyComunicazioni}. La classe è dichiarata e definita nei file 
 \emph{scheduleRBCommunicationPolicy.hpp} e  \emph{scheduleRBCommunicationPolicy.cpp},
@@ -715,7 +717,8 @@ mathescape]{c}
     public:
       // code...
       ScheduledTaskInfo scheduleCommunicationTask(
-                        const FasterCommunicationTaskPtr & commTask, long int precTime);
+                        const FasterCommunicationTaskPtr & commTask,
+                        long int precTime);
     private:
       void m_removeConsumers(
            const FasterCommunicationTaskPtr & commTask, bool scheduledOnBus);
