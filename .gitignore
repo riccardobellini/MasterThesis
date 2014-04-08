@@ -24,3 +24,6 @@
 !FPL_*.pdf
 !templates.pdf
 !FPL_Reconfs.pdf
+!bestClock.pdf
+!bestObjective.pdf
+!*TaskGraph.pdf
