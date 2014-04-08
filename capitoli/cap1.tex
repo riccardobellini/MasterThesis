@@ -198,7 +198,7 @@ L'utilizzo di architetture riconfigurabili garantisce un ciclo di sviluppo pi\`u
 \`e infatti possibile testare continuamente i componenti del sistema man mano che questo viene
 progettato. Questo consente di rilevare in anticipo eventuali errori o incongruenze rispetto alle
 specifiche iniziali, che nel caso della progettazione su circuiti dedicati \ac{ASIC} emergerebbero
-soltanto al termine del ciclo di sviluppo, in fase di test finale.
+soltanto al termine del ciclo di sviluppo, in fase di test finale \cite{ReconfigurableSystemDesignVerification}.
 
 Oltre alla riduzione del time-to-market del sistema, la possibilit\`a di riconfigurare
 il dispositivo consente di implementare tecniche di tolleranza ai guasti, o di adattare
@@ -213,7 +213,7 @@ rispetto a soluzioni general-purpose.
 
 \subsection{I dispositivi riconfigurabili}
 I dispositivi riconfigurabili, a differenza dei tradizionali microprocessori, permettono di modificare
-anche il \emph{data path};\footnote{Insieme di unit\`a funzionali che operano sui dati, ad esempio il
+anche il \emph{data path} \cite{ReconfigurableDatapath};\footnote{Insieme di unit\`a funzionali che operano sui dati, ad esempio il
 registro delle istruzioni, il \emph{program counter} e unit\`a di elaborazione (\acs{ALU}).}
 a differenza di sistemi dedicati \ac{ASIC}, la funzionalit\`a che implementano pu\`o essere
 modificata caricandone opportunamente una nuova.
@@ -230,12 +230,12 @@ di architetture viene utilizzato per ottenere un incremento di prestazioni.
 
 \paragraph{Applicazioni multimediali}
 La caratteristica principale delle applicazioni multimediali è la grande quantità di dati che
-vengono processati, unitamente a dei requisiti di soft real-time. L'utilizzo del reconfigurable
-computing permette di velocizzare l'esecuzione di queste applicazioni e a fornire maggiori garanzie
-sul mantenimento dei vincoli di soft real-time. Oltre al miglioramento
-in termini di velocità di esecuzione, grazie all'impiego del reconfigurable computing si possono
+vengono processati, unitamente a dei requisiti di soft real-time. L'utilizzo dei sistemi
+riconfigurabili permette di velocizzare l'esecuzione di queste applicazioni e a fornire maggiori garanzie
+sul mantenimento dei vincoli di soft real-time \cite{ReconfigurableSystemDesignVerification}. Oltre al miglioramento
+in termini di velocità di esecuzione, grazie all'impiego delle architetture riconfigurabili si possono
 riutilizzare alcuni moduli \ac{IP} comuni a diverse applicazioni, ad esempio codifica di
-Huffman, quantizzazione e \ac{DCT}.
+Huffman \cite{HuffmanFPGA}, quantizzazione e \ac{DCT} \cite{DCTImplementation}.
 
 \paragraph{Calcolo e simulazioni scientifiche}
 Il calcolo in ambito scientifico necessita di eseguire velocemente e in maniera efficiente
@@ -243,7 +243,7 @@ una serie di operazioni su una grossa mole di dati, allo scopo di effettuare sim
 calcoli matematici. La caratteristica di questi sistemi è il rapido cambiamento dei dati in
 input, che possono richiedere un adattamento in tempo reale della computazione.
 
-In questo caso l'impiego del reconfigurable computing permette di adattare velocemente
+In questo caso l'impiego dei sistemi riconfigurabili permette di adattare velocemente
 l'applicazione ai dati in input, oltre ad aumentare la scalabilità delle implementazioni
 di questi sistemi.
 
@@ -254,10 +254,10 @@ di questi sistemi.
 \paragraph{Sicurezza delle reti}
 La necessità di scambiare i dati in modo sicuro attraverso Internet ha portato allo sviluppo
 di diversi algoritmi crittografici, sia per lo scambio di informazioni, ad esempio
-\ac{AES} e \ac{DES}, sia per meccanismi di autenticazione e verifica dell'integrità come
-MD5 e \ac{SHA}.
+\ac{AES} \cite{AESFPGA} e \ac{DES} \cite{DESFPGA}, sia per meccanismi di autenticazione e verifica dell'integrità come
+MD5 \cite{MD5FPGA} e \ac{SHA} \cite{SHA256FPGA}.
 
-Il reconfigurable computing permette di adattare facilmente i sistemi di sicurezza
+Le architetture riconfigurabili permettono di adattare facilmente i sistemi di sicurezza
 all'impiego dei diversi standard utilizzati per la cifratura e decifratura dei dati, in
 maniera dinamica.
 
