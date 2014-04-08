@@ -1,5 +1,3 @@
-Generali: Attenzione, tradurre l'inglese in italiano per quanto possibile!!
-
 - Introduzione:
 - Stato arte:
 - Metodologia:
@@ -8,7 +6,5 @@ Generali: Attenzione, tradurre l'inglese in italiano per quanto possibile!!
     o Esempio di run completo dell'algoritmo, con evoluzione dell'area e dei processing element
     o Esempio di scheduling, con preprocessing e postprocessing
 - Sviluppi futuri:
-    o Più metriche!
-    o Generazione automatica dell'architettura target
 - Bibliografia:
     o Nomi abbreviati per tutti
