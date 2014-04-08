@@ -219,11 +219,11 @@ violazioni di vincoli.
 
 \subsection{Confronto a runtime}
 Per ciascun task graph utilizzato negli esperimenti sullo speedup rispetto alla baseline software
-e sul mapping dei task, \`e stato generato un runtime manager che gestisca lo scheduling dei task,
+e sul mapping dei task, \`e stato generato un runtime manager che gestisca lo scheduling dei task \cite{DurelliRuntimeManager},
 seguendo le indicazioni dello scheduler, in particolare la fase di postprocessing, vista nella sezione
 \ref{subsec:fasePostprocessing}, in cui viene esplicitato l'ordine di scheduling dei task.
 
-Per la validazione del runtime manager e l'analisi degli overhead introdotti, rispetto alle stime
+Per la validazione del runtime manager e l'analisi degli overhead introdotti rispetto alle stime
 illustrate nelle precedenti sezioni, sono stati realizzati dei core che implementano un contatore
 configurabile (per modellizzare il tempo di esecuzione dei task). I core sono stati creati utilizzando
 \emph{Vivado HLS} \cite{VivadoHLS}, i loro requisiti in termini di risorse riflettono quanto
