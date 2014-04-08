@@ -1,19 +1,84 @@
-\chapter{Conclusioni}
+\chapter{Conclusioni e sviluppi futuri}
 \label{chap:conclusioni}
 \vspace{1cm}
+L'obiettivo di questo capitolo \`e fornire un rapido riepilogo del lavoro svolto
+e descritto in questa tesi, con le motivazioni per cui si \`e ritenuto necessario
+svolgere il lavoro, nella sezione \ref{sec:osservazioniConclusiveCap7}. Vengono inoltre
+presentate alcune limitazioni di questo lavoro.
+
+La sezione \ref{sec:sviluppiFuturi} descrive cosa pu\`o essere fatto in futuro
+per migliorare la metodologia proposta, alla luce delle limitazioni elencate
+nella sezione precedente.
+
+\newpage
+
+
+\section{Osservazioni conclusive}
+\label{sec:osservazioniConclusiveCap7}
+La costante ricerca di prestazioni sempre migliori per i sistemi informativi
+ha dato una forte spinta alla ricerca nell'ambito delle architetture hardware.
+Spesso infatti, vi \`e necessit\`a di realizzare architetture dedicate in grado di
+velocizzare l'esecuzione di un'applicazione, consentendo allo stesso tempo
+un risparmio al consumo energetico richiesto.
+
+In tale processo, le architetture riconfigurabili rappresentano una valida opzione
+per ottenere performance elevate, senza sacrificare la flessibilit\`a che non si avrebbe
+utilizzando sistemi \ac{ASIC}. Tuttavia, sfruttare in modo efficace le potenzialit\`a
+offerte dai sistemi riconfigurabili \`e un compito impegnativo, in particolare a causa
+del lungo processo di design di questi sistemi, soggetto a errori.
+Inoltre, i tool di sviluppo esistenti offrono un supporto limitato al designer, e non permettono
+di valutare quando utilizzare la riconfigurazione parziale dinamica apporti miglioramenti
+all'esecuzione dell'applicazione sul sistema finale.
+
 In questo lavoro \`e stato proposto \emph{MapR}, una metodologia
-altamente automatizzata per la progettazione di \acs{MPSoC} riconfigurabili, che permette
-al progettista di valutare l'impatto della riconfigurazione durante la fase di design.
-Il lavoro oggetto della tesi combina euristiche sia per il design dell'architettura, che per
-le fasi di mapping e scheduling dell'applicazione da eseguire.
+altamente automatizzata per la progettazione di \acs{MPSoC} riconfigurabili, il cui
+obiettivo \`e permettere al designer di valutare l'impatto della riconfigurazione prima che il sistema
+sia implementato; ci\`o consente di determinare quando utilizzando la riconfigurazione si pu\`o
+ottenere uno speedup rispetto a un'esecuzione su un processore general-purpose oppure
+su hardware dedicato.
+Per la realizzazione di MapR sono state impiegate euristiche sia per il design dell'architettura, che per
+le fasi di mapping e scheduling dell'applicazione da eseguire; la soluzione cos\`i ottenuta \`e
+subottimale, tuttavia \`e possibile avere comunque una stima dello speedup ottenibile
+facendo uso di riconfigurazioni.
 
 Sono stati presentati i risultati relativi all'esecuzione degli algoritmi descritti
 nel capitolo \ref{chap:approccio}, che mostrano come la meta-euristica evolutiva basata
-su \ac{ACO} permetta di esplorare efficacemente lo spazio delle soluzioni,
+su \acl{ACO} permetta di esplorare efficacemente lo spazio delle soluzioni,
 per fornire al designer una stima dell'impatto della riconfigurazione sul sistema finale.
 
-In questo lavoro \`e stata presentata soltanto la metrica relativa al makespan,
+Pur permettendo di stimare lo speedup derivante dall'esecuzione di un'applicazione su hardware riconfigurabile,
+la metodologia proposta presenta alcune limitazioni. In primo luogo, in questo lavoro \`e stata presentata
+soltanto la metrica relativa al \mbox{makespan},
 calcolata da uno scheduler list-based che cerchi di sfruttare tecniche quali
 \emph{configuration prefetching} per mascherare l'overhead introdotto dalle
-riconfigurazioni e che consideri esplicitamente le comunicazioni da eseguire.
+riconfigurazioni e che consideri esplicitamente le comunicazioni da eseguire, oltre
+alla possibilit\`a di riutilizzare i moduli per ridurre il numero di riconfigurazioni.
+La seconda limitazione \`e la mancanza di una fase di \emph{floorplanning}, che assicuri
+l'effettiva fattibilit\`a del piazzamento dei moduli calcolati durante il mapping.
+La terza limitazione deriva dal fatto che, una volta calcolate le informazioni di mapping
+tramite l'algoritmo di esplorazione, la generazione e connessione dei core \`e lasciata
+al designer, che deve creare manualmente l'architettura target.
 
+\section{Sviluppi futuri}
+\label{sec:sviluppiFuturi}
+Il primo sviluppo futuro consiste nell'estensione della metodologia per considerare una fase di
+\emph{floorplanning} che fornisca un feedback per la fattibilit\`a del piazzamento, dato
+il mapping calcolato dall'algoritmo. In caso di feedback negativo l'esplorazione pu\`o essere rieseguita
+riducendo l'area a disposizione, per calcolare un nuovo mapping; alternativamente, nell'eventualit\`a
+di poter disporre di un algoritmo euristico molto veloce per il floorplanning, si pu\`o
+controllare la fattibilit\`a del piazzamento di ogni soluzione calcolata, generando in questa maniera
+solamente mapping fisicamente piazzabili.
+
+Oltre alla fase di floorplanning, possibili lavori futuri riguardano l'implementazione di
+algoritmi per valutare metriche aggiuntive, oltre al makespan, come quelle descritte
+nella sezione \ref{subsec:mappingScheduling}:
+\begin{itemize}
+ \item metrica relativa all'uso dell'area;
+ \item metrica relativa a una stima del consumo di energia di un determinato mapping.
+\end{itemize}
+
+
+Infine, per automatizzare ulteriormente il procedimento, sarebbe utile estendere la metodologia
+proposta per generare automaticamente l'architettura target definita in fase di esplorazione; invece
+che lasciare al designer il compito di creare i core e connetterli manualmente, tale procedimento
+potrebbe essere svolto in automatico dal sistema.
